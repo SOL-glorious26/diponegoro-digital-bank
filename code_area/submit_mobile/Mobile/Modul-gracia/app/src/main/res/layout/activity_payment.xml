@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout android:orientation="vertical" android:padding="20dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+        <TextView android:text="Pembayaran QRIS" android:textSize="26sp" android:textStyle="bold"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+        <Button android:id="@+id/btnScan" android:text="Scan QRIS"
+            android:layout_marginTop="20dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+        <ImageView android:id="@+id/imgQr" android:visibility="gone"
+            android:layout_gravity="center" android:layout_margin="16dp"
+            android:layout_width="240dp" android:layout_height="240dp"/>
+
+        <TextView android:id="@+id/tvMerchant" android:text="Merchant: -"
+            android:textSize="18sp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        <TextView android:id="@+id/tvNominal" android:text="Nominal: Rp0"
+            android:textSize="18sp" android:layout_marginTop="8dp"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_marginTop="16dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNominal" android:hint="Nominal pembayaran"
+                android:inputType="numberDecimal"
+                android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_marginTop="12dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPin" android:hint="PIN"
+                android:inputType="numberPassword" android:maxLength="6"
+                android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button android:id="@+id/btnPay" android:text="Konfirmasi &amp; Bayar"
+            android:layout_marginTop="20dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        <Button android:id="@+id/btnHistory" android:text="Lihat Status Pembayaran"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        <Button android:id="@+id/btnGenerate" android:text="Tampilkan QRIS Pribadi"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+    </LinearLayout>
+</ScrollView>

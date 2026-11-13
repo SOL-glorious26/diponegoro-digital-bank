@@ -1,0 +1,21 @@
+{
+  "name": "ddb-pengujian",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Uji end-to-end Diponegoro Digital Bank (STD-DDB-001): Web, Android, lintas platform, peramban, performa",
+  "scripts": {
+    "web:api": "node web/api-smoke.mjs",
+    "web:ui": "node web/ui-e2e.mjs hasil/web-ui",
+    "web:extra": "node web/wb-extra.mjs hasil/wb WB-11",
+    "web:token": "node web/wb-extra.mjs hasil/wb WB-12",
+    "web:browsers": "node web/browsers.mjs hasil/browsers",
+    "android:sa": "node android/sa-android.mjs hasil/sa",
+    "lintas": "node lintas-platform/lp-cross.mjs hasil/lp",
+    "perf": "node performa/perf.mjs hasil/perf",
+    "web:fitur": "node web/wb-extra.mjs hasil/wb WB-13,WB-14,WB-15"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

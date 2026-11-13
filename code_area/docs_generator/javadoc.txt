@@ -1,0 +1,72 @@
+/DdbBackendApplication.java | 25 | Backend Diponegoro Digital Bank — modular monolith (SRS 2.1). Satu paket per modul bisnis: auth, account, transfer, payment, topup, card, history, profile, notification; ditambah ledger (Financial Transaction Core) yang dipakai bersama.
+account/AccountController.java | 116 | 
+account/AccountDtos.java | 46 | lockType DATE butuh lockUntil (tanggal di masa depan); TARGET butuh target.
+account/AccountService.java | 265 | Modul Account: FR-06 – FR-09.
+account/Pocket.java | 40 | Metadata kantong (FR-08, FR-09). Saldonya ada di ledger_accounts (kind = POCKET).
+auth/AuthController.java | 169 | 
+auth/AuthDtos.java | 87 | Request & response modul Authentication (JSON).
+auth/AuthEntities.java | 29 | Enum modul Authentication (mengikuti class diagram & aplikasi Android).  Catatan gaya entitas di backend ini: entitas JPA memakai field publik tanpa relasi lazy (relasi disimpan sebagai id String), sehingga aman dari masalah proxy Hibernate dan tetap ringkas.
+auth/AuthRepositories.java | 57 | Repository Spring Data untuk modul Authentication.
+auth/AuthService.java | 407 | Modul Authentication: FR-01 – FR-05.
+auth/BiometricDevice.java | 33 | 
+auth/EkycVerification.java | 36 | 
+auth/LoginThrottle.java | 37 | Deteksi login mencurigakan (NFR-06): setelah AuthService#MAX_LOGIN_FAILURES password salah dalam AuthService#LOGIN_LOCK_WINDOW (dihitung sejak login berhasil terakhir), login akun tersebut ditahan sementara. Rate limit per IP dilakukan di API Gateway.
+auth/OtpCode.java | 35 | 
+auth/OtpService.java | 97 | OTP 6 digit (FR-01, FR-05, FR-27). Kode disimpan sebagai hash, berlaku #TTL, maksimal #MAX_ATTEMPTS kali salah, dan OTP lama untuk tujuan yang sama dibatalkan saat kirim ulang. Karena belum ada SMS/email sungguhan, kode dikembalikan ke pemanggil untuk ditampil
+auth/PinService.java | 97 | PIN transaksi 6 digit (FR-04, BR-02): hash BCrypt, terpisah dari password, blokir 5 menit setelah 3x salah.
+auth/TransactionGuard.java | 35 | Pemeriksaan wajib sebelum setiap transaksi keuangan: FR-02 (e-KYC disetujui) lalu FR-04 / BR-02 (PIN valid, blokir setelah 3x salah).
+auth/TransactionPin.java | 28 | 
+auth/User.java | 42 | 
+auth/UserSession.java | 38 | 
+card/VirtualCard.java | 52 | Virtual card (FR-21, FR-22). Nomor kartu & CVV disimpan terenkripsi AES-GCM.
+card/VirtualCardController.java | 87 | 
+card/VirtualCardService.java | 191 | Modul Virtual Card: FR-21, FR-22 (simulator penerbit kartu).
+common/ApiException.java | 43 | Kesalahan bisnis yang ditampilkan ke pengguna. code stabil (dipakai klien mobile/web), message berbahasa Indonesia dan siap ditampilkan.
+common/AuditEvent.java | 27 | Satu kejadian pada jejak audit keamanan (NFR-07).
+common/AuditService.java | 45 | Jejak audit keamanan (NFR-07): login, PIN salah/diblokir, perubahan kredensial, dll. Ditulis di transaksi terpisah (REQUIRES_NEW) agar tetap tercatat walau transaksi utama gagal.
+common/DataCipher.java | 50 | Enkripsi data sensitif saat disimpan (NFR-06): AES-256-GCM, IV acak per nilai.
+common/DdbProperties.java | 8 | 
+common/ErrorResponse.java | 11 | Format error seragam untuk seluruh API. fields berisi pesan per field saat validasi gagal.
+common/GlobalExceptionHandler.java | 81 | 
+common/Hashing.java | 20 | SHA-256 untuk data acak berentropi tinggi (refresh token). Password, PIN, dan OTP memakai BCrypt.
+common/Idempotency.java | 19 | Kunci idempotensi (BR-04). Setiap permintaan yang memindahkan uang wajib mengirim header Idempotency-Key (mis. UUID yang dibuat klien sekali per transaksi dan dipakai ulang saat retry). Kunci diberi awalan userId agar pengguna berbeda tidak bisa bertabrakan.
+common/Ids.java | 27 | 
+common/Money.java | 15 | 
+common/OpenApiConfig.java | 35 | Kontrak API bersama Mobile & Web (SRS 2.5, NFR-12): /v3/api-docs dan /swagger-ui.html.
+common/RequestContext.java | 18 | 
+common/TimeConfig.java | 18 | 
+demo/DemoDataSeeder.java | 161 | Data simulasi (SRS 2.5) agar riwayat, grafik saldo, dan dashboard langsung berisi — sama dengan aplikasi Android. Hanya berjalan bila ddb.seed-demo-data=true dan akun "demo" belum ada.  Akun: demo / Demo@1234 / PIN 123456 (rekening 1400123456). Nasabah lain: a
+history/HistoryController.java | 121 | 
+history/HistoryExporter.java | 101 | Ekspor riwayat transaksi ke CSV/PDF sesuai filter aktif (FR-26, platform Web).
+history/HistoryService.java | 185 | Modul Transaction History & Dashboard: FR-23 – FR-26. Semua angka dihitung dari ledger.
+ledger/JournalLine.java | 29 | 
+ledger/LedgerAccount.java | 31 | 
+ledger/LedgerModels.java | 92 | Model Financial Transaction Core (sama dengan core/ledger di aplikasi Android).
+ledger/LedgerRepositories.java | 49 | 
+ledger/LedgerService.java | 365 | Financial Transaction Core (BR-03, BR-04, BR-05, NFR-07).   Double-entry: jumlah baris jurnal setiap transaksi wajib 0. Atomik: satu transaksi database; rekening yang terlibat dikunci (SELECT … FOR UPDATE) berurutan id, divalidasi, lalu jurnal + cache saldo di
+ledger/LedgerTransaction.java | 61 | 
+ledger/TransactionDto.java | 25 | Bentuk transaksi yang dikirim ke klien — dipakai untuk bukti transaksi (FR-14), riwayat (FR-23) dan detail (FR-24). Arah (masuk/keluar) dihitung dari sudut pandang pengguna yang meminta.
+notification/EmailMessage.java | 30 | Email disimulasikan: disimpan ke outbox dan dapat dilihat di aplikasi (belum ada server email).
+notification/Notification.java | 50 | 
+notification/NotificationEntities.java | 18 | Enum modul Notification (FR-28, FR-29).
+notification/NotificationService.java | 221 | FR-29: notifikasi transaksi masuk & keluar lewat kanal pilihan pengguna (FR-28). Asinkron: ledger hanya menerbitkan event; notifikasi dibuat SETELAH transaksi commit, di thread lain, sehingga transfer tidak menunggu dan notifikasi tidak terkirim untuk transaks
+notification/NotificationSettings.java | 20 | Pilihan jenis & kanal notifikasi per pengguna (FR-28). Disimpan sebagai daftar dipisah koma.
+payment/PaymentController.java | 73 | amount diabaikan untuk QRIS dinamis.
+payment/PaymentService.java | 147 | Modul Payment (QRIS): FR-15, FR-16, FR-17.
+payment/QrisCodec.java | 111 | Encoder/decoder QRIS mengikuti struktur EMVCo Merchant-Presented QR (TLV + CRC16-CCITT), format standar QRIS Bank Indonesia (disederhanakan untuk simulasi; identik dengan versi Android).  Tag: 00 versi, 01 statis(11)/dinamis(12), 26 info akun merchant (00 GUID
+profile/ProfileController.java | 136 | 
+profile/ProfileService.java | 139 | Modul Profile: FR-27 (profil + OTP) dan FR-28 (keamanan).
+security/AuthUser.java | 25 | Pengguna yang sedang login. Di controller cukup tulis parameter @AuthenticationPrincipal AuthUser me.
+security/JwtService.java | 74 | Access token JWT berumur pendek (NFR-06). Klaim: sub = userId, sid = sessionId. Token yang sesinya sudah diakhiri (logout / logout semua perangkat) ditolak oleh SessionJwtConverter walaupun belum kedaluwarsa (FR-05).
+security/SecurityConfig.java | 63 | 
+security/SessionJwtConverter.java | 59 | Mengubah JWT valid menjadi AuthUser, sekaligus memeriksa sesi di database (FR-05):  sesi yang sudah logout / logout semua perangkat → ditolak; tidak aktif lebih dari #IDLE_TIMEOUT → sesi berakhir otomatis; selain itu last_seen_at diperbarui (paling sering tiap
+topup/PaidBill.java | 24 | Tagihan yang sudah dibayar per periode — mencegah pembayaran ganda (FR-20).
+topup/TopUpCatalog.java | 73 | Katalog produk top-up (sama dengan aplikasi Android). Nilai biaya adalah usulan.
+topup/TopUpController.java | 95 | 
+topup/TopUpService.java | 240 | Modul Top-up: FR-18 – FR-20. Penyedia pulsa, PLN, dan biller diganti simulator (SRS 2.5). Hasil inquiry deterministik dari nomor pelanggan (sama dengan aplikasi Android) agar mudah diuji. Pesanan selalu disusun ulang di server dari parameter — nominal dari kli
+transfer/FavoriteRecipient.java | 35 | Penerima favorit (FR-13).
+transfer/InterbankGateway.java | 30 | Adapter jaringan antarbank (SRS 2.1 & 2.5). Implementasi sekarang adalah simulator; integrasi produksi cukup mengganti implementasi ini tanpa mengubah modul Transfer.
+transfer/InterbankSimulator.java | 68 | Simulator jaringan antarbank. Direktori rekening sama dengan aplikasi Android, termasuk akun untuk skenario gagal: BRI 9999999999 = ditolak (A6), Mandiri 8888888888 = timeout (A5).
+transfer/TransferController.java | 91 | 
+transfer/TransferDtos.java | 33 | Layar konfirmasi (UC-01 langkah 4): penerima, nominal, biaya, total, saldo sesudah.
+transfer/TransferService.java | 204 | Modul Transfer: FR-10 – FR-14, UC-01 (alur utama + A1–A6).

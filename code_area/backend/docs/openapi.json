@@ -1,0 +1,4272 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Diponegoro Digital Bank API",
+    "description": "Backend bersama aplikasi Mobile & Web (SRS-DDB-001 v0.1).\n\n**Cara mencoba:** POST /api/v1/auth/login dengan `{\"identifier\":\"demo\",\"password\":\"Demo@1234\",\"deviceId\":\"swagger\"}`, salin `accessToken`, klik **Authorize**.\n\n**Aturan umum:** semua uang dalam rupiah (bilangan bulat); waktu dalam ISO-8601 UTC; setiap transaksi keuangan wajib header `Idempotency-Key` (UUID per transaksi, dipakai ulang saat retry); error berbentuk `{code, message, fields?, timestamp}`.\n",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
+    {
+      "bearer": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "3. Transfer",
+      "description": "FR-10 – FR-14, UC-01: sesama & antarbank, validasi rekening, favorit, bukti"
+    },
+    {
+      "name": "7. History & Dashboard",
+      "description": "FR-23 – FR-26: riwayat, filter, detail, grafik bulanan, ekspor"
+    },
+    {
+      "name": "4. Payment QRIS",
+      "description": "FR-15 – FR-17: pindai & bayar, QRIS pribadi, QRIS dinamis"
+    },
+    {
+      "name": "6. Virtual Card",
+      "description": "FR-21 – FR-22: buat kartu, detail ber-PIN, bekukan/aktifkan, limit"
+    },
+    {
+      "name": "2. Account",
+      "description": "FR-06 – FR-09: saldo, grafik saldo, kantong, locking"
+    },
+    {
+      "name": "8. Profile & Notification",
+      "description": "FR-27 – FR-29: profil + OTP, keamanan, pengaturan & kotak notifikasi"
+    },
+    {
+      "name": "5. Top-up",
+      "description": "FR-18 – FR-20: pulsa, paket data, token listrik, tagihan, e-wallet"
+    },
+    {
+      "name": "1. Authentication",
+      "description": "FR-01 – FR-05: registrasi, OTP, e-KYC, login, PIN, sesi, pemulihan"
+    }
+  ],
+  "paths": {
+    "/api/v1/me/photo": {
+      "put": {
+        "tags": [
+          "8. Profile & Notification"
+        ],
+        "operationId": "photo",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhotoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/me/notification-settings": {
+      "get": {
+        "tags": [
+          "8. Profile & Notification"
+        ],
+        "operationId": "settings",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "8. Profile & Notification"
+        ],
+        "summary": "Pilih jenis & kanal notifikasi (FR-28)",
+        "operationId": "updateSettings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SettingsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{id}/limit": {
+      "put": {
+        "tags": [
+          "6. Virtual Card"
+        ],
+        "summary": "Atur limit per transaksi (berlaku untuk transaksi berikutnya)",
+        "operationId": "limit",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LimitRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CardDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/accounts/pockets/{id}": {
+      "get": {
+        "tags": [
+          "2. Account"
+        ],
+        "operationId": "pocket",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PocketDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "2. Account"
+        ],
+        "summary": "Ubah nama, tujuan, target kantong",
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePocketRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PocketDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "2. Account"
+        ],
+        "summary": "Hapus kantong; sisa saldo dipindah ke rekening utama",
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/v1/accounts/me/balance-visibility": {
+      "put": {
+        "tags": [
+          "2. Account"
+        ],
+        "summary": "Simpan pilihan sembunyikan/tampilkan saldo (FR-06)",
+        "operationId": "visibility",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BalanceVisibilityRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountOverview"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/transfers": {
+      "post": {
+        "tags": [
+          "3. Transfer"
+        ],
+        "summary": "Eksekusi transfer dengan PIN (FR-10, FR-11). Wajib header Idempotency-Key.",
+        "operationId": "transfer",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransferRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/transfers/{txId}/check-status": {
+      "post": {
+        "tags": [
+          "3. Transfer"
+        ],
+        "summary": "Cek ulang status transfer yang masih diproses (UC-01 A5)",
+        "operationId": "checkStatus",
+        "parameters": [
+          {
+            "name": "txId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/transfers/quote": {
+      "post": {
+        "tags": [
+          "3. Transfer"
+        ],
+        "summary": "Layar konfirmasi: cek nominal, limit, saldo, biaya (UC-01 langkah 3–4)",
+        "operationId": "quote",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuoteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/transfers/inquiry": {
+      "post": {
+        "tags": [
+          "3. Transfer"
+        ],
+        "summary": "Validasi rekening tujuan & tampilkan nama penerima (FR-12)",
+        "operationId": "inquiry",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InquiryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipientDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/transfers/favorites": {
+      "get": {
+        "tags": [
+          "3. Transfer"
+        ],
+        "summary": "Penerima favorit (FR-13)",
+        "operationId": "favorites",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FavoriteDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "3. Transfer"
+        ],
+        "operationId": "addFavorite",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FavoriteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FavoriteDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/topup/quote": {
+      "post": {
+        "tags": [
+          "5. Top-up"
+        ],
+        "summary": "Ringkasan pesanan untuk layar konfirmasi",
+        "operationId": "quote_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/topup/orders": {
+      "post": {
+        "tags": [
+          "5. Top-up"
+        ],
+        "summary": "Bayar pesanan dengan PIN. Wajib header Idempotency-Key.",
+        "operationId": "execute",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExecuteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/qris/simulate-incoming": {
+      "post": {
+        "tags": [
+          "4. Payment QRIS"
+        ],
+        "summary": "[Simulator] Pengguna bank lain membayar ke QRIS pribadi Anda",
+        "operationId": "incoming",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncomingRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/qris/scan": {
+      "post": {
+        "tags": [
+          "4. Payment QRIS"
+        ],
+        "summary": "Validasi hasil pindai QRIS → merchant & nominal sebelum PIN (FR-15)",
+        "operationId": "scan",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScanRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/qris/pay": {
+      "post": {
+        "tags": [
+          "4. Payment QRIS"
+        ],
+        "summary": "Bayar QRIS dengan PIN (FR-15). Wajib header Idempotency-Key.",
+        "operationId": "pay",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PayRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/me/profile-change": {
+      "post": {
+        "tags": [
+          "8. Profile & Notification"
+        ],
+        "summary": "Ajukan perubahan username/email/telepon → OTP dikirim (FR-27)",
+        "operationId": "requestChange",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileDraft"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtpInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/me/profile-change/confirm": {
+      "post": {
+        "tags": [
+          "8. Profile & Notification"
+        ],
+        "summary": "Konfirmasi perubahan profil dengan OTP",
+        "operationId": "confirm",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OtpCodeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/me/pin": {
+      "post": {
+        "tags": [
+          "8. Profile & Notification"
+        ],
+        "summary": "Ubah PIN transaksi (FR-28)",
+        "operationId": "pin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PinChange"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/me/password": {
+      "post": {
+        "tags": [
+          "8. Profile & Notification"
+        ],
+        "summary": "Ubah password (FR-28)",
+        "operationId": "password",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordChange"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/me/notifications/{id}/read": {
+      "post": {
+        "tags": [
+          "8. Profile & Notification"
+        ],
+        "operationId": "read",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/me/notifications/read-all": {
+      "post": {
+        "tags": [
+          "8. Profile & Notification"
+        ],
+        "operationId": "readAll",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards": {
+      "get": {
+        "tags": [
+          "6. Virtual Card"
+        ],
+        "operationId": "list",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CardDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "6. Virtual Card"
+        ],
+        "summary": "Buat virtual card domestik/internasional (FR-21)",
+        "operationId": "create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CardDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{id}/simulate-purchase": {
+      "post": {
+        "tags": [
+          "6. Virtual Card"
+        ],
+        "summary": "[Simulator] Transaksi merchant memakai kartu. Wajib header Idempotency-Key.",
+        "operationId": "purchase",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{id}/freeze": {
+      "post": {
+        "tags": [
+          "6. Virtual Card"
+        ],
+        "operationId": "freeze",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CardDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{id}/details": {
+      "post": {
+        "tags": [
+          "6. Virtual Card"
+        ],
+        "summary": "Lihat nomor lengkap, masa berlaku, CVV — wajib PIN (FR-22)",
+        "operationId": "details",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PinRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CardDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{id}/activate": {
+      "post": {
+        "tags": [
+          "6. Virtual Card"
+        ],
+        "operationId": "activate",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CardDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "tags": [
+          "1. Authentication"
+        ],
+        "summary": "Registrasi akun (FR-01). OTP dikirim ke email/nomor telepon.",
+        "operationId": "register",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/register/verify-otp": {
+      "post": {
+        "tags": [
+          "1. Authentication"
+        ],
+        "summary": "Verifikasi OTP registrasi → akun aktif dan langsung login",
+        "operationId": "verifyRegistration",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyRegistrationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthTokens"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/register/resend-otp": {
+      "post": {
+        "tags": [
+          "1. Authentication"
+        ],
+        "summary": "Kirim ulang OTP registrasi",
+        "operationId": "resend",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResendOtpRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtpInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/refresh": {
+      "post": {
+        "tags": [
+          "1. Authentication"
+        ],
+        "summary": "Tukar refresh token dengan access token baru (refresh token dirotasi)",
+        "operationId": "refresh",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthTokens"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/recovery/verify": {
+      "post": {
+        "tags": [
+          "1. Authentication"
+        ],
+        "summary": "Verifikasi OTP pemulihan → recoveryToken",
+        "operationId": "verifyRecovery",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecoveryVerifyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecoveryVerified"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/recovery/reset": {
+      "post": {
+        "tags": [
+          "1. Authentication"
+        ],
+        "summary": "Setel password/PIN baru dengan recoveryToken",
+        "operationId": "resetCredential",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecoveryResetRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/recovery/request": {
+      "post": {
+        "tags": [
+          "1. Authentication"
+        ],
+        "summary": "Mulai pemulihan password/PIN: kirim OTP (FR-05)",
+        "operationId": "startRecovery",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecoveryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecoveryStarted"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/pin": {
+      "post": {
+        "tags": [
+          "1. Authentication"
+        ],
+        "summary": "Buat PIN transaksi 6 digit (FR-04)",
+        "operationId": "createPin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PinRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/pin/verify": {
+      "post": {
+        "tags": [
+          "1. Authentication"
+        ],
+        "summary": "Verifikasi PIN transaksi tanpa transaksi keuangan (layar PIN setelah login, FR-04). Salah 3x berturut-turut memblokir PIN 5 menit (BR-02).",
+        "operationId": "verifyPin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PinRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "tags": [
+          "1. Authentication"
+        ],
+        "summary": "Logout dari perangkat ini",
+        "operationId": "logout",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/logout-all": {
+      "post": {
+        "tags": [
+          "1. Authentication"
+        ],
+        "summary": "Logout dari semua perangkat (FR-05)",
+        "operationId": "logoutAll",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": [
+          "1. Authentication"
+        ],
+        "summary": "Login dengan username/email/nomor telepon + password (FR-03)",
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthTokens"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/ekyc": {
+      "get": {
+        "tags": [
+          "1. Authentication"
+        ],
+        "summary": "Status e-KYC (PROCESSING → APPROVED/REJECTED setelah ±3 detik)",
+        "operationId": "ekycStatus",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EkycDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "1. Authentication"
+        ],
+        "summary": "Kirim data e-KYC (FR-02, simulasi). NIK berakhiran 0000 akan ditolak.",
+        "operationId": "submitEkyc",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EkycRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EkycDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/biometric/enroll": {
+      "post": {
+        "tags": [
+          "1. Authentication"
+        ],
+        "summary": "Aktifkan login biometrik di perangkat ini (FR-28)",
+        "operationId": "enrollBiometric",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BiometricEnrollRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BiometricEnrollment"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/biometric/disable": {
+      "post": {
+        "tags": [
+          "1. Authentication"
+        ],
+        "summary": "Nonaktifkan login biometrik di semua perangkat",
+        "operationId": "disableBiometric",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/biometric-login": {
+      "post": {
+        "tags": [
+          "1. Authentication"
+        ],
+        "summary": "Login biometrik (FR-03) dengan token perangkat yang dibuka oleh sidik jari/wajah",
+        "operationId": "biometricLogin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BiometricLoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthTokens"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/accounts/pockets": {
+      "get": {
+        "tags": [
+          "2. Account"
+        ],
+        "summary": "Daftar kantong (FR-08)",
+        "operationId": "pockets",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PocketDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "2. Account"
+        ],
+        "summary": "Buat kantong, opsional langsung dikunci sampai tanggal/target (FR-08, FR-09)",
+        "operationId": "create_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePocketRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PocketDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/accounts/pockets/{id}/withdraw": {
+      "post": {
+        "tags": [
+          "2. Account"
+        ],
+        "summary": "Tarik dari kantong; kantong terkunci butuh earlyWithdrawal=true + PIN (BR-06)",
+        "operationId": "withdraw",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WithdrawRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PocketDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/accounts/pockets/{id}/lock": {
+      "post": {
+        "tags": [
+          "2. Account"
+        ],
+        "summary": "Kunci kantong sampai tanggal atau target (FR-09)",
+        "operationId": "lock",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LockPocketRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PocketDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/accounts/pockets/{id}/deposit": {
+      "post": {
+        "tags": [
+          "2. Account"
+        ],
+        "summary": "Isi kantong dari rekening utama (butuh header Idempotency-Key)",
+        "operationId": "deposit",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoveRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PocketDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/transfers/banks": {
+      "get": {
+        "tags": [
+          "3. Transfer"
+        ],
+        "summary": "Daftar bank tujuan (simulasi) beserta biayanya",
+        "operationId": "banks",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BankDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/topup/pln/inquiry": {
+      "get": {
+        "tags": [
+          "5. Top-up"
+        ],
+        "summary": "Cek ID pelanggan PLN (FR-19). Berakhiran 0000 = tidak ditemukan.",
+        "operationId": "pln",
+        "parameters": [
+          {
+            "name": "meterNumber",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlnCustomer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/topup/data-packages": {
+      "get": {
+        "tags": [
+          "5. Top-up"
+        ],
+        "summary": "Deteksi operator dari nomor HP dan daftar paket data (FR-18)",
+        "operationId": "dataPackages",
+        "parameters": [
+          {
+            "name": "phone",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataPackages"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/topup/catalog": {
+      "get": {
+        "tags": [
+          "5. Top-up"
+        ],
+        "summary": "Katalog: operator, nominal, biaya, biller, e-wallet",
+        "operationId": "catalog",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Catalog"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/topup/bills/inquiry": {
+      "get": {
+        "tags": [
+          "5. Top-up"
+        ],
+        "summary": "Cek tagihan PDAM/BPJS/Internet (FR-20)",
+        "operationId": "bill",
+        "parameters": [
+          {
+            "name": "biller",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PDAM",
+                "BPJS",
+                "INTERNET"
+              ]
+            }
+          },
+          {
+            "name": "customerNumber",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BillInquiry"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/qris/my-qr": {
+      "get": {
+        "tags": [
+          "4. Payment QRIS"
+        ],
+        "summary": "QRIS pribadi untuk menerima dana (FR-16); dengan amount = QRIS dinamis (FR-17)",
+        "operationId": "myQr",
+        "parameters": [
+          {
+            "name": "amount",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyQr"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/qris/demo": {
+      "get": {
+        "tags": [
+          "4. Payment QRIS"
+        ],
+        "summary": "[Simulator] Contoh kode QRIS untuk uji tanpa kamera",
+        "operationId": "demo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DemoQr"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/me": {
+      "get": {
+        "tags": [
+          "8. Profile & Notification"
+        ],
+        "summary": "Profil pengguna yang login (FR-27)",
+        "operationId": "me",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/me/notifications": {
+      "get": {
+        "tags": [
+          "8. Profile & Notification"
+        ],
+        "summary": "Kotak notifikasi (FR-29)",
+        "operationId": "notifications",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationPage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/me/notifications/unread-count": {
+      "get": {
+        "tags": [
+          "8. Profile & Notification"
+        ],
+        "operationId": "unread",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/me/notifications/push": {
+      "get": {
+        "tags": [
+          "8. Profile & Notification"
+        ],
+        "summary": "Ambil notifikasi push yang belum ditampilkan perangkat (polling; sekali ambil)",
+        "operationId": "push",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NotificationDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/me/emails": {
+      "get": {
+        "tags": [
+          "8. Profile & Notification"
+        ],
+        "summary": "[Simulator] Kotak keluar email notifikasi",
+        "operationId": "emails",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EmailDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/history": {
+      "get": {
+        "tags": [
+          "7. History & Dashboard"
+        ],
+        "summary": "Riwayat terbaru dulu dengan paginasi; filter & pencarian dapat dikombinasikan (FR-23)",
+        "operationId": "list_1",
+        "parameters": [
+          {
+            "name": "range",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "ALL",
+              "enum": [
+                "ALL",
+                "LAST_7_DAYS",
+                "LAST_30_DAYS",
+                "THIS_MONTH",
+                "LAST_MONTH",
+                "CUSTOM"
+              ]
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "DEPOSIT",
+                "TRANSFER",
+                "QRIS",
+                "TOPUP",
+                "POCKET",
+                "CARD"
+              ]
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "IN",
+                "OUT",
+                "INTERNAL"
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "SUCCESS",
+                "PROCESSING",
+                "FAILED"
+              ]
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/HistoryPage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/history/{txId}": {
+      "get": {
+        "tags": [
+          "7. History & Dashboard"
+        ],
+        "summary": "Detail transaksi + baris jurnal ledger (FR-24)",
+        "operationId": "detail",
+        "parameters": [
+          {
+            "name": "txId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/history/monthly-summary": {
+      "get": {
+        "tags": [
+          "7. History & Dashboard"
+        ],
+        "summary": "Pemasukan & pengeluaran per bulan untuk grafik dashboard (FR-25)",
+        "operationId": "monthly",
+        "parameters": [
+          {
+            "name": "months",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 6
+            }
+          },
+          {
+            "name": "endMonthsBack",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MonthSummary"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/history/export": {
+      "get": {
+        "tags": [
+          "7. History & Dashboard"
+        ],
+        "summary": "Ekspor riwayat sesuai filter aktif ke CSV atau PDF (FR-26, Web)",
+        "operationId": "export",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "csv"
+            }
+          },
+          {
+            "name": "range",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "ALL",
+              "enum": [
+                "ALL",
+                "LAST_7_DAYS",
+                "LAST_30_DAYS",
+                "THIS_MONTH",
+                "LAST_MONTH",
+                "CUSTOM"
+              ]
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "DEPOSIT",
+                "TRANSFER",
+                "QRIS",
+                "TOPUP",
+                "POCKET",
+                "CARD"
+              ]
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "IN",
+                "OUT",
+                "INTERNAL"
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "SUCCESS",
+                "PROCESSING",
+                "FAILED"
+              ]
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/sessions": {
+      "get": {
+        "tags": [
+          "1. Authentication"
+        ],
+        "summary": "Daftar sesi/perangkat aktif",
+        "operationId": "sessions",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SessionDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/accounts/me": {
+      "get": {
+        "tags": [
+          "2. Account"
+        ],
+        "summary": "Ringkasan rekening utama & saldo (FR-06)",
+        "operationId": "overview",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountOverview"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/accounts/me/balance-chart": {
+      "get": {
+        "tags": [
+          "2. Account"
+        ],
+        "summary": "Grafik saldo harian/mingguan/bulanan (FR-07)",
+        "operationId": "chart",
+        "parameters": [
+          {
+            "name": "period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "DAILY",
+              "enum": [
+                "DAILY",
+                "WEEKLY",
+                "MONTHLY"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BalanceChart"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/transfers/favorites/{id}": {
+      "delete": {
+        "tags": [
+          "3. Transfer"
+        ],
+        "operationId": "removeFavorite",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PhotoRequest": {
+        "type": "object",
+        "properties": {
+          "photoUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "UserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING_OTP",
+              "ACTIVE",
+              "FINANCIAL_ENABLED",
+              "KYC_REJECTED"
+            ]
+          },
+          "ekycStatus": {
+            "type": "string",
+            "enum": [
+              "PROCESSING",
+              "APPROVED",
+              "REJECTED"
+            ]
+          },
+          "hasPin": {
+            "type": "boolean"
+          },
+          "biometricEnabled": {
+            "type": "boolean"
+          },
+          "photoUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "SettingsRequest": {
+        "type": "object",
+        "properties": {
+          "types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "INCOMING",
+                "OUTGOING",
+                "SECURITY",
+                "INFO"
+              ]
+            },
+            "uniqueItems": true
+          },
+          "channels": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "PUSH",
+                "IN_APP",
+                "EMAIL"
+              ]
+            },
+            "uniqueItems": true
+          }
+        }
+      },
+      "SettingsDto": {
+        "type": "object",
+        "properties": {
+          "types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "INCOMING",
+                "OUTGOING",
+                "SECURITY",
+                "INFO"
+              ]
+            },
+            "uniqueItems": true
+          },
+          "channels": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "PUSH",
+                "IN_APP",
+                "EMAIL"
+              ]
+            },
+            "uniqueItems": true
+          }
+        }
+      },
+      "LimitRequest": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "required": [
+          "limit"
+        ]
+      },
+      "CardDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "cardholderName": {
+            "type": "string"
+          },
+          "maskedNumber": {
+            "type": "string"
+          },
+          "last4": {
+            "type": "string"
+          },
+          "expiry": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "FROZEN"
+            ]
+          },
+          "usageScope": {
+            "type": "string",
+            "enum": [
+              "DOMESTIC",
+              "INTERNATIONAL"
+            ]
+          },
+          "transactionLimit": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UpdatePocketRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "target": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "PocketDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "target": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "balance": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lockType": {
+            "type": "string",
+            "enum": [
+              "NONE",
+              "DATE",
+              "TARGET"
+            ]
+          },
+          "lockUntil": {
+            "type": "string",
+            "format": "date"
+          },
+          "locked": {
+            "type": "boolean"
+          },
+          "lockDescription": {
+            "type": "string"
+          },
+          "progress": {
+            "type": "number",
+            "format": "float"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "BalanceVisibilityRequest": {
+        "type": "object",
+        "properties": {
+          "hidden": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "hidden"
+        ]
+      },
+      "AccountOverview": {
+        "type": "object",
+        "properties": {
+          "ownerName": {
+            "type": "string"
+          },
+          "accountNumber": {
+            "type": "string"
+          },
+          "balance": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "pocketsTotal": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "balanceHidden": {
+            "type": "boolean"
+          },
+          "financialEnabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TransferRequest": {
+        "type": "object",
+        "properties": {
+          "bankCode": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accountNumber": {
+            "type": "string",
+            "minLength": 1
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "note": {
+            "type": "string"
+          },
+          "pin": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accountNumber",
+          "amount",
+          "bankCode",
+          "pin"
+        ]
+      },
+      "TransactionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "DEPOSIT",
+              "TRANSFER",
+              "QRIS",
+              "TOPUP",
+              "POCKET",
+              "CARD"
+            ]
+          },
+          "categoryLabel": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "SUCCESS",
+              "PROCESSING",
+              "FAILED"
+            ]
+          },
+          "statusLabel": {
+            "type": "string"
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "IN",
+              "OUT",
+              "INTERNAL"
+            ]
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fee": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "fromName": {
+            "type": "string"
+          },
+          "fromDetail": {
+            "type": "string"
+          },
+          "toName": {
+            "type": "string"
+          },
+          "toDetail": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
+          "statusReason": {
+            "type": "string"
+          },
+          "extra": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "QuoteRequest": {
+        "type": "object",
+        "properties": {
+          "bankCode": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accountNumber": {
+            "type": "string",
+            "minLength": 1
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "accountNumber",
+          "amount",
+          "bankCode"
+        ]
+      },
+      "QuoteDto": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "$ref": "#/components/schemas/RecipientDto"
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fee": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "note": {
+            "type": "string"
+          },
+          "balance": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "balanceAfter": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "RecipientDto": {
+        "type": "object",
+        "properties": {
+          "bankCode": {
+            "type": "string"
+          },
+          "bankName": {
+            "type": "string"
+          },
+          "accountNumber": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "favorite": {
+            "type": "boolean"
+          }
+        }
+      },
+      "InquiryRequest": {
+        "type": "object",
+        "properties": {
+          "bankCode": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accountNumber": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accountNumber",
+          "bankCode"
+        ]
+      },
+      "FavoriteRequest": {
+        "type": "object",
+        "properties": {
+          "bankCode": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accountNumber": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accountNumber",
+          "bankCode"
+        ]
+      },
+      "FavoriteDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "bankCode": {
+            "type": "string"
+          },
+          "bankName": {
+            "type": "string"
+          },
+          "accountNumber": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "addedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "OrderRequest": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "PULSA",
+              "DATA",
+              "PLN",
+              "BILL",
+              "EWALLET"
+            ]
+          },
+          "phone": {
+            "type": "string"
+          },
+          "nominal": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "productId": {
+            "type": "string"
+          },
+          "meterNumber": {
+            "type": "string"
+          },
+          "biller": {
+            "type": "string",
+            "enum": [
+              "PDAM",
+              "BPJS",
+              "INTERNET"
+            ]
+          },
+          "customerNumber": {
+            "type": "string"
+          },
+          "wallet": {
+            "type": "string",
+            "enum": [
+              "GOPAY",
+              "OVO",
+              "DANA",
+              "SHOPEEPAY"
+            ]
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "PULSA",
+              "DATA",
+              "PLN",
+              "BILL",
+              "EWALLET"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "targetName": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fee": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "details": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "billKey": {
+            "type": "string"
+          }
+        }
+      },
+      "ExecuteRequest": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "PULSA",
+              "DATA",
+              "PLN",
+              "BILL",
+              "EWALLET"
+            ]
+          },
+          "phone": {
+            "type": "string"
+          },
+          "nominal": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "productId": {
+            "type": "string"
+          },
+          "meterNumber": {
+            "type": "string"
+          },
+          "biller": {
+            "type": "string",
+            "enum": [
+              "PDAM",
+              "BPJS",
+              "INTERNET"
+            ]
+          },
+          "customerNumber": {
+            "type": "string"
+          },
+          "wallet": {
+            "type": "string",
+            "enum": [
+              "GOPAY",
+              "OVO",
+              "DANA",
+              "SHOPEEPAY"
+            ]
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "pin": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "pin"
+        ]
+      },
+      "IncomingRequest": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "payerName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "amount"
+        ]
+      },
+      "ScanRequest": {
+        "type": "object",
+        "properties": {
+          "payload": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "payload"
+        ]
+      },
+      "ScanResult": {
+        "type": "object",
+        "properties": {
+          "merchantName": {
+            "type": "string"
+          },
+          "merchantId": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "mcc": {
+            "type": "string"
+          },
+          "dynamic": {
+            "type": "boolean"
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sameBank": {
+            "type": "boolean"
+          },
+          "issuer": {
+            "type": "string"
+          },
+          "payload": {
+            "type": "string"
+          }
+        }
+      },
+      "PayRequest": {
+        "type": "object",
+        "properties": {
+          "payload": {
+            "type": "string",
+            "minLength": 1
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "pin": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "payload",
+          "pin"
+        ]
+      },
+      "ProfileDraft": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          }
+        }
+      },
+      "OtpInfo": {
+        "type": "object",
+        "properties": {
+          "sentTo": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "demoCode": {
+            "type": "string"
+          }
+        }
+      },
+      "OtpCodeRequest": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "code"
+        ]
+      },
+      "PinChange": {
+        "type": "object",
+        "properties": {
+          "oldPin": {
+            "type": "string",
+            "minLength": 1
+          },
+          "newPin": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "newPin",
+          "oldPin"
+        ]
+      },
+      "MessageResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "PasswordChange": {
+        "type": "object",
+        "properties": {
+          "oldPassword": {
+            "type": "string",
+            "minLength": 1
+          },
+          "newPassword": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "newPassword",
+          "oldPassword"
+        ]
+      },
+      "CreateRequest": {
+        "type": "object",
+        "properties": {
+          "usageScope": {
+            "type": "string",
+            "enum": [
+              "DOMESTIC",
+              "INTERNATIONAL"
+            ]
+          }
+        },
+        "required": [
+          "usageScope"
+        ]
+      },
+      "PurchaseRequest": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "international": {
+            "type": "boolean"
+          },
+          "merchant": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "amount"
+        ]
+      },
+      "PinRequest": {
+        "type": "object",
+        "properties": {
+          "pin": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "pin"
+        ]
+      },
+      "CardDetails": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "cardholderName": {
+            "type": "string"
+          },
+          "cardNumber": {
+            "type": "string"
+          },
+          "expiry": {
+            "type": "string"
+          },
+          "cvv": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "FROZEN"
+            ]
+          },
+          "usageScope": {
+            "type": "string",
+            "enum": [
+              "DOMESTIC",
+              "INTERNATIONAL"
+            ]
+          },
+          "transactionLimit": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "RegisterRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "maxLength": 30,
+            "minLength": 4
+          },
+          "email": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "password",
+          "username"
+        ]
+      },
+      "RegisterResponse": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "otp": {
+            "$ref": "#/components/schemas/OtpInfo"
+          }
+        }
+      },
+      "VerifyRegistrationRequest": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "code": {
+            "type": "string",
+            "minLength": 1
+          },
+          "deviceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "deviceName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "deviceId",
+          "userId"
+        ]
+      },
+      "AuthTokens": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "accessTokenExpiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "refreshToken": {
+            "type": "string"
+          },
+          "refreshTokenExpiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sessionId": {
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserDto"
+          }
+        }
+      },
+      "ResendOtpRequest": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "userId"
+        ]
+      },
+      "RefreshRequest": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "refreshToken"
+        ]
+      },
+      "RecoveryVerifyRequest": {
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "PASSWORD",
+              "PIN"
+            ]
+          },
+          "code": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "code",
+          "identifier",
+          "type"
+        ]
+      },
+      "RecoveryVerified": {
+        "type": "object",
+        "properties": {
+          "recoveryToken": {
+            "type": "string"
+          }
+        }
+      },
+      "RecoveryResetRequest": {
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "PASSWORD",
+              "PIN"
+            ]
+          },
+          "recoveryToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "newSecret": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "identifier",
+          "newSecret",
+          "recoveryToken",
+          "type"
+        ]
+      },
+      "RecoveryRequest": {
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "PASSWORD",
+              "PIN"
+            ]
+          }
+        },
+        "required": [
+          "identifier",
+          "type"
+        ]
+      },
+      "RecoveryStarted": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "otp": {
+            "$ref": "#/components/schemas/OtpInfo"
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "deviceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "deviceName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "deviceId",
+          "identifier",
+          "password"
+        ]
+      },
+      "EkycRequest": {
+        "type": "object",
+        "properties": {
+          "nik": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "selfieReference": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "nik",
+          "selfieReference"
+        ]
+      },
+      "EkycDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PROCESSING",
+              "APPROVED",
+              "REJECTED"
+            ]
+          },
+          "nikMasked": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "submittedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "decidedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "BiometricEnrollRequest": {
+        "type": "object",
+        "properties": {
+          "deviceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "deviceId"
+        ]
+      },
+      "BiometricEnrollment": {
+        "type": "object",
+        "properties": {
+          "biometricToken": {
+            "type": "string"
+          }
+        }
+      },
+      "BiometricLoginRequest": {
+        "type": "object",
+        "properties": {
+          "biometricToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "deviceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "deviceName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "biometricToken",
+          "deviceId"
+        ]
+      },
+      "CreatePocketRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "target": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lockType": {
+            "type": "string",
+            "enum": [
+              "NONE",
+              "DATE",
+              "TARGET"
+            ]
+          },
+          "lockUntil": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "WithdrawRequest": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "format": "int64",
+            "exclusiveMinimum": 0
+          },
+          "earlyWithdrawal": {
+            "type": "boolean"
+          },
+          "pin": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "amount"
+        ]
+      },
+      "LockPocketRequest": {
+        "type": "object",
+        "properties": {
+          "lockType": {
+            "type": "string",
+            "enum": [
+              "NONE",
+              "DATE",
+              "TARGET"
+            ]
+          },
+          "lockUntil": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "required": [
+          "lockType"
+        ]
+      },
+      "MoveRequest": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "format": "int64",
+            "exclusiveMinimum": 0
+          }
+        },
+        "required": [
+          "amount"
+        ]
+      },
+      "BankDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "internal": {
+            "type": "boolean"
+          },
+          "fee": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "PlnCustomer": {
+        "type": "object",
+        "properties": {
+          "meterNumber": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "tariff": {
+            "type": "string"
+          }
+        }
+      },
+      "DataPackages": {
+        "type": "object",
+        "properties": {
+          "operator": {
+            "$ref": "#/components/schemas/Operator"
+          },
+          "packages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Product"
+            }
+          }
+        }
+      },
+      "Operator": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "prefixes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "Catalog": {
+        "type": "object",
+        "properties": {
+          "operators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Operator"
+            }
+          },
+          "pulsaNominals": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "plnNominals": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "pulsaFee": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "plnFee": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "billFee": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ewalletFee": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ewalletMin": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ewalletMax": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "billers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OptionDto"
+            }
+          },
+          "ewallets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OptionDto"
+            }
+          }
+        }
+      },
+      "OptionDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "BillInquiry": {
+        "type": "object",
+        "properties": {
+          "biller": {
+            "type": "string",
+            "enum": [
+              "PDAM",
+              "BPJS",
+              "INTERNET"
+            ]
+          },
+          "billerLabel": {
+            "type": "string"
+          },
+          "customerNumber": {
+            "type": "string"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "period": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fee": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "MyQr": {
+        "type": "object",
+        "properties": {
+          "payload": {
+            "type": "string"
+          },
+          "dynamic": {
+            "type": "boolean"
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "accountName": {
+            "type": "string"
+          },
+          "accountNumber": {
+            "type": "string"
+          }
+        }
+      },
+      "DemoQr": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "payload": {
+            "type": "string"
+          }
+        }
+      },
+      "NotificationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "INCOMING",
+              "OUTGOING",
+              "SECURITY",
+              "INFO"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "transactionId": {
+            "type": "string"
+          },
+          "read": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "NotificationPage": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotificationDto"
+            }
+          },
+          "unread": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasMore": {
+            "type": "boolean"
+          }
+        }
+      },
+      "EmailDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "sentAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "HistoryPage": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TransactionDto"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalItems": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "hasMore": {
+            "type": "boolean"
+          }
+        }
+      },
+      "JournalLineDto": {
+        "type": "object",
+        "properties": {
+          "account": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "memo": {
+            "type": "string"
+          },
+          "postedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TransactionDetail": {
+        "type": "object",
+        "properties": {
+          "transaction": {
+            "$ref": "#/components/schemas/TransactionDto"
+          },
+          "journal": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JournalLineDto"
+            }
+          }
+        }
+      },
+      "MonthSummary": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "month": {
+            "type": "string",
+            "format": "date"
+          },
+          "income": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "expense": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "net": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "SessionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "deviceId": {
+            "type": "string"
+          },
+          "deviceName": {
+            "type": "string"
+          },
+          "authMethod": {
+            "type": "string",
+            "enum": [
+              "PASSWORD",
+              "BIOMETRIC"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastSeenAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "current": {
+            "type": "boolean"
+          }
+        }
+      },
+      "BalanceChart": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "enum": [
+              "DAILY",
+              "WEEKLY",
+              "MONTHLY"
+            ]
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BalancePoint"
+            }
+          }
+        }
+      },
+      "BalancePoint": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "balance": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

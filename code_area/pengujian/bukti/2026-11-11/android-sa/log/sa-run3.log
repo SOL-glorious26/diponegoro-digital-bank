@@ -1,0 +1,5 @@
+PASS  SA-13  virtual card: buat, detail dengan PIN, bekukan  — kartu Virtual card •••• •••• •••• 9682 berhasil dibuat (status: Aktif) (58 dtk)
+PASS  SA-28  matikan notifikasi transaksi keluar → tidak dikirim  — tidak ada notifikasi keluar baru; setelan dipulihkan (OUTGOING aktif lagi) (51 dtk)
+PASS  SA-16  notifikasi push dana masuk ≤ 15 detik  — muncul ±6.5 detik setelah transfer dari andi (27 dtk)
+
+3/3 PASS

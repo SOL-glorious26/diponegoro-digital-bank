@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Varian online (pengembangan): backend lokal diakses lewat HTTP polos, mis. http://10.0.2.2:8080 (emulator)
+  atau http://<IP-laptop>:8080 (HP di Wi-Fi yang sama). Untuk rilis/cloud wajib HTTPS: ubah menjadi "false"
+  setelah backend dipasang di belakang TLS (SAD-DDB-001 Bab IX, NFR-06).
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>

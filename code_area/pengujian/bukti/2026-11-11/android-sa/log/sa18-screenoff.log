@@ -1,0 +1,10 @@
+args: [-p, com.diponegoro.digitalbank, -c, android.intent.category.LAUNCHER, 1]
+ arg: "-p"
+ arg: "com.diponegoro.digitalbank"
+ arg: "-c"
+ arg: "android.intent.category.LAUNCHER"
+ arg: "1"
+data="com.diponegoro.digitalbank"
+data="android.intent.category.LAUNCHER"
+login selesai, layar dimatikan
+setelah bangun: Diponegoro Digital Bank | Login untuk melanjutkan. Akun demo: demo / Demo@1234 (PIN 123456) | Username / email / nomor telepon | Password | Lihat | Sesi berakhi

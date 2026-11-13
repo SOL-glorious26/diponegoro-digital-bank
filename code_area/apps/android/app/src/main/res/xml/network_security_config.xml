@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Default: hanya HTTPS (NFR-06). Varian online menimpa berkas ini untuk backend lokal saat pengembangan. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+</network-security-config>

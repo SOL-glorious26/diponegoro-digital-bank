@@ -1,0 +1,29 @@
+args: [-p, com.diponegoro.digitalbank, -c, android.intent.category.LAUNCHER, 1]
+ arg: "-p"
+ arg: "com.diponegoro.digitalbank"
+ arg: "-c"
+ arg: "android.intent.category.LAUNCHER"
+ arg: "1"
+data="com.diponegoro.digitalbank"
+data="android.intent.category.LAUNCHER"
+args: [-p, com.diponegoro.digitalbank, -c, android.intent.category.LAUNCHER, 1]
+ arg: "-p"
+ arg: "com.diponegoro.digitalbank"
+ arg: "-c"
+ arg: "android.intent.category.LAUNCHER"
+ arg: "1"
+data="com.diponegoro.digitalbank"
+data="android.intent.category.LAUNCHER"
+PASS  SA-21  registrasi → OTP → e-KYC → PIN sampai transaksi aktif (+ tombol Kembali setelah OTP, DEF-07)  — pengguna samwcceimz; Kembali dari e-KYC tidak menuju OTP; saldo awal Rp5.000.000 (110 dtk)
+FAIL  SA-26  bayar tagihan, pembayaran kedua di periode sama ditolak  — timeout menunggu /berhasil/i — layar: Masukkan PIN Transaksi | Tagihan Air PDAM — total Rp137.500 | PIN 6 digit | PIN salah. Sisa percobaan: 2 | Batal | Konfirmasi (56 dtk)
+args: [-p, com.diponegoro.digitalbank, -c, android.intent.category.LAUNCHER, 1]
+ arg: "-p"
+ arg: "com.diponegoro.digitalbank"
+ arg: "-c"
+ arg: "android.intent.category.LAUNCHER"
+ arg: "1"
+data="com.diponegoro.digitalbank"
+data="android.intent.category.LAUNCHER"
+PASS  SA-02  PIN salah 3 kali → diblokir sementara (akun baru)  — PIN salah. Sisa percobaan: 1 → PIN sedang diblokir sementara. Gunakan pemulihan PIN atau coba lagi nanti. → PIN sedang diblokir sementara. Gunakan pemulihan PIN atau coba lagi nanti. (51 dtk)
+
+2/3 PASS

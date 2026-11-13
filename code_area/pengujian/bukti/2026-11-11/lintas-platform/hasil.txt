@@ -1,0 +1,5 @@
+PASS  LP-01  transfer Android (demo) → saldo & riwayat andi di Web  — nominal Rp12.278, ref DDB261111FE2A0403, saldo Web Rp2.380.759 (harapan Rp2.380.759)
+PASS  LP-02  QRIS dinamis Web (andi) dibayar Android (demo)  — nominal Rp7.571 tampil di Android; saldo andi Web Rp2.388.330 (harapan Rp2.388.330)
+PASS  LP-03  top-up e-wallet di Web (demo) tampil di riwayat Android  — ref DDB2611115C631939, total Rp24.173
+PASS  LP-04  logout semua perangkat dari Android → Web kembali ke login  — sesi Web terlihat di Android: true; pesan Web: Sesi Anda telah berakhir
+PASS  —  tanpa error JavaScript di Web

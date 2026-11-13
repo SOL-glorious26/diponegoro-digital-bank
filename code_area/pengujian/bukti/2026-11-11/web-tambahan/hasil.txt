@@ -1,0 +1,2 @@
+PASS  WB-12  access token kedaluwarsa diperbarui otomatis; refresh ditolak → halaman masuk  — muat ulang setelah 3 menit tetap masuk; navigasi dalam aplikasi tetap berjalan; setelah dicabut → login dengan pesan sesi berakhir
+PASS  —  tanpa error JavaScript di Web

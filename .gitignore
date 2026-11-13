@@ -1,0 +1,39 @@
+# ===== Rahasia: JANGAN PERNAH di-commit =====
+.env
+**/keystore/
+**/keystore.properties
+*.jks
+*.keystore
+**/local.properties
+*.pem
+
+# Tanda tangan PM (hanya dipakai saat dokumen final)
+**/project_manager_sign.png
+
+# ===== Hasil build & dependensi (bisa dibuat ulang) =====
+node_modules/
+dist/
+**/.gradle/
+**/build/
+**/target/
+**/.idea/
+*.iml
+.kotlin/
+*.apk
+**/rilis/
+
+# Database lokal H2 milik backend (dibuat otomatis saat jalan)
+code_area/backend/data/
+
+# Hasil uji sementara (bukti resmi ada di pengujian/bukti/)
+code_area/pengujian/hasil/
+
+# ===== Arsip & versi lama (tetap disimpan di laptop PM) =====
+code_area/_arsip/
+documents_area/_temp_versi_lama/
+
+# ===== Sampah sistem =====
+.DS_Store
+Thumbs.db
+~$*.docx
+~$*.xlsx

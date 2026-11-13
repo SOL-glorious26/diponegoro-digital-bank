@@ -1,0 +1,2 @@
+NF-01 Android: waktu buka dingin (am start -W, layar login pertama), emulator Pixel 8 API 37, 5 kali
+TotalTime (ms): 1339, 1326, 1370, 1348, 1364  → maks 1370 ms ≤ 2000 ms: LULUS

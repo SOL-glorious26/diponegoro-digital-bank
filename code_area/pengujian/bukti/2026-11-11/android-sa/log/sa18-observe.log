@@ -1,0 +1,20 @@
+args: [-p, com.diponegoro.digitalbank, -c, android.intent.category.LAUNCHER, 1]
+ arg: "-p"
+ arg: "com.diponegoro.digitalbank"
+ arg: "-c"
+ arg: "android.intent.category.LAUNCHER"
+ arg: "1"
+data="com.diponegoro.digitalbank"
+data="android.intent.category.LAUNCHER"
+login selesai
+32s layar=Awake :: Saldo rekening utama | Rp24.387.052 | Sembunyikan saldo | DEMO • 1400 1234 56 | Di kantong
+64s layar=Awake :: Saldo rekening utama | Rp24.387.052 | Sembunyikan saldo | DEMO • 1400 1234 56 | Di kantong
+96s layar=Awake :: Saldo rekening utama | Rp24.387.052 | Sembunyikan saldo | DEMO • 1400 1234 56 | Di kantong
+129s layar=Awake :: Saldo rekening utama | Rp24.387.052 | Sembunyikan saldo | DEMO • 1400 1234 56 | Di kantong
+161s layar=Awake :: Saldo rekening utama | Rp24.387.052 | Sembunyikan saldo | DEMO • 1400 1234 56 | Di kantong
+193s layar=Awake :: Saldo rekening utama | Rp24.387.052 | Sembunyikan saldo | DEMO • 1400 1234 56 | Di kantong
+225s layar=Awake :: Saldo rekening utama | Rp24.387.052 | Sembunyikan saldo | DEMO • 1400 1234 56 | Di kantong
+257s layar=Awake :: Saldo rekening utama | Rp24.387.052 | Sembunyikan saldo | DEMO • 1400 1234 56 | Di kantong
+289s layar=Awake :: Saldo rekening utama | Rp24.387.052 | Sembunyikan saldo | DEMO • 1400 1234 56 | Di kantong
+321s layar=Awake :: Diponegoro Digital Bank | Login untuk melanjutkan. Akun demo: demo / Demo@1234 (PIN 123456
+SESI BERAKHIR terdeteksi

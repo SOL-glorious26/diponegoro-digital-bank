@@ -1,0 +1,10 @@
+PASS  SA-06  transfer antarbank timeout (Mandiri 8888888888) → diproses, lalu final via cek status  — Diproses → Berhasil setelah "Periksa ulang status"; total debit tepat Rp12.500 (86 dtk)
+PASS  SA-26  bayar tagihan, pembayaran kedua di periode sama ditolak  — Tagihan Air PDAM periode November 2026 sudah lunas (75 dtk)
+FAIL  SA-13  virtual card: buat, detail dengan PIN, bekukan  — timeout menunggu /^Bekukan/ — layar: Saldo rekening utama | Rp24.715.052 | Sembunyikan saldo | DEMO • 1400 1234 56 | Di kantong: Rp20.000 | Transfer | Bayar QRIS | Terima QRIS | Top-up | Kantong | Virtual Card | Grafik Saldo | Analitik | Bulan ini (Nov 2026) | (65 dtk)
+PASS  SA-14  riwayat: filter Keluar, detail, analitik  — 3 transaksi keluar tampil; detail dan analitik terbuka (29 dtk)
+PASS  SA-27  grafik saldo sesuai saldo dan riwayat  — titik terakhir Rp24.715.052 = saldo backend (25 dtk)
+FAIL  SA-28  matikan notifikasi transaksi keluar → tidak dikirim  — setelan OUTGOING tidak tersimpan: {"types":["INCOMING","OUTGOING","SECURITY","INFO"],"channels":["PUSH","IN_APP"]} (21 dtk)
+FAIL  SA-16  notifikasi push dana masuk ≤ 15 detik  — Command failed: C:\Users\user\AppData\Local\Android\Sdk\platform-tools\adb.exe shell cmd notification clear-all (19 dtk)
+PASS  SA-17  konsistensi dua perangkat: total saldo demo + andi tetap  — demo −Rp9.000, andi +Rp9.000, total tetap Rp27.125.882 (34 dtk)
+
+5/8 PASS

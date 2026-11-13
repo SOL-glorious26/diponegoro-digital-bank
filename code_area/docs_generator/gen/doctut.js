@@ -1,0 +1,344 @@
+const path = require("path");
+const S = require("./ddbstyle");
+const { D, P, H1, H2, H3, B, NL, CAP, NOTE, table, img, PW } = S;
+const { Paragraph, TextRun, Table, TableRow, TableCell, WidthType, ShadingType, BorderStyle } = D;
+const [, , FIG, OUT, LOGO] = process.argv;
+
+function code(src) {
+  const bd = { style: BorderStyle.SINGLE, size: 4, color: "808080" };
+  return new Table({ width: { size: PW, type: WidthType.DXA }, columnWidths: [PW], rows: [new TableRow({ children: [new TableCell({
+    width: { size: PW, type: WidthType.DXA }, borders: { top: bd, bottom: bd, left: bd, right: bd },
+    shading: { fill: "F7F7F7", type: ShadingType.CLEAR, color: "auto" }, margins: { top: 80, bottom: 80, left: 140, right: 140 },
+    children: src.replace(/^\n/, "").replace(/\s+$/, "").split("\n").map((l) => new Paragraph({ spacing: { after: 0, line: 240 },
+      children: [new TextRun({ text: l.length ? l : " ", font: "Consolas", size: 18, color: "000000" })] })) })] })] });
+}
+const TIP = (t) => P("**Tips:** " + t);
+const WARN = (t) => P("**Perhatian:** " + t);
+
+const meta = {
+  docLabel: "Dokumen Pendamping Dokumen 6 dan 7", title: "Panduan Uji Aplikasi di Ponsel",
+  subtitle: "Tutorial Lengkap Memasang dan Mencoba Aplikasi Android Diponegoro Digital Bank di Ponsel Sungguhan",
+  code: "TUT-DDB-001-AND", version: "1.1", statusShort: "Siap Dipakai Tim",
+  status: "Versi 1.0 – siap dipakai anggota tim dan penguji; diperbarui setelah uji ponsel pertama (19–22 November 2026)",
+  module: "Uji aplikasi Android (varian demo dan online) pada ponsel", createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager)",
+  updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager)", team: "Kelompok Jaran Goyang – seluruh anggota (penguji: Steven, Gracia, Grace, Permata)",
+  refs: "DVM-DDB-001-AND v0.9; DVM-DDB-001-BE v0.9.1; FSD-DDB-001 v0.9.1; backend/run-local.ps1",
+  date: "12 November 2026", logo: LOGO,
+  revisions: [["1.0", "11 Nov 2026", "Salomo P.G. Hokoyoku", "Versi pertama: persiapan ponsel, varian demo, varian online lewat Wi-Fi/hotspot/ngrok, skenario uji, troubleshooting."],
+    ["1.1", "12 Nov 2026", "Salomo P.G. Hokoyoku", "Path proyek Android diperbarui ke apps/android. Skenario U-01–U-20 sudah diotomasi di emulator (pengujian/android/sa-android.mjs, STD-DDB-001 SA-01–SA-28); uji di ponsel fisik tetap diperlukan untuk kamera QRIS (U-08)."]],
+};
+
+const body = [
+  H1("BAB I  PENDAHULUAN"),
+  H2("1.1 Tujuan"),
+  P("Panduan ini menjelaskan langkah demi langkah cara memasang dan mencoba aplikasi Android Diponegoro Digital Bank di ponsel sungguhan, mulai dari menyiapkan ponsel sampai menjalankan skenario uji. Panduan ditulis untuk anggota tim yang belum pernah memasang aplikasi dari Android Studio."),
+  H2("1.2 Pilih Cara Uji"),
+  table(["Cara", "Yang dibutuhkan", "Hasil", "Waktu"], [
+    ["A. APK demo (Bab IV)", "Ponsel + berkas APK demo", "Semua layar dapat dicoba dengan data simulasi di dalam aplikasi; tidak perlu server", "± 10 menit"],
+    ["B. APK online, satu Wi-Fi (Bab V)", "Ponsel + laptop menjalankan backend, satu jaringan Wi-Fi", "Data nyata dari backend; transaksi terlihat di perangkat lain dan di Web", "± 30 menit"],
+    ["C. APK online lewat hotspot atau ngrok (Bab VI)", "Seperti B, bila Wi-Fi kampus memblokir antarperangkat", "Sama dengan B", "± 30–40 menit"],
+  ], [2300, 2500, 3170, 1100], { boldFirst: true, size: 18 }),
+  CAP("Tabel 1.1 Pilihan cara uji"),
+  TIP("Untuk demo di depan dosen, siapkan kedua APK di ponsel. APK demo menjadi cadangan bila jaringan bermasalah. Keduanya dapat terpasang bersamaan karena application ID-nya berbeda."),
+  H2("1.3 Ringkasan Langkah"),
+  ...NL([
+    "Siapkan ponsel: aktifkan Opsi Pengembang dan USB debugging (Bab III).",
+    "Untuk cara A: build atau minta APK demo, pasang, login (Bab IV).",
+    "Untuk cara B/C: jalankan backend di laptop, buka firewall, uji alamat dari browser ponsel, build APK online dengan alamat laptop, pasang, izinkan Nearby devices, login (Bab V–VI).",
+    "Jalankan skenario uji dan catat hasilnya di Lampiran A (Bab VII).",
+    "Bereskan: hentikan backend, hapus aturan firewall, matikan USB debugging (Bab IX).",
+  ]),
+
+  H1("BAB II  PERSIAPAN"),
+  H2("2.1 Daftar Periksa Perangkat"),
+  table(["Perangkat", "Syarat", "Keterangan"], [
+    ["Ponsel Android", "Android 7.0 (API 24) atau lebih baru", "Disarankan baterai > 50%; Android 17 perlu langkah izin tambahan (Bab 5.7)"],
+    ["Kabel USB data", "Bukan kabel khusus pengisian daya", "Diperlukan untuk adb; tidak perlu bila APK dikirim lewat file"],
+    ["Laptop Windows 10/11", "Android Studio terpasang (SDK 37, platform-tools)", "Untuk build APK dan menjalankan backend"],
+    ["Kode proyek", "Folder submit_progress_digital_banking_project", "Berisi backend/, apps/android/ (aplikasi Android), dan apps/web/ (aplikasi Web)"],
+    ["Jaringan (cara B)", "Laptop dan ponsel pada Wi-Fi yang sama", "Wi-Fi rumah atau hotspot ponsel; Wi-Fi kampus sering memblokir (Bab VI)"],
+    ["Hak administrator laptop (cara B)", "Untuk membuka port 8080 di Windows Firewall", "Sekali saja"],
+  ], [2300, 3100, 3670], { boldFirst: true, size: 18 }),
+  CAP("Tabel 2.1 Perangkat yang dibutuhkan"),
+  H2("2.2 Gambaran Koneksi"),
+  P("Pada cara B, aplikasi di ponsel menghubungi backend di laptop melalui alamat IP laptop di jaringan Wi-Fi yang sama. Pada cara C (ngrok), ponsel menghubungi alamat HTTPS publik yang diteruskan ngrok ke laptop."),
+  img(path.join(FIG, "phone_topology.png"), 600, { alt: "Topologi uji ponsel" }),
+  CAP("Gambar 2.1 Topologi uji ponsel"),
+  H2("2.3 Lokasi adb"),
+  P("adb (Android Debug Bridge) ikut terpasang bersama Android Studio. Agar perintah adb dapat dipakai di terminal, gunakan path lengkapnya atau tambahkan foldernya ke PATH sesi terminal:"),
+  code(`
+# PowerShell
+$env:Path += ";$env:LOCALAPPDATA\\Android\\Sdk\\platform-tools"
+adb version
+
+# Git Bash
+export PATH="$PATH:$LOCALAPPDATA/Android/Sdk/platform-tools"
+adb version
+`),
+  CAP("Gambar 2.2 Menambahkan adb ke PATH sesi terminal"),
+
+  H1("BAB III  MENYIAPKAN PONSEL"),
+  H2("3.1 Mengaktifkan Opsi Pengembang"),
+  ...NL([
+    "Buka Setelan → Tentang ponsel (letak menu berbeda per merek, lihat Tabel 3.1).",
+    "Ketuk Nomor build (Build number) 7 kali sampai muncul pesan \"Anda sekarang adalah pengembang\". Masukkan PIN layar kunci bila diminta.",
+    "Menu Opsi pengembang (Developer options) kini muncul di Setelan → Sistem atau di halaman utama Setelan.",
+  ]),
+  table(["Merek", "Letak Nomor build", "Letak Opsi pengembang"], [
+    ["Samsung (One UI)", "Setelan → Tentang ponsel → Informasi perangkat lunak → Nomor versi", "Setelan → Opsi pengembang (paling bawah)"],
+    ["Xiaomi / Redmi / POCO", "Setelan → Tentang ponsel → Versi OS (HyperOS/MIUI), ketuk 7 kali", "Setelan → Setelan tambahan → Opsi pengembang"],
+    ["OPPO / realme", "Setelan → Tentang perangkat → Versi → Nomor build", "Setelan → Setelan tambahan / Sistem → Opsi pengembang"],
+    ["vivo", "Setelan → Tentang ponsel → Versi perangkat lunak", "Setelan → Sistem → Opsi pengembang"],
+    ["Google Pixel / Android One", "Setelan → Tentang ponsel → Nomor build", "Setelan → Sistem → Opsi pengembang"],
+  ], [2100, 3800, 3170], { boldFirst: true, size: 18 }),
+  CAP("Tabel 3.1 Letak menu per merek (dapat berbeda sesuai versi sistem)"),
+  H2("3.2 Mengaktifkan USB Debugging"),
+  ...NL([
+    "Buka Opsi pengembang, aktifkan USB debugging.",
+    "Xiaomi/Redmi/POCO: aktifkan juga Instal melalui USB dan Debugging USB (Setelan keamanan). Menu ini biasanya meminta login Akun Mi dan kartu SIM aktif.",
+    "OPPO/realme/vivo: bila ada, matikan Verifikasi aplikasi melalui USB atau izinkan saat muncul dialog pemasangan.",
+    "Hubungkan ponsel ke laptop dengan kabel USB data. Bila muncul pilihan mode USB, pilih Transfer file (MTP).",
+    "Di ponsel muncul dialog Izinkan debugging USB? beserta sidik jari kunci RSA laptop. Centang Selalu izinkan dari komputer ini, lalu Izinkan.",
+  ]),
+  P("Periksa dari laptop:"),
+  code(`
+adb devices
+# Hasil yang benar:
+# List of devices attached
+# R58M12ABCDE    device
+#
+# "unauthorized" -> buka kunci layar ponsel dan setujui dialog debugging
+# daftar kosong   -> ganti kabel/port USB, pilih mode Transfer file, pasang driver USB OEM (Samsung/Xiaomi)
+`),
+  CAP("Gambar 3.1 Memeriksa ponsel terhubung adb"),
+  H2("3.3 Alternatif tanpa Kabel: Wireless Debugging (Android 11+)"),
+  ...NL([
+    "Pastikan ponsel dan laptop pada Wi-Fi yang sama.",
+    "Opsi pengembang → Debugging nirkabel (Wireless debugging) → aktifkan → Sambungkan perangkat dengan kode penyambungan.",
+    "Ponsel menampilkan alamat IP:port penyambungan dan kode 6 digit. Di laptop jalankan perintah pada Gambar 3.2.",
+  ]),
+  code(`
+adb pair 192.168.1.23:37155        # alamat penyambungan, lalu masukkan kode 6 digit
+adb connect 192.168.1.23:41289     # alamat & port pada layar utama Debugging nirkabel (berbeda dari port pair)
+adb devices
+`),
+  CAP("Gambar 3.2 Menyambungkan adb lewat Wi-Fi (alamat hanya contoh)"),
+
+  H1("BAB IV  CARA A – MENCOBA APK DEMO (TANPA SERVER)"),
+  H2("4.1 Membangun APK Demo"),
+  code(`
+# Git Bash
+export JAVA_HOME="/c/Program Files/Android/Android Studio/jbr"
+cd apps/android
+./gradlew :app:assembleDemoDebug
+# APK: app/build/outputs/apk/demo/debug/app-demo-debug.apk
+
+# PowerShell
+$env:JAVA_HOME = "C:\\Program Files\\Android\\Android Studio\\jbr"
+cd apps\\android
+.\\gradlew.bat :app:assembleDemoDebug
+`),
+  CAP("Gambar 4.1 Membangun APK demo"),
+  P("Build pertama membutuhkan internet dan beberapa menit untuk mengunduh Gradle serta dependensi. Anggota tim yang tidak memasang Android Studio dapat meminta berkas APK dari PM."),
+  H2("4.2 Memasang APK"),
+  H3("Pilihan 1: lewat adb (ponsel terhubung)"),
+  code(`
+adb install -r app/build/outputs/apk/demo/debug/app-demo-debug.apk
+# atau sekaligus build + pasang:
+./gradlew :app:installDemoDebug
+`),
+  CAP("Gambar 4.2 Memasang APK lewat adb"),
+  H3("Pilihan 2: kirim berkas APK (tanpa USB debugging)"),
+  ...NL([
+    "Kirim app-demo-debug.apk ke ponsel lewat kabel (salin ke folder Download), Google Drive, atau Telegram/WhatsApp (kirim sebagai dokumen, bukan media).",
+    "Buka berkas APK dari aplikasi Files/File Manager di ponsel.",
+    "Bila muncul \"Demi keamanan, ponsel Anda tidak diizinkan memasang aplikasi tidak dikenal dari sumber ini\", ketuk Setelan → aktifkan Izinkan dari sumber ini, lalu kembali dan ketuk Instal.",
+    "Bila Google Play Protect memperingatkan aplikasi tidak dikenal, pilih Detail lainnya → Tetap instal. Peringatan ini wajar untuk APK debug yang tidak diunduh dari Play Store.",
+  ]),
+  WARN("Setelah selesai, matikan kembali izin Instal aplikasi tidak dikenal untuk aplikasi pengirim berkas tersebut."),
+  H2("4.3 Login dan Mencoba"),
+  ...NL([
+    "Buka aplikasi Digital Bank.",
+    "Login dengan username demo dan password Demo@1234.",
+    "Masukkan PIN 123456 untuk membuka aplikasi.",
+    "Izinkan notifikasi bila diminta (Android 13+), agar notifikasi transaksi tampil.",
+    "Jalankan skenario pada Bab VII. Data demo kembali ke kondisi awal setiap kali aplikasi ditutup paksa.",
+  ]),
+
+  H1("BAB V  CARA B – APK ONLINE DENGAN BACKEND DI LAPTOP"),
+  H2("5.1 Menjalankan Backend"),
+  code(`
+# PowerShell, dari folder proyek
+cd backend
+.\\run-local.ps1 -H2
+# Bila muncul "running scripts is disabled on this system":
+powershell -ExecutionPolicy Bypass -File .\\run-local.ps1 -H2
+`),
+  CAP("Gambar 5.1 Menjalankan backend dengan basis data H2"),
+  P("Tunggu sampai muncul baris hijau \"Backend jalan di http://localhost:8080 (HP di Wi-Fi yang sama: http://<IP>:8080)\" dan log Spring Boot \"Started DdbBackendApplication\". Biarkan jendela ini tetap terbuka selama pengujian; menekan Ctrl+C akan menghentikan backend."),
+  H2("5.2 Mencari Alamat IP Laptop"),
+  P("Skrip run-local.ps1 sudah menampilkan IP laptop. Untuk memastikan, jalankan ipconfig di jendela PowerShell lain:"),
+  code(`
+ipconfig
+# Cari bagian "Wireless LAN adapter Wi-Fi":
+#    IPv4 Address. . . . . . . . . . . : 192.168.1.10      <- ini IP laptop
+# Abaikan adapter "vEthernet (WSL/Hyper-V)", "VirtualBox", dan "Ethernet" yang tidak terhubung.
+`),
+  CAP("Gambar 5.2 Membaca IP laptop"),
+  WARN("IP dapat berubah saat laptop tersambung ulang ke Wi-Fi. Bila berubah, APK online harus dibangun ulang dengan IP baru (Bab 5.5)."),
+  H2("5.3 Membuka Port 8080 di Windows Firewall"),
+  P("Buka PowerShell sebagai Administrator (klik kanan Start → Terminal (Admin)), lalu jalankan:"),
+  code(`
+New-NetFirewallRule -DisplayName "DDB Backend 8080" -Direction Inbound -Protocol TCP \`
+    -LocalPort 8080 -Action Allow -Profile Private,Public
+
+# Periksa profil jaringan Wi-Fi; "Public" lebih ketat. Ubah ke Private bila jaringan tepercaya:
+Get-NetConnectionProfile
+Set-NetConnectionProfile -InterfaceAlias "Wi-Fi" -NetworkCategory Private
+`),
+  CAP("Gambar 5.3 Aturan firewall untuk port 8080"),
+  P("Bila Windows menampilkan dialog \"Windows Defender Firewall has blocked some features of Java\" saat backend pertama kali berjalan, centang Private networks lalu Allow access."),
+  H2("5.4 Uji Koneksi dari Browser Ponsel"),
+  ...NL([
+    "Sambungkan ponsel ke Wi-Fi yang sama dengan laptop. Matikan data seluler sementara agar ponsel tidak memakai jalur lain.",
+    "Buka Chrome di ponsel, ketik http://192.168.1.10:8080/actuator/health (ganti dengan IP laptop Anda).",
+    "Hasil yang benar: {\"status\":\"UP\"}. Bila halaman tidak terbuka, jangan lanjut ke langkah berikutnya; perbaiki dulu dengan Bab VIII.",
+  ]),
+  H2("5.5 Membangun APK Online dengan Alamat Laptop"),
+  code(`
+# Git Bash
+export JAVA_HOME="/c/Program Files/Android/Android Studio/jbr"
+cd apps/android
+./gradlew :app:assembleOnlineDebug -Pddb.baseUrl=http://192.168.1.10:8080/
+# APK: app/build/outputs/apk/online/debug/app-online-debug.apk
+
+# PowerShell (tanda kutip wajib karena ada titik pada nama properti)
+.\\gradlew.bat :app:assembleOnlineDebug "-Pddb.baseUrl=http://192.168.1.10:8080/"
+`),
+  CAP("Gambar 5.4 Membangun APK online"),
+  WARN("Alamat wajib diawali http:// dan diakhiri garis miring (/). Tanpa -Pddb.baseUrl, APK memakai http://10.0.2.2:8080/ yang hanya berlaku di emulator."),
+  H2("5.6 Memasang APK Online"),
+  code(`
+adb install -r app/build/outputs/apk/online/debug/app-online-debug.apk
+`),
+  CAP("Gambar 5.5 Memasang APK online"),
+  P("Tanpa adb, kirim berkas APK seperti Bab 4.2 Pilihan 2. APK online dan APK demo dapat terpasang bersamaan; keduanya bernama Digital Bank di peluncur. Cara membedakannya: tekan lama ikon → Info aplikasi; varian demo memiliki versi 1.0-demo."),
+  H2("5.7 Izin Aplikasi saat Pertama Dibuka"),
+  table(["Izin", "Kapan muncul", "Pilihan", "Akibat bila ditolak"], [
+    ["Nearby devices / Perangkat sekitar (ACCESS_LOCAL_NETWORK)", "Saat aplikasi dibuka, hanya Android 17 dan varian online", "Izinkan", "Sistem memblokir koneksi ke laptop; muncul \"Tidak dapat terhubung ke server\""],
+    ["Notifikasi (POST_NOTIFICATIONS)", "Di Beranda, Android 13+", "Izinkan", "Transaksi tetap jalan, tetapi notifikasi push tidak tampil"],
+    ["Kamera (CAMERA)", "Saat menekan Pindai dengan kamera di Bayar QRIS", "Saat aplikasi digunakan", "Tidak dapat memindai; masih dapat memilih gambar QR dari galeri"],
+  ], [2400, 2400, 1500, 2770], { boldFirst: true, size: 17 }),
+  CAP("Tabel 5.1 Izin aplikasi"),
+  P("Bila izin terlanjur ditolak: Setelan → Aplikasi → Digital Bank → Izin → aktifkan izin terkait, lalu tutup paksa dan buka kembali aplikasi."),
+  H2("5.8 Login"),
+  ...NL([
+    "Login dengan demo / Demo@1234, lalu PIN 123456.",
+    "Beranda menampilkan saldo dari server. Bandingkan dengan Swagger di laptop (http://localhost:8080/swagger-ui.html, GET /api/v1/accounts/me) bila perlu.",
+    "Untuk uji dua perangkat, login di perangkat kedua (emulator atau ponsel lain) dengan andi / Demo@1234 (PIN 123456).",
+  ]),
+  NOTE("Satu akun dapat login di beberapa perangkat; daftar perangkat terlihat di Profil → Sesi aktif. Sesi berakhir otomatis setelah 5 menit tidak aktif."),
+
+  H1("BAB VI  CARA C – BILA WI-FI TIDAK DAPAT DIPAKAI"),
+  P("Banyak Wi-Fi kampus, kafe, dan kantor mengaktifkan client isolation sehingga perangkat dalam satu Wi-Fi tidak dapat saling menghubungi. Gejalanya: Bab 5.4 gagal meskipun firewall sudah dibuka. Gunakan salah satu cara berikut."),
+  H2("6.1 Hotspot dari Ponsel"),
+  ...NL([
+    "Di ponsel penguji, aktifkan Hotspot pribadi (Setelan → Koneksi → Hotspot seluler).",
+    "Sambungkan laptop ke hotspot tersebut.",
+    "Jalankan ipconfig di laptop; ambil IPv4 pada adapter Wi-Fi (biasanya 192.168.43.x, 10.x.x.x, atau 172.20.10.x).",
+    "Lanjutkan dari Bab 5.3 (firewall, pastikan profil jaringan hotspot juga diizinkan), 5.4, lalu build ulang APK dengan IP baru.",
+  ]),
+  P("Hotspot memakai kuota data ponsel hanya untuk lalu lintas ke internet. Lalu lintas antara ponsel dan laptop tetap lokal dan sangat kecil."),
+  H2("6.2 ngrok (HTTPS Publik)"),
+  P("ngrok membuat alamat HTTPS publik yang diteruskan ke port 8080 laptop. Ponsel dapat memakai jaringan apa pun, termasuk data seluler."),
+  ...NL([
+    "Daftar akun gratis di ngrok.com, unduh ngrok untuk Windows, lalu daftarkan authtoken (sekali saja).",
+    "Jalankan backend seperti Bab 5.1.",
+    "Di terminal lain jalankan ngrok http 8080, lalu salin alamat Forwarding https://….ngrok-free.app.",
+    "Uji di browser ponsel: https://<alamat>/actuator/health → {\"status\":\"UP\"}. Bila muncul halaman peringatan ngrok, ketuk Visit Site; halaman ini hanya muncul di browser dan tidak memengaruhi aplikasi.",
+    "Build APK online dengan alamat tersebut.",
+  ]),
+  code(`
+ngrok config add-authtoken <token-dari-dashboard>
+ngrok http 8080
+# Forwarding  https://ab12-cd34.ngrok-free.app -> http://localhost:8080
+
+./gradlew :app:assembleOnlineDebug -Pddb.baseUrl=https://ab12-cd34.ngrok-free.app/
+`),
+  CAP("Gambar 6.1 Memakai ngrok (alamat hanya contoh)"),
+  WARN("Alamat ngrok versi gratis berubah setiap kali ngrok dijalankan ulang, sehingga APK harus dibangun ulang. Backend menjadi dapat diakses publik selama ngrok berjalan. Gunakan hanya data demo dan hentikan ngrok (Ctrl+C) setelah selesai."),
+  NOTE("Dengan HTTPS, izin Nearby devices tidak diperlukan karena koneksi tidak menuju alamat LAN."),
+
+  H1("BAB VII  SKENARIO UJI"),
+  P("Jalankan skenario berikut berurutan dan catat hasilnya di Lampiran A. Kolom Varian menunjukkan skenario yang berlaku untuk demo (D), online (O), atau keduanya (D/O)."),
+  table(["ID", "Skenario", "Langkah", "Hasil yang diharapkan", "Varian"], [
+    ["U-01", "Login dan PIN", "Login demo/Demo@1234 → PIN 123456", "Masuk Beranda; saldo dan nomor rekening 1400123456 tampil", "D/O"],
+    ["U-02", "PIN salah", "Logout → login → PIN salah 3 kali", "PIN diblokir sementara dengan pesan sisa waktu", "D/O"],
+    ["U-03", "Sembunyikan saldo", "Ketuk ikon mata di Beranda, tutup dan buka aplikasi", "Saldo tetap tersembunyi", "D/O"],
+    ["U-04", "Transfer sesama bank", "Transfer → Diponegoro Digital Bank → 1400000002 → Rp10.000 → PIN", "Nama ANDI PRATAMA tampil sebelum PIN; transaksi berhasil; saldo berkurang; bukti dapat dibagikan", "D/O"],
+    ["U-05", "Transfer antarbank ditolak", "Bank BRI, rekening 9999999999", "Transaksi gagal, dana dikembalikan, tercatat di riwayat", "D/O"],
+    ["U-06", "Transfer antarbank timeout", "Bank Mandiri, rekening 8888888888 → Cek status", "Status tertunda, lalu final setelah cek status", "D/O"],
+    ["U-07", "Saldo tidak cukup", "Transfer nominal melebihi saldo", "Ditolak sebelum PIN dengan pesan saldo tidak mencukupi", "D/O"],
+    ["U-08", "Bayar QRIS (kamera)", "Perangkat 2: Terima QRIS → tampilkan QR. Ponsel: Bayar QRIS → Pindai dengan kamera", "Nama merchant/penerima dan nominal tampil; setelah PIN, saldo kedua akun berubah", "O"],
+    ["U-09", "Bayar QRIS (contoh)", "Bayar QRIS → pilih QR contoh", "Pembayaran berhasil dengan PIN", "D/O"],
+    ["U-10", "Top-up pulsa", "Top-up → Pulsa → nomor 0812… → nominal → PIN", "Berhasil; tercatat di riwayat", "D/O"],
+    ["U-11", "Token PLN tidak ditemukan", "Top-up → PLN → ID pelanggan berakhiran 0000", "Pesan pelanggan tidak ditemukan", "D/O"],
+    ["U-12", "Kantong", "Kantong → buat → isi Rp20.000 → kunci sampai tanggal", "Saldo utama berkurang; penarikan ditolak selama terkunci", "D/O"],
+    ["U-13", "Virtual card", "Virtual Card → buat → lihat detail dengan PIN → bekukan", "Nomor lengkap dan CVV hanya tampil setelah PIN; status beku", "D/O"],
+    ["U-14", "Riwayat dan analitik", "Riwayat → filter Keluar → buka detail; Analitik", "Transaksi uji muncul; grafik bulan berjalan berubah", "D/O"],
+    ["U-15", "Ubah profil dengan OTP", "Profil → ubah email → masukkan kode OTP demo", "Perubahan aktif setelah OTP; notifikasi keamanan muncul", "D/O"],
+    ["U-16", "Notifikasi push", "Perangkat 2 (andi) transfer ke 1400123456", "Notifikasi dana masuk muncul di ponsel ≤ 15 detik", "O"],
+    ["U-17", "Konsistensi dua perangkat", "Ponsel (demo) transfer ke andi; cek saldo andi di perangkat 2", "Saldo kedua akun konsisten; total tidak berubah", "O"],
+    ["U-18", "Timeout sesi", "Diamkan aplikasi > 5 menit, lalu lakukan aksi", "Diminta login ulang", "D/O"],
+    ["U-19", "Logout semua perangkat", "Profil → Sesi aktif → keluar dari semua perangkat", "Perangkat lain kembali ke layar login saat aksi berikutnya", "O"],
+    ["U-20", "Offline", "Hentikan backend (Ctrl+C), lalu muat ulang Beranda", "Pesan \"Tidak dapat terhubung ke server\"; aplikasi tidak tertutup paksa", "O"],
+  ], [700, 1700, 2900, 3070, 700], { size: 16, center: [0, 4] }),
+  CAP("Tabel 7.1 Skenario uji di ponsel"),
+  NOTE("Rincian aturan bisnis setiap skenario ada di FSD-DDB-001. Laporkan kegagalan beserta tangkapan layar, waktu, dan ID transaksi (lihat bukti transaksi)."),
+
+  H1("BAB VIII  TROUBLESHOOTING"),
+  table(["Gejala", "Kemungkinan penyebab", "Solusi"], [
+    ["adb devices kosong", "Kabel hanya untuk mengisi daya, mode USB salah, driver belum ada", "Ganti kabel/port; pilih Transfer file; pasang driver OEM (Samsung USB Driver, Xiaomi USB Driver)"],
+    ["adb devices: unauthorized", "Dialog izin debugging belum disetujui", "Buka kunci layar, setujui; atau Opsi pengembang → Cabut otorisasi debugging USB, lalu sambungkan ulang"],
+    ["INSTALL_FAILED_UPDATE_INCOMPATIBLE", "APK dengan tanda tangan lain sudah terpasang", "adb uninstall com.diponegoro.digitalbank (atau .demo), lalu pasang ulang"],
+    ["INSTALL_FAILED_USER_RESTRICTED (Xiaomi)", "Instal melalui USB belum aktif", "Aktifkan di Opsi pengembang; setujui dialog di ponsel saat memasang"],
+    ["\"Aplikasi tidak terpasang\" saat membuka APK", "Berkas rusak saat dikirim sebagai media atau tidak cukup ruang", "Kirim sebagai dokumen; kosongkan ruang penyimpanan"],
+    ["Browser ponsel tidak dapat membuka /actuator/health", "Firewall, beda jaringan, client isolation, IP salah", "Periksa Bab 5.2–5.3; matikan data seluler; coba hotspot atau ngrok (Bab VI)"],
+    ["Browser bisa, aplikasi \"Tidak dapat terhubung ke server\"", "Izin Nearby devices ditolak (Android 17) atau APK dibangun dengan IP lama", "Izinkan di Setelan → Aplikasi → Izin; build ulang dengan IP saat ini"],
+    ["CLEARTEXT communication not permitted", "Memakai APK demo atau URL http pada build lain", "Pastikan memasang app-online-debug.apk"],
+    ["Login gagal \"username atau password salah\"", "Basis data backend baru tanpa data demo", "Pastikan SEED_DEMO_DATA tidak dimatikan; hapus folder backend/data lalu jalankan ulang"],
+    ["Kembali ke layar login sendiri", "Sesi tidak aktif > 5 menit atau logout dari perangkat lain", "Login ulang (perilaku sesuai FR-05)"],
+    ["Kamera tidak terbuka", "Izin kamera ditolak", "Izinkan kamera di Setelan → Aplikasi → Digital Bank → Izin"],
+    ["Notifikasi tidak muncul", "Izin notifikasi ditolak atau penghemat baterai agresif", "Izinkan notifikasi; nonaktifkan optimasi baterai untuk Digital Bank"],
+    ["Port 8080 sudah dipakai", "Backend lama masih berjalan", "Tutup jendela backend lama atau hentikan proses java yang menjalankan ddb-backend"],
+  ], [2600, 2900, 3570], { size: 17 }),
+  CAP("Tabel 8.1 Troubleshooting uji di ponsel"),
+  P("Untuk melihat pesan kesalahan rinci dari aplikasi, sambungkan adb lalu jalankan perintah berikut sambil mengulang langkah yang gagal:"),
+  code(`
+adb logcat -s DdbApi:W AndroidRuntime:E
+`),
+  CAP("Gambar 8.1 Melihat log jaringan dan crash aplikasi"),
+
+  H1("BAB IX  SETELAH PENGUJIAN"),
+  ...NL([
+    "Hentikan backend dengan Ctrl+C di jendela PowerShell; hentikan ngrok bila dipakai.",
+    "Hapus aturan firewall bila tidak diperlukan lagi: Remove-NetFirewallRule -DisplayName \"DDB Backend 8080\" (PowerShell Administrator).",
+    "Kembalikan profil jaringan ke Public bila sebelumnya diubah dan jaringan tersebut bukan jaringan pribadi.",
+    "Di ponsel, matikan USB debugging/Debugging nirkabel dan izin Instal aplikasi tidak dikenal.",
+    "Kirim Lampiran A yang sudah diisi ke PIC Dokumen 6 (Testing) untuk direkap.",
+  ]),
+
+  H1("LAMPIRAN A  LEMBAR HASIL UJI"),
+  table(null, [
+    [{ t: "Nama penguji", bold: true, fill: S.KEY_FILL }, "", { t: "Tanggal", bold: true, fill: S.KEY_FILL }, ""],
+    [{ t: "Merek/model ponsel", bold: true, fill: S.KEY_FILL }, "", { t: "Versi Android", bold: true, fill: S.KEY_FILL }, ""],
+    [{ t: "Varian / cara", bold: true, fill: S.KEY_FILL }, "Demo / Online-Wi-Fi / Hotspot / ngrok", { t: "Base URL", bold: true, fill: S.KEY_FILL }, ""],
+  ], [2000, 2800, 1700, 2570], { size: 18 }),
+  CAP("Tabel A.1 Identitas pengujian"),
+  table(["ID", "Lulus / Gagal", "Catatan (pesan, ID transaksi, tangkapan layar)"],
+    Array.from({ length: 20 }, (_, i) => [`U-${String(i + 1).padStart(2, "0")}`, "", ""]),
+    [900, 1700, 6470], { size: 18, center: [0, 1] }),
+  CAP("Tabel A.2 Hasil per skenario"),
+];
+
+S.build(meta, body, OUT);

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:allowBackup="true"
+        android:label="QRIS App"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.QRISApp">
+
+        <activity android:name=".OtpActivity" />
+        <activity android:name=".NotificationActivity" />
+        <activity android:name=".SecurityActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".PaymentActivity" />
+        <activity android:name=".HomeActivity" />
+        <activity android:name=".LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

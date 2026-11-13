@@ -1,0 +1,11 @@
+args: [-p, com.diponegoro.digitalbank, -c, android.intent.category.LAUNCHER, 1]
+ arg: "-p"
+ arg: "com.diponegoro.digitalbank"
+ arg: "-c"
+ arg: "android.intent.category.LAUNCHER"
+ arg: "1"
+data="com.diponegoro.digitalbank"
+data="android.intent.category.LAUNCHER"
+PASS  SA-18  diam > 5 menit → diminta login ulang  — Sesi berakhir otomatis karena tidak ada aktivitas. Silakan login kembali. (391 dtk)
+
+1/1 PASS

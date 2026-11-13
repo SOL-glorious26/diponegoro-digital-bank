@@ -1,0 +1,28 @@
+args: [-p, com.diponegoro.digitalbank, -c, android.intent.category.LAUNCHER, 1]
+ arg: "-p"
+ arg: "com.diponegoro.digitalbank"
+ arg: "-c"
+ arg: "android.intent.category.LAUNCHER"
+ arg: "1"
+data="com.diponegoro.digitalbank"
+data="android.intent.category.LAUNCHER"
+args: [-p, com.diponegoro.digitalbank, -c, android.intent.category.LAUNCHER, 1]
+ arg: "-p"
+ arg: "com.diponegoro.digitalbank"
+ arg: "-c"
+ arg: "android.intent.category.LAUNCHER"
+ arg: "1"
+data="com.diponegoro.digitalbank"
+data="android.intent.category.LAUNCHER"
+PASS  SA-21  registrasi → OTP → e-KYC → PIN sampai transaksi aktif (+ tombol Kembali setelah OTP, DEF-07)  — pengguna samwccl25k; Kembali dari e-KYC tidak menuju OTP; saldo awal Rp5.000.000 (110 dtk)
+args: [-p, com.diponegoro.digitalbank, -c, android.intent.category.LAUNCHER, 1]
+ arg: "-p"
+ arg: "com.diponegoro.digitalbank"
+ arg: "-c"
+ arg: "android.intent.category.LAUNCHER"
+ arg: "1"
+data="com.diponegoro.digitalbank"
+data="android.intent.category.LAUNCHER"
+PASS  SA-02  PIN salah 3 kali → diblokir sementara (akun baru)  — PIN salah. Sisa percobaan: 2 → PIN salah. Sisa percobaan: 1 → PIN sedang diblokir sementara. Gunakan pemulihan PIN atau coba lagi nanti. (51 dtk)
+
+2/2 PASS

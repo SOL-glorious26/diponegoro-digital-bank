@@ -1,0 +1,21 @@
+PASS  chrome   login dan Beranda  — Chrome/157.0.0.0
+PASS  chrome   transfer dengan PIN dan bukti
+PASS  chrome   riwayat dan detail transaksi
+PASS  chrome   QRIS pribadi tampil
+PASS  chrome   tanpa scroll horizontal (desktop)
+PASS  chrome   keluar
+PASS  chrome   tanpa error JavaScript
+PASS  edge     login dan Beranda  — Edg/157.0.0.0
+PASS  edge     transfer dengan PIN dan bukti
+PASS  edge     riwayat dan detail transaksi
+PASS  edge     QRIS pribadi tampil
+PASS  edge     tanpa scroll horizontal (desktop)
+PASS  edge     keluar
+PASS  edge     tanpa error JavaScript
+PASS  firefox  login dan Beranda  — Firefox/156.0
+PASS  firefox  transfer dengan PIN dan bukti
+PASS  firefox  riwayat dan detail transaksi
+PASS  firefox  QRIS pribadi tampil
+PASS  firefox  tanpa scroll horizontal (desktop)
+PASS  firefox  keluar
+PASS  firefox  tanpa error JavaScript

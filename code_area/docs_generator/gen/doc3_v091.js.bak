@@ -1,0 +1,319 @@
+const path = require("path");
+const fs = require("fs");
+const S = require("./ddbstyle");
+const { P, H1, H2, H3, B, NL, CAP, NOTE, table, img, PW } = S;
+const [, , FIG2, FIG3, OUT, LOGO, OPENAPI] = process.argv;
+const f2 = (n) => path.join(FIG2, n), f3 = (n) => path.join(FIG3, n);
+
+// ---------- endpoints from openapi.json (source of truth)
+const api = JSON.parse(fs.readFileSync(OPENAPI, "utf8"));
+const fallback = {
+  "PUT /api/v1/me/photo": "Ubah foto profil (URL) (FR-27)",
+  "GET /api/v1/me/notification-settings": "Lihat pengaturan jenis & kanal notifikasi (FR-28)",
+  "GET /api/v1/accounts/pockets/{id}": "Detail kantong (FR-08)",
+  "POST /api/v1/transfers/favorites": "Tambah penerima favorit (FR-13)",
+  "DELETE /api/v1/transfers/favorites/{id}": "Hapus penerima favorit (FR-13)",
+  "POST /api/v1/me/notifications/{id}/read": "Tandai satu notifikasi sudah dibaca (FR-29)",
+  "POST /api/v1/me/notifications/read-all": "Tandai semua notifikasi sudah dibaca (FR-29)",
+  "GET /api/v1/cards": "Daftar virtual card (FR-21)",
+  "POST /api/v1/cards/{id}/freeze": "Bekukan kartu (FR-22)",
+  "POST /api/v1/cards/{id}/activate": "Aktifkan kembali kartu (FR-22)",
+  "GET /api/v1/me/notifications/unread-count": "Jumlah notifikasi belum dibaca (FR-29)",
+};
+// openapi.json contains UTF-8 text that was decoded as Windows-1252 once (known issue in LANJUTKAN.md).
+const MOJI = [["â†’", "→"], ["â€“", "–"], ["â€”", "—"], ["Â±", "±"], ["â€™", "’"], ["Ã—", "×"]];
+const fixMojibake = (t) => { MOJI.forEach(([a, b]) => { t = t.split(a).join(b); }); if (/[ÂÃâ]/.test(t)) throw new Error("unfixed mojibake: " + t); return t; };
+const tagOrder = ["1. Authentication", "2. Account", "3. Transfer", "4. Payment QRIS", "5. Top-up", "6. Virtual Card", "7. History & Dashboard", "8. Profile & Notification"];
+const eps = [];
+for (const [p, v] of Object.entries(api.paths)) for (const [m, o] of Object.entries(v)) {
+  const key = `${m.toUpperCase()} ${p}`;
+  eps.push({ tag: (o.tags || ["?"])[0], method: m.toUpperCase(), path: p.replace("/api/v1", ""), sum: fixMojibake((o.summary || fallback[key] || "").trim()) });
+}
+const missing = eps.filter((e) => !e.sum);
+if (missing.length) throw new Error("summary missing: " + missing.map((e) => e.method + " " + e.path).join(", "));
+const mOrder = { GET: 0, POST: 1, PUT: 2, DELETE: 3 };
+const epRows = [];
+tagOrder.forEach((t) => {
+  const list = eps.filter((e) => e.tag === t).sort((a, b) => a.path.localeCompare(b.path) || mOrder[a.method] - mOrder[b.method]);
+  epRows.push([{ t: `${t.replace(/^\d\. /, "")} (${list.length} operasi)`, bold: true, fill: S.KEY_FILL, span: 3 }]);
+  list.forEach((e) => epRows.push([e.method, e.path, e.sum]));
+});
+if (eps.length !== 73) throw new Error("expected 73 operations, got " + eps.length);
+
+const meta = {
+  docLabel: "Dokumen 3", title: "Functional Design", subtitle: "Deskripsi Modul, Batas Sistem, Antarmuka Eksternal, Spesifikasi Fungsi, dan Workflow",
+  code: "FSD-DDB-001", version: "0.9.1", statusShort: "Draf Lengkap untuk Review",
+  status: "Draf lengkap – menunggu peer review (Steven Wibisana) dan persetujuan Project Manager",
+  module: "Functional Design – 8 modul bisnis (FR-01 s.d. FR-29)", createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend)",
+  updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend)", team: "Kelompok Jaran Goyang – reviewer keterujian: Steven Wibisana",
+  refs: "SRS-DDB-001 v0.1 (Bagian 3); SAD-DDB-001 v0.9.1; backend/docs/openapi.json (73 operasi); kode backend dan Android per 11 November 2026",
+  date: "11 November 2026", logo: LOGO,
+  revisions: [
+    ["0.1", "11 Nov 2026", "Salomo P.G. Hokoyoku", "Outline Functional Design per modul."],
+    ["0.9", "11 Nov 2026", "Salomo P.G. Hokoyoku", "Draf lengkap: deskripsi 8 modul, batas sistem, antarmuka eksternal (72 operasi API), spesifikasi FR-01–FR-29, aturan bisnis, workflow."],
+    ["0.9.1", "11 Nov 2026", "Salomo P.G. Hokoyoku", "Pembaruan setelah integrasi Android–backend (Fase 5) 11 Nov sore: endpoint verifikasi PIN (73 operasi), status implementasi Android online, openapi.json bersih."],
+  ],
+};
+
+// ---------- FR specification rows: [FR, nama, input, proses & aturan, output / kesalahan]
+const W5 = [800, 1500, 1900, 2970, 1900];
+const spec = (rows) => table(["FR", "Fungsi", "Input", "Proses dan aturan", "Output / kesalahan"], rows, W5, { size: 17, boldFirst: true });
+const mod = {
+  auth: [
+    ["FR-01", "Registrasi akun + OTP (Must)", "Username, password, email dan/atau nomor telepon", "Username 4–30 karakter (huruf kecil, angka, titik, garis bawah); password ≥ 8 karakter berisi huruf dan angka; minimal satu kontak. Akun dibuat berstatus PENDING_OTP dan OTP dikirim (berlaku 2 menit, maks. 5× salah, kirim ulang membatalkan OTP lama).", "Akun ACTIVE + sesi login setelah OTP valid. Kesalahan: INVALID_USERNAME, WEAK_PASSWORD, CONTACT_REQUIRED, INVALID_EMAIL, OTP_INVALID, OTP_EXPIRED"],
+    ["FR-02", "Verifikasi identitas e-KYC (Must)", "NIK 16 digit, swafoto (simulasi)", "Status PROCESSING lalu APPROVED/REJECTED setelah ±3 detik. NIK berakhiran 0000 ditolak (simulator). Transaksi keuangan hanya aktif bila e-KYC disetujui (status FINANCIAL_ENABLED). Pengajuan ulang diizinkan setelah ditolak.", "Status e-KYC. Kesalahan: INVALID_NIK, OTP_REQUIRED, EKYC_DONE; KYC_REQUIRED pada transaksi"],
+    ["FR-03", "Login password dan biometrik (Must)", "Username/email/telepon + password; token perangkat biometrik (mobile)", "Pesan gagal bersifat umum. Login dikunci 15 menit setelah 5× password salah. Biometrik hanya untuk perangkat yang sudah didaftarkan (enroll).", "Access token 15 menit + refresh token 7 hari. Kesalahan: INVALID_CREDENTIALS, LOGIN_LOCKED, BIOMETRIC_INVALID"],
+    ["FR-04", "PIN transaksi 6 digit (Must)", "PIN 6 digit", "PIN disimpan sebagai hash BCrypt, terpisah dari password. Setiap transaksi memverifikasi PIN; layar PIN setelah login memakai POST /auth/pin/verify dengan aturan yang sama; 3× salah memblokir PIN 5 menit (BR-02).", "PIN dibuat/terverifikasi. Kesalahan: PIN_FORMAT, PIN_EXISTS, PIN_NOT_SET, PIN_INVALID (sisa percobaan), PIN_BLOCKED"],
+    ["FR-05", "Manajemen sesi dan pemulihan (Should)", "Aksi logout; jenis pemulihan (password/PIN), OTP, nilai baru", "Sesi berakhir setelah 5 menit tidak aktif. Logout semua perangkat membatalkan seluruh sesi aktif. Pemulihan: minta OTP → verifikasi → recoveryToken (berlaku 10 menit) → setel nilai baru.", "Sesi berakhir/dibatalkan; password atau PIN baru. Kesalahan: SESSION_INVALID, OTP_REQUIRED"],
+  ],
+  account: [
+    ["FR-06", "Tampil saldo + sembunyikan (Must)", "Pilihan tampil/sembunyikan", "Saldo rekening utama ditampilkan di dashboard; pilihan disimpan di server sehingga konsisten antarperangkat.", "Saldo atau penanda tersamar"],
+    ["FR-07", "Grafik perubahan saldo (Should)", "Periode harian, mingguan, bulanan", "Titik grafik dihitung dari jurnal ledger sehingga konsisten dengan riwayat.", "Deret titik saldo per periode"],
+    ["FR-08", "Kantong simpanan (Should)", "Nama (≤ 30), tujuan (≤ 60), target (≥ Rp10.000), nominal isi", "Maks. 10 kantong per pengguna. Isi kantong memakai Idempotency-Key. Kantong yang dihapus memindahkan sisa saldo ke rekening utama; pemindahan tercatat di riwayat.", "Daftar/detail kantong. Kesalahan: POCKET_LIMIT, INVALID_POCKET, INSUFFICIENT_BALANCE"],
+    ["FR-09", "Locking kantong (Should)", "Jenis kunci (tanggal/target), nilai, PIN untuk penarikan dini", "Dana terkunci tidak dapat dipakai transaksi (BR-06). Penarikan sebelum tanggal/target tercapai memerlukan earlyWithdrawal = true dan PIN. Kunci terbuka otomatis saat tercapai.", "Status kunci. Kesalahan: POCKET_LOCKED, INVALID_LOCK, TARGET_REQUIRED, TARGET_REACHED"],
+  ],
+  transfer: [
+    ["FR-10", "Transfer sesama bank (Must)", "Rekening tujuan, nominal, catatan (≤ 50), PIN, Idempotency-Key", "Debit dan kredit dalam satu transaksi atomik dengan ledger double-entry (BR-03); biaya Rp0; tidak boleh ke rekening sendiri.", "Transaksi berhasil + bukti. Kesalahan: OWN_ACCOUNT, NOTE_TOO_LONG"],
+    ["FR-11", "Transfer antarbank (Must)", "Bank tujuan (daftar simulasi), rekening, nominal, PIN", "Nominal Rp5.000 s.d. Rp25.000.000 per transaksi (maksimum dan biaya Rp2.500 adalah nilai usulan). Simulator dapat menghasilkan sukses, ditolak (refund otomatis, BR-05), atau timeout (status Diproses, cek ulang).", "Status Berhasil/Diproses/Gagal. Kesalahan: AMOUNT_TOO_SMALL, AMOUNT_TOO_LARGE, INSUFFICIENT_BALANCE, IDEMPOTENCY_KEY_REQUIRED"],
+    ["FR-12", "Validasi rekening tujuan (Must)", "Kode bank, nomor rekening", "Inquiry dilakukan sebelum layar konfirmasi; transaksi tidak dapat dilanjutkan bila rekening tidak valid.", "Nama penerima. Kesalahan: INVALID_ACCOUNT"],
+    ["FR-13", "Penerima favorit (Should)", "Data penerima", "Maks. 20 favorit; favorit tersedia sebagai pilihan pada langkah penerima.", "Daftar favorit. Kesalahan: FAVORITE_LIMIT"],
+    ["FR-14", "Bukti transfer (Should)", "ID transaksi", "Data bukti (ID, waktu, pengirim, penerima, nominal, biaya, status) diambil dari detail transaksi; gambar/PDF dibuat di klien dan dibagikan melalui share sheet.", "Berkas PNG/PDF bukti transfer"],
+  ],
+  qris: [
+    ["FR-15", "Pindai QRIS untuk membayar (Must, Mobile)", "Isi kode QR (kamera/galeri), nominal bila QR statis, PIN, Idempotency-Key", "Kode didekode sesuai format EMVCo dengan validasi CRC16. Merchant dan nominal ditampilkan sebelum PIN. Nominal Rp1.000 s.d. Rp10.000.000 (usulan); validasi batas dan saldo dilakukan sebelum dialog PIN. Tidak boleh membayar QRIS sendiri.", "Status berhasil/gagal. Kesalahan: INVALID_QRIS, AMOUNT_TOO_SMALL, AMOUNT_TOO_LARGE, OWN_QRIS, INSUFFICIENT_BALANCE"],
+    ["FR-16", "QRIS pribadi untuk menerima dana (Must)", "–", "Kode QRIS pribadi dibangkitkan dari rekening pengguna. Dana masuk dari bank sama/berbeda disimulasikan melalui endpoint simulator dan tercatat di saldo dan riwayat.", "Kode QRIS; notifikasi dana masuk. Kesalahan simulator: QRIS_RECIPIENT_NOT_FOUND"],
+    ["FR-17", "QRIS dinamis (Could)", "Nominal yang ditetapkan penerima", "Nominal tertanam di kode dan tidak dapat diubah pembayar.", "Kode QRIS dinamis"],
+  ],
+  topup: [
+    ["FR-18", "Pulsa dan paket data (Must)", "Nomor HP, produk/nominal, PIN, Idempotency-Key", "Operator dideteksi dari prefiks nomor; katalog dan biaya admin (pulsa Rp1.500, usulan) ditampilkan pada quote; saldo didebet hanya setelah PIN valid.", "Status transaksi. Kesalahan: INVALID_PHONE, UNKNOWN_OPERATOR, INVALID_PRODUCT, INVALID_NOMINAL"],
+    ["FR-19", "Token listrik (Must)", "ID pelanggan PLN, nominal, PIN", "Inquiry ID pelanggan (berakhiran 0000 = tidak ditemukan, simulator); biaya admin Rp2.500 (usulan).", "Struk dengan nomor token. Kesalahan: INVALID_METER, CUSTOMER_NOT_FOUND, INVALID_NOMINAL"],
+    ["FR-20", "Tagihan rumah tangga lain (Could)", "Jenis tagihan (PDAM/BPJS/Internet) atau e-wallet, nomor pelanggan, PIN", "Cek tagihan berdasarkan nomor pelanggan, lalu bayar; bukti tersimpan di riwayat.", "Bukti pembayaran. Kesalahan: CUSTOMER_NOT_FOUND, INVALID_WALLET"],
+  ],
+  card: [
+    ["FR-21", "Buat virtual card (Should)", "Cakupan: domestik/internasional", "Hanya untuk e-KYC disetujui; maks. 5 kartu per pengguna. Nomor dan CVV dienkripsi AES-GCM; ditampilkan tersamar.", "Kartu baru berstatus ACTIVE. Kesalahan: KYC_REQUIRED, CARD_LIMIT, INVALID_SCOPE"],
+    ["FR-22", "Kelola kartu (Should)", "PIN (lihat detail), aksi bekukan/aktifkan, nilai limit", "Detail lengkap hanya setelah PIN valid. Kartu FROZEN menolak seluruh transaksi. Limit per transaksi Rp10.000 s.d. Rp50.000.000 (default Rp5.000.000, usulan), berlaku untuk transaksi berikutnya. Kartu domestik menolak merchant luar negeri.", "Detail kartu/status/limit. Kesalahan: PIN_INVALID, LIMIT_TOO_SMALL, LIMIT_TOO_LARGE, CARD_FROZEN, CARD_LIMIT_EXCEEDED, CARD_DOMESTIC_ONLY"],
+  ],
+  history: [
+    ["FR-23", "Riwayat + filter + pencarian (Must)", "Rentang tanggal, jenis, status, kata kunci, halaman", "Urut terbaru dengan paginasi; filter dan pencarian dapat dikombinasikan. Jenis: Setoran, Transfer, QRIS, Top-up & Tagihan, Kantong, Kartu Virtual. Status: Berhasil, Diproses, Gagal.", "Daftar transaksi berhalaman"],
+    ["FR-24", "Detail transaksi (Must)", "ID transaksi", "Status selalu bersumber dari ledger.", "ID, waktu, jenis, pihak terkait, nominal, biaya, status, baris jurnal"],
+    ["FR-25", "Dashboard bulanan (Should)", "Bulan", "Agregasi pemasukan dan pengeluaran per bulan dari ledger.", "Data grafik pemasukan/pengeluaran"],
+    ["FR-26", "Ekspor riwayat (Could, Web)", "Filter aktif, format CSV/PDF", "Berkas dibangkitkan backend sesuai filter yang sedang aktif; hanya ditawarkan di Web.", "Berkas CSV/PDF untuk diunduh"],
+  ],
+  profile: [
+    ["FR-27", "Profil pengguna (Must)", "Username, email, telepon, foto (URL)", "Perubahan username/email/telepon aktif setelah OTP ke kontak baru; foto saat ini berupa URL (unggah berkas belum tersedia).", "Profil diperbarui. Kesalahan: NO_CHANGES, OTP_INVALID, INVALID_PHOTO"],
+    ["FR-28", "Pengaturan keamanan dan notifikasi (Should)", "Password/PIN lama dan baru, status biometrik, jenis dan kanal notifikasi", "Ubah password (WEAK_PASSWORD, SAME_PASSWORD, WRONG_PASSWORD), ubah PIN (SAME_PIN), aktifkan/nonaktifkan biometrik, pilih jenis dan kanal notifikasi.", "Pengaturan tersimpan"],
+    ["FR-29", "Notifikasi transaksi (Should)", "Event transaksi dari ledger", "Diproses asinkron (@Async) ke kanal pilihan: in-app (kotak notifikasi), push (diambil klien secara polling), email (outbox simulasi).", "Notifikasi masuk/keluar; jumlah belum dibaca"],
+  ],
+};
+
+const body = [
+  // BAB I
+  H1("BAB I  PENDAHULUAN"),
+  H2("1.1 Tujuan Dokumen"),
+  P("Dokumen ini menjabarkan kebutuhan fungsional SRS-DDB-001 menjadi desain fungsional yang dapat diimplementasikan dan diuji. Isinya meliputi deskripsi modul, batas sistem, antarmuka eksternal, spesifikasi setiap fungsi (FR-01 s.d. FR-29), dan alur kerja (workflow). Dokumen ini menjadi acuan Detailed Design (Dokumen 4), User Interface Map (Dokumen 5), kasus uji (Dokumen 6), dan User Manual (Dokumen 9)."),
+  H2("1.2 Ruang Lingkup dan Konvensi"),
+  B("Cakupan: delapan modul bisnis SRS, 29 kebutuhan fungsional, dan aturan bisnis BR-01 s.d. BR-07."),
+  B("ID kebutuhan (FR-xx, BR-xx, NFR-xx) sama persis dengan SRS v0.1 dan tidak diubah."),
+  B("Nilai yang belum ditetapkan SRS tetapi sudah dipakai di kode diberi label **usulan**."),
+  B("Butir yang belum tersedia di SRS v0.1 maupun di kode diberi label **Perlu Ditentukan**."),
+  B("Kode kesalahan (mis. INSUFFICIENT_BALANCE) adalah nilai field code pada respons error backend, sedangkan pesan untuk pengguna dibawa field message."),
+  B("Spesifikasi diturunkan dari SRS dan diverifikasi terhadap implementasi backend dan Android per 11 November 2026."),
+
+  // BAB II Description Module
+  H1("BAB II  DESCRIPTION MODULE"),
+  P("Sistem terdiri atas delapan modul bisnis yang dibangun di atas satu komponen lintas modul, yaitu Financial Transaction Core (ledger). Tabel 2.1 merangkum setiap modul."),
+  table(["No", "Modul", "Tujuan", "FR (Must/Should/Could)", "Platform"], [
+    ["1", "Authentication", "Pendaftaran, verifikasi identitas, akses masuk, PIN transaksi, dan sesi; gerbang bagi seluruh modul lain", "FR-01–05 (4/1/0)", "Mobile & Web; biometrik hanya mobile"],
+    ["2", "Account", "Saldo, grafik saldo, kantong simpanan, dan locking", "FR-06–09 (1/3/0)", "Mobile & Web"],
+    ["3", "Transfer", "Pemindahan dana sesama bank dan antarbank sesuai UC-01", "FR-10–14 (3/2/0)", "Mobile & Web"],
+    ["4", "Payment (QRIS)", "Membayar dan menerima dana dengan standar QRIS", "FR-15–17 (2/0/1)", "Pindai hanya mobile; QRIS pribadi/dinamis mobile & Web"],
+    ["5", "Top-up", "Pulsa, paket data, token listrik, tagihan rumah tangga, e-wallet", "FR-18–20 (2/0/1)", "Mobile & Web"],
+    ["6", "Virtual Card", "Penerbitan dan pengelolaan kartu virtual", "FR-21–22 (0/2/0)", "Mobile & Web"],
+    ["7", "Transaction History & Dashboard", "Riwayat, detail, ringkasan bulanan, ekspor", "FR-23–26 (2/1/1)", "Mobile & Web; ekspor hanya Web"],
+    ["8", "Profile & Notification", "Profil, pengaturan keamanan, notifikasi transaksi", "FR-27–29 (1/2/0)", "Mobile & Web"],
+  ], [450, 1700, 3270, 1550, 2100], { center: [0], size: 18 }),
+  CAP("Tabel 2.1 Ringkasan modul bisnis (total 29 FR: 15 Must, 11 Should, 3 Could)"),
+  H2("2.1 Authentication"),
+  P("Modul Authentication mengelola siklus hidup akun. Status akun berpindah dari PENDING_OTP (baru mendaftar) ke ACTIVE (OTP terverifikasi), lalu ke FINANCIAL_ENABLED bila e-KYC disetujui, atau KYC_REJECTED bila ditolak. Hanya akun FINANCIAL_ENABLED dengan PIN yang valid yang dapat bertransaksi. Pemeriksaan ini dilakukan oleh komponen TransactionGuard untuk modul Account (penarikan dini), Transfer, Payment, Top-up, dan Virtual Card."),
+  img(f3("w_state.png"), 520, { alt: "Diagram status akun" }),
+  CAP("Gambar 2.1 Diagram status akun"),
+  H2("2.2 Account"),
+  P("Modul Account menampilkan saldo rekening utama dan mengelola kantong simpanan. Rekening utama dan setiap kantong dicatat sebagai akun ledger, sehingga saldo, grafik, dan riwayat selalu konsisten dengan jurnal. Kantong dapat dikunci sampai tanggal tertentu atau sampai target tercapai, dan dana terkunci tidak dapat dipakai untuk transaksi."),
+  H2("2.3 Transfer"),
+  P("Modul Transfer menjalankan UC-01: memilih jenis transfer, memvalidasi rekening, mengisi nominal, konfirmasi, PIN, pemrosesan, dan bukti. Transfer antarbank diteruskan ke simulator jaringan antarbank yang dapat menghasilkan sukses, penolakan (refund otomatis), atau timeout (status Diproses)."),
+  H2("2.4 Payment (QRIS)"),
+  P("Modul Payment memungkinkan pengguna membayar merchant dengan memindai kode QRIS (Android) dan menerima dana dengan menampilkan kode QRIS pribadi statis atau dinamis. Kode diproses sesuai format EMVCo dengan checksum CRC16."),
+  H2("2.5 Top-up"),
+  P("Modul Top-up melayani pembelian pulsa, paket data, token listrik, pembayaran tagihan PDAM/BPJS/Internet, dan top-up e-wallet melalui simulator penyedia. Setiap pembelian melalui tahap quote (ringkasan harga dan biaya admin) sebelum pembayaran dengan PIN."),
+  H2("2.6 Virtual Card"),
+  P("Modul Virtual Card menerbitkan kartu simulasi dengan cakupan domestik atau internasional, menampilkan detail kartu setelah verifikasi PIN, serta menyediakan fungsi bekukan/aktifkan dan pengaturan limit per transaksi. Endpoint simulator transaksi merchant tersedia untuk membuktikan aturan beku, limit, dan cakupan."),
+  H2("2.7 Transaction History & Dashboard"),
+  P("Modul ini menampilkan seluruh transaksi dari ledger dengan filter, pencarian, paginasi, detail termasuk baris jurnal, ringkasan pemasukan/pengeluaran bulanan, dan ekspor CSV/PDF khusus Web."),
+  H2("2.8 Profile & Notification"),
+  P("Modul ini mengelola data profil dengan verifikasi OTP, pengaturan keamanan (password, PIN, biometrik), preferensi notifikasi, dan kotak notifikasi. Notifikasi dibangkitkan secara asinkron dari event transaksi ledger."),
+
+  // BAB III Boundaries
+  H1("BAB III  SISTEM BOUNDARIES"),
+  H2("3.1 Diagram Konteks"),
+  P("Batas sistem mencakup aplikasi Android, aplikasi Web, API Gateway, backend, dan basis data. Di luar batas sistem terdapat nasabah, administrator (belum diimplementasikan), dan layanan eksternal yang disimulasikan."),
+  img(f2("d2_context.png"), 520, { alt: "Diagram konteks" }),
+  CAP("Gambar 3.1 Diagram konteks dan batas sistem"),
+  H2("3.2 Aktor"),
+  table(["Aktor", "Jenis", "Interaksi dengan sistem"], [
+    ["Nasabah (mahasiswa, profesional, UMKM)", "Primer", "Memakai seluruh fungsi FR-01 s.d. FR-29 melalui Android atau Web"],
+    ["Jaringan antarbank (simulator)", "Sekunder", "Menerima transfer antarbank dan mengembalikan sukses, ditolak, atau timeout"],
+    ["Jaringan QRIS (simulator)", "Sekunder", "Menyediakan contoh kode QRIS dan mensimulasikan dana masuk dari bank lain"],
+    ["Penyedia pulsa/PLN/tagihan (simulator)", "Sekunder", "Menyediakan katalog, inquiry pelanggan, dan hasil pembelian"],
+    ["Penerbit kartu (simulator)", "Sekunder", "Menerbitkan kartu simulasi dan mensimulasikan transaksi merchant"],
+    ["Penyedia OTP dan e-KYC (simulasi)", "Sekunder", "OTP dikembalikan di respons (mode simulasi); e-KYC diputuskan otomatis"],
+    ["Administrator sistem", "Di luar rilis", "Disebut SRS 2.3; tidak ada antarmuka pada rilis ini"],
+  ], [3000, 1300, 4770], { boldFirst: true, size: 18 }),
+  CAP("Tabel 3.1 Aktor sistem"),
+  H2("3.3 Di Dalam dan Di Luar Batas"),
+  table(["Di dalam batas sistem", "Di luar batas sistem (rilis ini)"], [
+    ["29 FR pada 8 modul bisnis", "Produk kredit/pinjaman dan investasi nyata"],
+    ["Ledger double-entry, idempotensi, refund, jejak audit", "Kartu debit fisik, penarikan tunai, layanan ATM"],
+    ["Simulator antarbank, QRIS, biller, kartu, OTP, e-KYC", "Integrasi produksi core banking, antarbank, QRIS, biller"],
+    ["Aplikasi Android (minSdk 24) dan Web (peramban modern)", "Aplikasi iOS; multibahasa"],
+    ["Data demo dan akun demo otomatis", "Antarmuka administrator; fitur diferensiasi (Budgeting, Split Bill, Round-Up, Quest)"],
+  ], [4535, 4535], { size: 18 }),
+  CAP("Tabel 3.2 Batas cakupan sistem"),
+  H2("3.4 Batas Platform"),
+  B("**Hanya Android:** pindai QRIS dengan kamera/galeri (FR-15) dan login biometrik (FR-03)."),
+  B("**Hanya Web:** ekspor riwayat CSV/PDF (FR-26)."),
+  B("**Keduanya:** seluruh FR lain memakai endpoint yang sama, sehingga aturan bisnis identik di kedua platform."),
+
+  // BAB IV External interface
+  H1("BAB IV  EKSTERNAL INTERFACE"),
+  H2("4.1 Antarmuka Pengguna"),
+  P("Antarmuka Android dibangun dengan Jetpack Compose dengan navigasi bottom bar Beranda / Riwayat / QRIS / Profil. Kode layar dan peta navigasi lengkap ditetapkan pada User Interface Map (Dokumen 5). Antarmuka Web menunggu konfirmasi tim Web (lihat SAD-DDB-001 Bab VIII)."),
+  table(["Modul", "Layar Android (berkas)", "Halaman Web"], [
+    ["Authentication", "Registrasi, OTP, e-KYC, Login, PIN, Pemulihan (authentication/presentation/screen)", "Perlu Ditentukan (D05W)"],
+    ["Account", "Beranda + saldo (home), kantong dan grafik saldo (AccountScreens)", "Perlu Ditentukan (D05W)"],
+    ["Transfer", "Alur transfer, konfirmasi, bukti (TransferScreen)", "Perlu Ditentukan (D05W)"],
+    ["Payment (QRIS)", "Pindai, konfirmasi, terima QRIS (PaymentScreens)", "Perlu Ditentukan (D05W)"],
+    ["Top-up", "Pulsa/data, PLN, tagihan, e-wallet (TopUpScreen)", "Perlu Ditentukan (D05W)"],
+    ["Virtual Card", "Daftar, buat, detail, limit (VirtualCardScreen)", "Perlu Ditentukan (D05W)"],
+    ["History & Dashboard", "Riwayat, filter, detail, analitik (HistoryScreens)", "Perlu Ditentukan (D05W)"],
+    ["Profile & Notification", "Profil, keamanan, pengaturan dan kotak notifikasi (ProfileScreens)", "Perlu Ditentukan (D05W)"],
+  ], [2000, 4870, 2200], { boldFirst: true, size: 18 }),
+  CAP("Tabel 4.1 Antarmuka pengguna per modul"),
+  H2("4.2 Antarmuka Perangkat Lunak: API Klien–Backend"),
+  P("Seluruh klien berkomunikasi dengan backend melalui REST/JSON di bawah prefiks /api/v1 (di belakang API Gateway). Konvensi umum:"),
+  B("Header Authorization: Bearer <accessToken> untuk semua endpoint selain registrasi, login, refresh, dan pemulihan."),
+  B("Header Idempotency-Key (UUID per layar konfirmasi) untuk setiap transaksi keuangan."),
+  B("Uang dalam bilangan bulat rupiah; waktu ISO-8601 UTC, ditampilkan dalam WIB."),
+  B("Kesalahan berformat {\"code\", \"message\", \"fields\"}."),
+  P("Tabel 4.2 memuat seluruh 73 operasi API yang dibangkitkan dari openapi.json. Endpoint bertanda [Simulator] hanya untuk pengujian dan demo."),
+  table(["Metode", "Path (setelah /api/v1)", "Fungsi"], epRows, [900, 3400, 4770], { size: 16 }),
+  CAP("Tabel 4.2 Daftar operasi API per modul (sumber: backend/docs/openapi.json)"),
+  H2("4.3 Antarmuka Sistem Eksternal (Simulator)"),
+  table(["Sistem", "Perilaku simulasi", "Data uji pemicu"], [
+    ["Jaringan antarbank", "Sukses, ditolak (refund), timeout (Diproses)", "BCA 1234567890, BRI 9876543210, BNI 1122334455, Mandiri 5566778899 (normal); BRI 9999999999 (ditolak); Mandiri 8888888888 (timeout)"],
+    ["QRIS", "Dekode/enkode EMVCo + CRC16; contoh kode statis/dinamis; dana masuk", "GET /qris/demo; POST /qris/simulate-incoming"],
+    ["Penyedia PLN/tagihan", "Inquiry pelanggan dan pembayaran", "ID pelanggan atau nomor tagihan berakhiran 0000 = tidak ditemukan"],
+    ["e-KYC", "Keputusan otomatis setelah ±3 detik", "NIK berakhiran 0000 = ditolak"],
+    ["OTP", "Kode dikembalikan di respons (demoCode) bila EXPOSE_OTP = true", "–"],
+    ["Penerbit kartu", "Kartu simulasi dan transaksi merchant", "POST /cards/{id}/simulate-purchase"],
+  ], [2000, 3270, 3800], { boldFirst: true, size: 18 }),
+  CAP("Tabel 4.3 Antarmuka sistem eksternal yang disimulasikan"),
+  H2("4.4 Antarmuka Perangkat Keras dan Komunikasi"),
+  B("**Kamera** (Android): pindai QRIS; izin CAMERA. Tersedia alternatif pilih gambar dari galeri."),
+  B("**Sensor biometrik** (Android): login biometrik. Pada build saat ini biometrik masih disimulasikan; integrasi BiometricPrompt belum dilakukan."),
+  B("**Notifikasi** (Android): izin POST_NOTIFICATIONS untuk notifikasi transaksi."),
+  B("**Berbagi berkas** (Android): FileProvider untuk membagikan bukti transaksi PNG/PDF."),
+  B("**Komunikasi:** HTTPS ke API Gateway (TLS belum dipasang, lihat SAD-DDB-001 Bab IX); JSON; rate limit gateway 20 permintaan/detik per IP dan 10 permintaan/menit untuk endpoint login/registrasi."),
+
+  // BAB V Functions Specification
+  H1("BAB V  FUNCTIONS SPECIFICATION"),
+  P("Setiap fungsi dispesifikasikan dengan input, proses dan aturan, serta output dan kode kesalahan. Endpoint terkait tercantum pada Tabel 4.2. Kriteria penerimaan mengacu pada SRS Bagian 3.2."),
+  H2("5.1 Authentication"), spec(mod.auth), CAP("Tabel 5.1 Spesifikasi fungsi Authentication"),
+  H2("5.2 Account"), spec(mod.account), CAP("Tabel 5.2 Spesifikasi fungsi Account"),
+  H2("5.3 Transfer"), spec(mod.transfer), CAP("Tabel 5.3 Spesifikasi fungsi Transfer"),
+  H2("5.4 Payment (QRIS)"), spec(mod.qris), CAP("Tabel 5.4 Spesifikasi fungsi Payment (QRIS)"),
+  H2("5.5 Top-up"), spec(mod.topup), CAP("Tabel 5.5 Spesifikasi fungsi Top-up"),
+  H2("5.6 Virtual Card"), spec(mod.card), CAP("Tabel 5.6 Spesifikasi fungsi Virtual Card"),
+  H2("5.7 Transaction History & Dashboard"), spec(mod.history), CAP("Tabel 5.7 Spesifikasi fungsi Transaction History & Dashboard"),
+  H2("5.8 Profile & Notification"), spec(mod.profile), CAP("Tabel 5.8 Spesifikasi fungsi Profile & Notification"),
+  H2("5.9 Aturan Bisnis"),
+  table(["ID", "Aturan (SRS 3.4)", "Penerapan", "Status nilai"], [
+    ["BR-01", "Nominal minimum transfer Rp5.000", "Validasi pada quote dan eksekusi transfer (AMOUNT_TOO_SMALL)", "SRS (menunggu konfirmasi)"],
+    ["BR-02", "PIN salah 3× berturut-turut memblokir transaksi sementara", "PinService: blokir 5 menit (PIN_BLOCKED)", "Durasi 5 menit: usulan"],
+    ["BR-03", "Transaksi keuangan dicatat ledger double-entry dan atomik", "LedgerService + kunci baris FOR UPDATE", "Diterapkan"],
+    ["BR-04", "Kunci idempotensi mencegah debit ganda", "Header Idempotency-Key wajib (IDEMPOTENCY_KEY_REQUIRED)", "Diterapkan"],
+    ["BR-05", "Transfer antarbank yang ditolak dikembalikan otomatis", "Jurnal pembalik (refund) + status Gagal + notifikasi", "Diterapkan"],
+    ["BR-06", "Dana kantong terkunci tidak dapat dipakai kecuali penarikan dini + PIN", "AccountService (POCKET_LOCKED; earlyWithdrawal + PIN)", "Diterapkan"],
+    ["BR-07", "Limit transaksi harian belum ditetapkan", "Belum ada limit harian; yang diterapkan adalah batas per transaksi Rp25.000.000", "Perlu Ditentukan"],
+  ], [850, 2900, 3420, 1900], { boldFirst: true, size: 18 }),
+  CAP("Tabel 5.9 Aturan bisnis dan penerapannya"),
+  H2("5.10 Nilai Usulan yang Perlu Dikonfirmasi"),
+  table(["Parameter", "Nilai usulan", "Lokasi di kode backend"], [
+    ["Maksimum transfer per transaksi", "Rp25.000.000", "TransferService.MAX_AMOUNT"],
+    ["Biaya transfer antarbank", "Rp2.500 (sesama bank Rp0)", "TransferService.INTERBANK_FEE"],
+    ["Batas pembayaran QRIS", "Rp1.000 – Rp10.000.000", "PaymentService.MIN/MAX_AMOUNT"],
+    ["Limit virtual card", "Rp10.000 – Rp50.000.000 (default Rp5.000.000); maks. 5 kartu", "VirtualCardService"],
+    ["Biaya admin pulsa / PLN / tagihan", "Rp1.500 / Rp2.500 / Rp2.500", "TopUpCatalog"],
+    ["Kantong", "Maks. 10; target minimum Rp10.000", "AccountService"],
+    ["Penerima favorit", "Maks. 20", "TransferService.MAX_FAVORITES"],
+    ["Timeout sesi tidak aktif", "5 menit", "SessionJwtConverter.IDLE_TIMEOUT"],
+    ["Masa berlaku OTP; maksimum salah", "2 menit; 5 kali", "OtpService"],
+  ], [3200, 3270, 2600], { boldFirst: true, size: 18 }),
+  CAP("Tabel 5.10 Nilai usulan (belum ditetapkan SRS)"),
+
+  // BAB VI Workflow
+  H1("BAB VI  WORKFLOW"),
+  P("Bab ini menyajikan alur kerja utama per modul. Kotak biru adalah aksi pengguna, kotak hijau adalah aksi sistem, belah ketupat adalah keputusan, dan kotak merah adalah jalur alternatif atau kesalahan."),
+  H2("6.1 Registrasi dan Aktivasi Akun"),
+  img(f3("w_register.png"), 520, { alt: "Workflow registrasi" }), CAP("Gambar 6.1 Workflow registrasi, OTP, e-KYC, dan PIN (FR-01, FR-02, FR-04)"),
+  H2("6.2 Login dan Sesi"),
+  img(f3("w_login.png"), 520, { alt: "Workflow login" }), CAP("Gambar 6.2 Workflow login dan manajemen sesi (FR-03, FR-05)"),
+  H2("6.3 Transfer Dana (UC-01)"),
+  img(f3("w_transfer.png"), 520, { alt: "Workflow transfer" }), CAP("Gambar 6.3 Workflow transfer dana dengan alur alternatif A1–A6 (FR-10 – FR-14)"),
+  H2("6.4 Pembayaran QRIS"),
+  img(f3("w_qris.png"), 520, { alt: "Workflow QRIS" }), CAP("Gambar 6.4 Workflow pembayaran QRIS (FR-15, FR-17)"),
+  H2("6.5 Top-up dan Tagihan"),
+  img(f3("w_topup.png"), 520, { alt: "Workflow top-up" }), CAP("Gambar 6.5 Workflow top-up dan pembayaran tagihan (FR-18 – FR-20)"),
+  H2("6.6 Kantong dan Locking"),
+  img(f3("w_pocket.png"), 520, { alt: "Workflow kantong" }), CAP("Gambar 6.6 Workflow kantong, locking, dan penarikan dini (FR-08, FR-09, BR-06)"),
+  H2("6.7 Virtual Card"),
+  img(f3("w_card.png"), 520, { alt: "Workflow virtual card" }), CAP("Gambar 6.7 Workflow virtual card (FR-21, FR-22)"),
+  H2("6.8 Riwayat dan Ekspor"),
+  img(f3("w_history.png"), 520, { alt: "Workflow riwayat" }), CAP("Gambar 6.8 Workflow riwayat, detail, dan ekspor (FR-23 – FR-26)"),
+  H2("6.9 Perubahan Profil"),
+  img(f3("w_profile.png"), 520, { alt: "Workflow profil" }), CAP("Gambar 6.9 Workflow perubahan profil dengan OTP (FR-27)"),
+
+  // BAB VII Status
+  H1("BAB VII  STATUS IMPLEMENTASI DAN ISU TERBUKA"),
+  H2("7.1 Matriks Status Implementasi per FR"),
+  P("Status berikut disusun berdasarkan kode dan hasil uji per 11 November 2026. Aplikasi Android memiliki varian demo (data simulasi) dan varian online yang memanggil backend; varian online lulus uji end-to-end terhadap backend sungguhan."),
+  table(["FR", "Backend", "Android", "Web"], [
+    ["FR-01, FR-02, FR-04, FR-05", "Ada", "Ada (demo dan online)", "Belum terverifikasi"],
+    ["FR-03", "Ada (password + biometrik)", "Ada; biometrik disimulasikan", "Belum terverifikasi (tanpa biometrik)"],
+    ["FR-06 – FR-14", "Ada", "Ada (demo dan online)", "Belum terverifikasi"],
+    ["FR-15", "Ada", "Ada (kamera, galeri, QR demo)", "Tidak berlaku"],
+    ["FR-16 – FR-25", "Ada", "Ada (demo dan online)", "Belum terverifikasi"],
+    ["FR-26", "Ada (CSV/PDF)", "Tidak berlaku", "Belum terverifikasi"],
+    ["FR-27 – FR-29", "Ada (foto berupa URL)", "Ada (demo dan online)", "Belum terverifikasi"],
+  ], [2400, 2200, 2400, 2070], { boldFirst: true, size: 18 }),
+  CAP("Tabel 7.1 Status implementasi FR per platform"),
+  NOTE("'Ada' berarti fungsi terimplementasi dan tercakup test otomatis atau uji emulator; status ini belum berarti lulus pengujian sistem (Dokumen 6)."),
+  H2("7.2 Isu Terbuka"),
+  ...NL([
+    "SRS v0.1 belum memuat bagian Antarmuka Eksternal, Kebutuhan Data, dan Matriks Keterlacakan (dijadwalkan v0.2). Bab IV dokumen ini disusun dari implementasi dan perlu diselaraskan saat SRS v0.2 terbit.",
+    "BR-07 (limit harian) belum ditetapkan; saat ini hanya ada batas per transaksi.",
+    "Nilai usulan pada Tabel 5.10 perlu dikonfirmasi tim dan dosen.",
+    "Login biometrik Android masih disimulasikan; integrasi BiometricPrompt diperlukan untuk memenuhi FR-03 secara penuh di perangkat nyata.",
+    "Foto profil hanya mendukung URL; unggah berkas belum tersedia.",
+    "Desain fungsional sisi Web belum dapat diverifikasi sampai tim Web melaporkan progres dan halaman yang tersedia.",
+  ]),
+  H2("Referensi"),
+  ...NL([
+    "Kelompok Jaran Goyang. (2026). Software Requirements Specification PT Diponegoro Digital Bank (SRS-DDB-001) v0.1.",
+    "Kelompok Jaran Goyang. (2026). Architectural Design (SAD-DDB-001) v0.9.",
+    "Kelompok Jaran Goyang. (2026). Project Document (PRJ-DDB-001) v0.9.",
+    "Backend Diponegoro Digital Bank: backend/docs/openapi.json dan README.md (11 November 2026).",
+    "EMVCo. EMV QR Code Specification for Payment Systems – Merchant-Presented Mode.",
+  ]),
+];
+
+S.build(meta, body, OUT);

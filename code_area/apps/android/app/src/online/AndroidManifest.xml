@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Varian online: Android 17 (API 37) memblokir akses aplikasi ke alamat jaringan lokal (10.x, 192.168.x)
+  tanpa izin ACCESS_LOCAL_NETWORK. Dibutuhkan selama backend dijalankan di laptop/LAN saat pengembangan;
+  tidak diperlukan lagi bila backend sudah di cloud dengan alamat publik + HTTPS.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
+</manifest>

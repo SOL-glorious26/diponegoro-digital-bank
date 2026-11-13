@@ -1,0 +1,3 @@
+PASS  SA-20  server tidak terjangkau → pesan, aplikasi tidak tertutup  — pesan "Tidak dapat terhubung ke server"; aplikasi tetap berjalan (backend perlu dijalankan ulang) (14 dtk)
+
+1/1 PASS

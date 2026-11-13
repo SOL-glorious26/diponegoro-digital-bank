@@ -1,0 +1,11 @@
+args: [-p, com.diponegoro.digitalbank, -c, android.intent.category.LAUNCHER, 1]
+ arg: "-p"
+ arg: "com.diponegoro.digitalbank"
+ arg: "-c"
+ arg: "android.intent.category.LAUNCHER"
+ arg: "1"
+data="com.diponegoro.digitalbank"
+data="android.intent.category.LAUNCHER"
+FAIL  SA-18  diam > 5 menit → diminta login ulang  — timeout menunggu /^Riwayat$/ — layar: Diponegoro Digital Bank | Login untuk melanjutkan. Akun demo: demo / Demo@1234 (PIN 123456) | Username / email / nomor telepon | Password | Lihat | Sesi berakhir otomatis karena tidak ada aktivitas. Silakan login kembali.  (409 dtk)
+
+0/1 PASS

@@ -1,0 +1,3 @@
+PASS  SA-23  login biometrik (simulasi token perangkat) tanpa password  — masuk tanpa password lewat tombol biometrik (simulasi: token perangkat, belum memakai sensor/BiometricPrompt) (102 dtk)
+
+1/1 PASS

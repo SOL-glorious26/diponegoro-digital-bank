@@ -1,0 +1,355 @@
+const S = require("./ddbstyle");
+const { P, H1, H2, H3, B, NL, CAP, NOTE, table } = S;
+const [, , FIG, OUT, LOGO] = process.argv;
+
+// Hasil eksekusi test otomatis (diisi dari laporan Surefire / Gradle pada tanggal eksekusi)
+const RUN = require("./doc6_results.json");
+
+const meta = {
+  docLabel: "Dokumen 6", title: "Pengujian Sistem", subtitle: "System Testing Android, Web, Backend/API, dan Lintas Platform",
+  code: "STD-DDB-001", version: "0.9", statusShort: "Draf Desain Uji dan Hasil Awal",
+  status: "Draf – desain kasus uji lengkap; hasil test otomatis aktual; eksekusi uji sistem manual berjalan; menunggu review PIC (Steven Wibisana) dan persetujuan Project Manager",
+  module: "Pengujian Sistem Diponegoro Digital Bank (8 modul bisnis, Financial Transaction Core, klien Android dan Web)",
+  createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager) – draf awal untuk PIC Dokumen 6",
+  updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager)",
+  team: "Kelompok Jaran Goyang – PIC: Steven Wibisana; eksekusi Android: Gracia, Grace; eksekusi Web: Permata; data uji dan backend: Salomo",
+  refs: "SRS-DDB-001 v0.1; PRJ-DDB-001 v0.9.2 Bab III; SAD-DDB-001 v0.9.2; FSD-DDB-001 v0.9.1; SDD-DDB-001-BE v0.9.1; TUT-DDB-001-AND v1.0; User Interface Map (Web) v0.3",
+  date: "11 November 2026", logo: LOGO,
+  revisions: [
+    ["0.9", "11 Nov 2026", "Salomo P.G. Hokoyoku", "Draf awal: strategi, lingkungan, matriks keterlacakan FR-01–FR-29, kasus uji Backend/API, Android, Web, lintas platform, dan non-fungsional; hasil aktual test otomatis; log defect dari pengembangan."],
+  ],
+};
+
+const ST = { L: "Lulus", G: "Gagal", T: "Terblokir", N: "Belum dieksekusi" };
+
+// ---------------- Kasus uji Backend/API (otomatis) ----------------
+const BE = [
+  ["AccountFlowTest", "rekeningDibukaSetelahEkycDenganSaldoAwal", "Rekening dibuka setelah e-KYC disetujui dengan saldo awal", "FR-02, FR-06"],
+  ["AccountFlowTest", "rekeningBelumAdaSebelumEkyc", "Rekening belum tersedia sebelum e-KYC", "FR-02"],
+  ["AccountFlowTest", "sembunyikanSaldoTersimpan", "Pilihan sembunyikan saldo tersimpan di server", "FR-06"],
+  ["AccountFlowTest", "kantongIsiKunciTarikDiniDenganPin", "Kantong: isi, kunci, tarik dini dengan PIN", "FR-08, FR-09, BR-06"],
+  ["AccountFlowTest", "kunciTargetTerbukaOtomatis…", "Kunci target terbuka otomatis; hapus kantong mengembalikan saldo", "FR-09"],
+  ["AccountFlowTest", "kunciTanggalTerbukaSetelahTanggalLewat", "Kunci tanggal terbuka setelah tanggal lewat", "FR-09"],
+  ["AccountFlowTest", "saldoTidakCukupTidakMengubahApaPun", "Saldo tidak cukup tidak mengubah data apa pun", "BR-03"],
+  ["AccountFlowTest", "grafikSaldoKonsistenDenganLedger", "Grafik saldo konsisten dengan ledger", "FR-07"],
+  ["AccountFlowTest", "kantongOrangLainTidakBisaDiakses", "Kantong milik pengguna lain tidak dapat diakses", "NFR-06"],
+  ["AuthFlowTest", "verifikasiPinMandiriMemakaiAturanBlokirYangSama", "Verifikasi PIN setelah login memakai aturan blokir yang sama", "FR-04, BR-02"],
+  ["AuthFlowTest", "registrasiOtpEkycPinSampaiFinancialEnabled", "Registrasi → OTP → e-KYC → PIN sampai transaksi aktif", "FR-01, FR-02, FR-04"],
+  ["AuthFlowTest", "ekycDenganNikBerakhiran0000Ditolak", "e-KYC dengan NIK berakhiran 0000 ditolak", "FR-02"],
+  ["AuthFlowTest", "passwordSalahPesanUmumDanDikunciSetelah5Kali", "Password salah: pesan umum, dikunci setelah 5 kali", "FR-03"],
+  ["AuthFlowTest", "logoutSemuaPerangkatMembatalkanSemuaToken", "Logout semua perangkat membatalkan seluruh token", "FR-05"],
+  ["AuthFlowTest", "sesiBerakhirSetelah5Menit…", "Sesi berakhir setelah 5 menit tidak aktif; refresh token dirotasi", "FR-05"],
+  ["AuthFlowTest", "pemulihanPasswordDenganOtp", "Pemulihan password dengan OTP", "FR-05"],
+  ["AuthFlowTest", "loginBiometrikDenganTokenPerangkat", "Login biometrik dengan token perangkat", "FR-03"],
+  ["AuthFlowTest", "endpointTerlindungTanpaTokenDitolak…", "Endpoint terlindung tanpa token ditolak dengan format JSON seragam", "NFR-06"],
+  ["DemoDataTest", "dataDemoKonsistenDanBisaDipakai", "Data demo konsisten (jurnal seimbang) dan dapat dipakai login", "Data uji"],
+  ["HistoryProfileNotificationTest", "riwayatFilterKombinasiPencarianDanPaginasi", "Riwayat: kombinasi filter, pencarian, paginasi", "FR-23"],
+  ["HistoryProfileNotificationTest", "detailMemuatJurnalSeimbang…", "Detail memuat jurnal seimbang; tidak dapat dilihat pengguna lain", "FR-24, NFR-06"],
+  ["HistoryProfileNotificationTest", "ringkasanBulananDanEksporCsvPdf", "Ringkasan bulanan dan ekspor CSV/PDF", "FR-25, FR-26"],
+  ["HistoryProfileNotificationTest", "notifikasiTransaksiMasukDanKeluarAsinkron", "Notifikasi transaksi masuk dan keluar (asinkron)", "FR-29"],
+  ["HistoryProfileNotificationTest", "transferDitolakMengirimSatuNotifikasiGagal", "Transfer ditolak mengirim tepat satu notifikasi gagal", "FR-29"],
+  ["HistoryProfileNotificationTest", "pengaturanKanalEmail…", "Pengaturan kanal notifikasi; kanal wajib harus dipilih", "FR-28"],
+  ["HistoryProfileNotificationTest", "ubahProfilDenganOtpDanUbahPasswordPin", "Ubah profil dengan OTP; ubah password dan PIN", "FR-27, FR-28"],
+  ["PaymentTopUpCardFlowTest", "codecRoundTripDanCrcRusakDitolak", "Encode/decode QRIS EMVCo; CRC rusak ditolak", "FR-15"],
+  ["PaymentTopUpCardFlowTest", "bayarQrisStatisDanBatasNominal", "Bayar QRIS statis dan batas nominal", "FR-15"],
+  ["PaymentTopUpCardFlowTest", "qrisDinamisMemakaiNominalDariKode", "QRIS dinamis memakai nominal dari kode", "FR-17"],
+  ["PaymentTopUpCardFlowTest", "qrisPribadiSesamaBank…", "QRIS pribadi sesama bank mengkredit penerima; QR sendiri ditolak", "FR-16"],
+  ["PaymentTopUpCardFlowTest", "simulasiDanaMasukQris", "Simulasi dana masuk melalui QRIS", "FR-16"],
+  ["PaymentTopUpCardFlowTest", "tokenPlnDanIdTidakDitemukan", "Token PLN dan ID pelanggan tidak ditemukan", "FR-19"],
+  ["PaymentTopUpCardFlowTest", "pulsaDanNominalTidakValid", "Pulsa dan nominal tidak valid", "FR-18"],
+  ["PaymentTopUpCardFlowTest", "tagihanTidakBisaDibayarDuaKali", "Tagihan tidak dapat dibayar dua kali", "FR-20"],
+  ["PaymentTopUpCardFlowTest", "kartuVirtualDetailBerPin…", "Virtual card: detail ber-PIN, bekukan, limit, cakupan", "FR-21, FR-22"],
+  ["TransferFlowTest", "transferSesamaBankAtomikDanKeduaSaldoBerubah", "Transfer sesama bank atomik; kedua saldo berubah", "FR-10, BR-03"],
+  ["TransferFlowTest", "validasiInputA2A3DanRekeningSendiri", "Validasi input (A2, A3) dan rekening sendiri", "FR-10, FR-12"],
+  ["TransferFlowTest", "saldoTidakCukupA1", "Saldo tidak cukup (A1)", "FR-10"],
+  ["TransferFlowTest", "pinSalahA4TidakMendebitDanBlokirSetelah3Kali", "PIN salah (A4) tidak mendebit; blokir setelah 3 kali", "FR-04, BR-02"],
+  ["TransferFlowTest", "antarbankDenganBiaya", "Transfer antarbank dengan biaya", "FR-11"],
+  ["TransferFlowTest", "ditolakJaringanA6DanaDikembalikan", "Ditolak jaringan (A6), dana dikembalikan otomatis", "FR-11, BR-05"],
+  ["TransferFlowTest", "timeoutA5DiprosesLaluCekUlangBerhasil", "Timeout (A5) berstatus diproses, lalu cek ulang berhasil", "FR-11"],
+  ["TransferFlowTest", "favoritTambahHapusDanTerlihatSaatInquiry", "Favorit: tambah, hapus, terlihat saat inquiry", "FR-12, FR-13"],
+  ["TransferFlowTest", "transferParalelTidakMenembusSaldo…", "Transfer paralel tidak menembus saldo; kunci idempotensi sama hanya sekali debit", "BR-04, NFR-07"],
+  ["TransferFlowTest", "belumEkycTidakBisaTransfer", "Pengguna belum e-KYC tidak dapat transfer", "FR-02"],
+];
+
+// ---------------- Test otomatis Android ----------------
+const AND = [
+  ["LedgerTest", "6", "Jurnal seimbang, posting tidak seimbang ditolak, atomisitas, idempotensi, refund, saldo awal", "BR-03, BR-04, BR-05"],
+  ["AccountRepositoryTest", "6", "Sembunyikan saldo, grafik saldo, siklus kantong, kunci tanggal/target, validasi input", "FR-06–FR-09"],
+  ["TransferRepositoryTest", "9", "Validasi rekening, aturan nominal, sesama bank, antarbank, A5, A6, PIN salah, e-KYC, favorit", "FR-04, FR-10–FR-13"],
+  ["PaymentRepositoryTest", "6", "Codec QRIS + CRC, QR dirusak, QRIS dinamis, QRIS statis + PIN salah, QRIS pribadi", "FR-15–FR-17"],
+  ["TopUpRepositoryTest", "6", "Deteksi operator, pulsa + biaya, paket data, token PLN, tagihan sekali per periode, e-wallet", "FR-18–FR-20"],
+  ["VirtualCardUseCasesTest", "8", "Buat kartu, e-KYC wajib, detail dengan PIN, akses pengguna lain, bekukan, limit, cakupan domestik", "FR-21, FR-22"],
+  ["HistoryAndProfileTest", "7", "Urutan dan paginasi riwayat, filter + pencarian, ringkasan bulanan, detail jurnal, profil dengan OTP, ubah PIN/password, notifikasi", "FR-23–FR-25, FR-27–FR-29"],
+  ["ApiClientTest (MockWebServer)", "8", "Bearer token, refresh sekali saat 401, sesi berakhir, pesan error, offline, Idempotency-Key, format waktu", "FR-04, FR-05, NFR-05"],
+  ["AppTourTest + ReceiptAndDialogShotsTest (Robolectric, varian demo)", "5", "Tur seluruh layar, dialog PIN, bukti transfer berhasil/ditolak, struk PLN", "FR-14, NFR-08"],
+  ["LiveBackendTest (varian online)", "1", "Nasabah baru dari registrasi sampai transaksi di backend sungguhan (dilewati pada varian demo)", "FR-01–FR-04, FR-10, FR-15, FR-18, FR-21, FR-29"],
+  ["ExampleUnitTest", "1", "Test bawaan templat proyek", "–"],
+];
+
+// ---------------- Kasus uji sistem Android (manual) ----------------
+// [ID, judul, prasyarat/data, langkah, hasil harapan, varian, FR, status, catatan]
+const SA = [
+  ["SA-01", "Login dan PIN", "Akun demo", "Login demo / Demo@1234 → PIN 123456", "Masuk Beranda; saldo dan rekening 1400123456 tampil", "D/O", "FR-03, FR-04, FR-06", ST.L, "Emulator, varian online, 11 Nov 2026"],
+  ["SA-02", "PIN salah tiga kali", "Akun demo", "Logout → login → PIN salah 3 kali", "PIN diblokir sementara dengan pesan sisa waktu", "D/O", "FR-04, BR-02", ST.N, ""],
+  ["SA-03", "Sembunyikan saldo", "Login", "Ketuk ikon mata di Beranda; tutup dan buka aplikasi", "Saldo tetap tersembunyi", "D/O", "FR-06", ST.N, ""],
+  ["SA-04", "Transfer sesama bank", "Login; saldo cukup", "Transfer → Diponegoro Digital Bank → 1400000002 → Rp10.000 → PIN", "Nama ANDI PRATAMA tampil sebelum PIN; berhasil; saldo berkurang; bukti dapat dibagikan", "D/O", "FR-10, FR-12, FR-14", ST.L, "Emulator, varian online, 11 Nov 2026; dana terlihat di akun penerima"],
+  ["SA-05", "Transfer antarbank ditolak", "Login", "Bank BRI, rekening 9999999999", "Gagal; dana dikembalikan; tercatat di riwayat", "D/O", "FR-11, BR-05", ST.N, ""],
+  ["SA-06", "Transfer antarbank timeout", "Login", "Bank Mandiri, rekening 8888888888 → Cek status", "Status diproses, lalu final setelah cek status; tidak ada debit ganda", "D/O", "FR-11, BR-04", ST.N, ""],
+  ["SA-07", "Saldo tidak cukup", "Login", "Transfer nominal melebihi saldo", "Ditolak sebelum PIN dengan pesan saldo tidak mencukupi", "D/O", "FR-10", ST.N, ""],
+  ["SA-08", "Bayar QRIS dengan kamera", "Dua perangkat; varian online", "Perangkat 2: Terima QRIS. Ponsel: Bayar QRIS → pindai", "Penerima dan nominal tampil; setelah PIN, saldo kedua akun berubah", "O", "FR-15, FR-16", ST.N, "Memerlukan ponsel fisik"],
+  ["SA-09", "Bayar QRIS contoh", "Login", "Bayar QRIS → pilih QR contoh → PIN", "Pembayaran berhasil", "D/O", "FR-15", ST.N, ""],
+  ["SA-10", "Top-up pulsa", "Login", "Top-up → Pulsa → nomor 0812… → nominal → PIN", "Berhasil; tercatat di riwayat", "D/O", "FR-18", ST.N, ""],
+  ["SA-11", "Token PLN tidak ditemukan", "Login", "Top-up → PLN → ID pelanggan berakhiran 0000", "Pesan pelanggan tidak ditemukan", "D/O", "FR-19", ST.N, ""],
+  ["SA-12", "Kantong terkunci", "Login", "Kantong → buat → isi Rp20.000 → kunci sampai tanggal", "Saldo utama berkurang; penarikan ditolak selama terkunci kecuali penarikan dini dengan PIN", "D/O", "FR-08, FR-09, BR-06", ST.N, ""],
+  ["SA-13", "Virtual card", "Login; e-KYC disetujui", "Virtual Card → buat → detail dengan PIN → bekukan", "Nomor lengkap dan CVV hanya tampil setelah PIN; status beku", "D/O", "FR-21, FR-22", ST.N, ""],
+  ["SA-14", "Riwayat dan analitik", "Ada transaksi uji", "Riwayat → filter Keluar → detail; buka Analitik", "Transaksi uji muncul; grafik bulan berjalan berubah", "D/O", "FR-23, FR-24, FR-25", ST.N, ""],
+  ["SA-15", "Ubah profil dengan OTP", "Login", "Profil → ubah email → masukkan OTP", "Perubahan aktif setelah OTP; notifikasi keamanan muncul", "D/O", "FR-27", ST.N, ""],
+  ["SA-16", "Notifikasi push", "Dua perangkat; varian online", "Perangkat 2 (andi) transfer ke 1400123456", "Notifikasi dana masuk muncul ≤ 15 detik", "O", "FR-29", ST.N, "Memerlukan dua perangkat"],
+  ["SA-17", "Konsistensi dua perangkat", "Dua perangkat; varian online", "Ponsel (demo) transfer ke andi; cek saldo andi di perangkat 2", "Saldo kedua akun konsisten; total tidak berubah", "O", "BR-03, NFR-08", ST.N, "Memerlukan dua perangkat"],
+  ["SA-18", "Timeout sesi", "Login", "Diamkan aplikasi > 5 menit, lalu lakukan aksi", "Diminta login ulang", "D/O", "FR-05", ST.N, ""],
+  ["SA-19", "Logout semua perangkat", "Dua perangkat; varian online", "Profil → Sesi aktif → keluar dari semua perangkat", "Perangkat lain kembali ke login pada aksi berikutnya", "O", "FR-05", ST.N, "Memerlukan dua perangkat"],
+  ["SA-20", "Server tidak terjangkau", "Varian online", "Hentikan backend, lalu muat ulang Beranda", "Pesan \"Tidak dapat terhubung ke server\"; aplikasi tidak tertutup paksa", "O", "NFR-05", ST.N, ""],
+  ["SA-21", "Registrasi sampai transaksi aktif", "Varian online; username baru", "Daftar → OTP → e-KYC dengan NIK valid → buat PIN", "e-KYC disetujui; rekening dan saldo awal tersedia; menu transaksi aktif", "D/O", "FR-01, FR-02, FR-04", ST.N, ""],
+  ["SA-22", "e-KYC ditolak", "Username baru", "Daftar → OTP → e-KYC dengan NIK berakhiran 0000", "e-KYC ditolak; menu transaksi tetap terkunci", "D/O", "FR-02", ST.N, ""],
+  ["SA-23", "Login biometrik", "Ponsel dengan sidik jari/wajah terdaftar", "Aktifkan biometrik di Profil → logout → login dengan biometrik", "Login berhasil tanpa password", "D/O", "FR-03", ST.N, "Memerlukan ponsel fisik"],
+  ["SA-24", "Penerima favorit", "Login", "Simpan penerima sebagai favorit → transfer baru → pilih favorit → hapus", "Favorit dapat dipilih dan dihapus", "D/O", "FR-13", ST.N, ""],
+  ["SA-25", "QRIS dinamis", "Dua perangkat atau QR contoh dinamis", "Buat QRIS dengan nominal → bayar", "Nominal tidak dapat diubah pembayar", "D/O", "FR-17", ST.N, ""],
+  ["SA-26", "Bayar tagihan", "Login", "Top-up → Tagihan (PDAM/BPJS/Internet) → nomor pelanggan → bayar → ulangi", "Pembayaran pertama berhasil; pembayaran kedua pada periode sama ditolak", "D/O", "FR-20", ST.N, ""],
+  ["SA-27", "Grafik saldo", "Ada transaksi", "Beranda → grafik saldo → ganti periode", "Titik grafik sesuai perubahan saldo pada riwayat", "D/O", "FR-07", ST.N, ""],
+  ["SA-28", "Pengaturan keamanan dan notifikasi", "Login", "Profil → Pengaturan → matikan satu jenis notifikasi → lakukan transaksi", "Notifikasi jenis tersebut tidak dikirim", "D/O", "FR-28", ST.N, ""],
+];
+
+// ---------------- Kasus uji Web ----------------
+const WB = [
+  ["WB-01", "Login (UI-01)", "Login dengan username/email + password, tanpa OTP", "Masuk ke Dashboard; token tersimpan sesuai SAD Bab VIII", "FR-03"],
+  ["WB-02", "Registrasi, OTP, e-KYC", "Daftar → OTP → e-KYC → PIN", "e-KYC disetujui; transaksi aktif", "FR-01, FR-02, FR-04"],
+  ["WB-03", "Route guard e-KYC", "Akun belum e-KYC membuka halaman transfer lewat URL", "Diarahkan ke halaman e-KYC", "FR-02"],
+  ["WB-04", "Dashboard saldo (UI-07)", "Buka Dashboard; sembunyikan saldo; muat ulang", "Saldo sama dengan Android; pilihan sembunyikan tersimpan", "FR-06, NFR-08"],
+  ["WB-05", "Transfer sesama bank (UI-08–UI-11)", "Rekening 1400000002 → Rp10.000 → PIN", "Nama penerima tampil; berhasil; header Idempotency-Key terkirim", "FR-04, FR-10, FR-12"],
+  ["WB-06", "Transfer antarbank ditolak", "BRI 9999999999", "Gagal; dana dikembalikan; tercatat di riwayat", "FR-11, BR-05"],
+  ["WB-07", "Riwayat dan detail (UI-16)", "Filter jenis/tanggal, cari kata kunci, buka detail", "Hasil sesuai filter; detail sesuai ledger", "FR-23, FR-24"],
+  ["WB-08", "Ekspor riwayat", "Ekspor CSV dan PDF dengan filter aktif", "Berkas terunduh dan isinya sesuai filter", "FR-26"],
+  ["WB-09", "QRIS pribadi", "Buka halaman QRIS pribadi", "Kode QRIS pribadi tampil dan dapat dipindai Android", "FR-16"],
+  ["WB-10", "Top-up pulsa dan PLN", "Pulsa 0812…; PLN ID berakhiran 0000", "Pulsa berhasil; PLN menampilkan pelanggan tidak ditemukan", "FR-18, FR-19"],
+  ["WB-11", "Profil dengan OTP", "Ubah email → OTP", "Perubahan aktif setelah OTP", "FR-27"],
+  ["WB-12", "Sesi dan token", "Biarkan access token kedaluwarsa, lalu lakukan aksi", "Token diperbarui sekali; bila gagal diarahkan ke login", "FR-05"],
+];
+
+// ---------------- Lintas platform ----------------
+const LP = [
+  ["LP-01", "Transfer di Android tampil di Web", "Transfer dari Android (akun demo) ke andi; buka Web dengan akun andi", "Saldo dan riwayat andi di Web sesuai ledger", "FR-10, FR-23, NFR-08"],
+  ["LP-02", "QRIS Web dibayar Android", "Web menampilkan QRIS pribadi; Android memindai dan membayar", "Saldo penerima di Web bertambah sesuai nominal", "FR-15, FR-16"],
+  ["LP-03", "Top-up di Web tampil di Android", "Top-up pulsa di Web; buka riwayat Android akun yang sama", "Transaksi muncul di Android dengan nominal dan status sama", "FR-18, FR-23"],
+  ["LP-04", "Logout semua perangkat lintas platform", "Login di Web dan Android; logout semua perangkat dari Android", "Sesi Web berakhir pada aksi berikutnya", "FR-05"],
+];
+
+// ---------------- Non-fungsional ----------------
+const NF = [
+  ["NF-01", "NFR-01", "Waktu muat layar utama ≤ 2 detik", "Stopwatch/Logcat pada emulator dan ponsel; DevTools pada Web", ST.N, ""],
+  ["NF-02", "NFR-02", "Respons API baca p95 ≤ 500 ms", "100 permintaan GET saldo/riwayat ke backend lokal, hitung p95", ST.N, ""],
+  ["NF-03", "NFR-03", "Transfer selesai ≤ 3 detik", "Ukur waktu POST transfer sesama bank (10 kali)", ST.N, ""],
+  ["NF-04", "NFR-06", "Rate limit login di gateway", "Kirim > 10 login/menit melalui gateway", ST.T, "Gateway belum dapat dijalankan (Docker belum terpasang)"],
+  ["NF-05", "NFR-06", "Akses tanpa token ditolak", "Panggil endpoint terlindung tanpa Authorization", ST.L, "Dicakup test otomatis BE-18"],
+  ["NF-06", "NFR-07", "Tidak ada debit ganda dan saldo tidak tembus pada transaksi paralel", "Transfer paralel dengan kunci idempotensi sama", ST.L, "Dicakup test otomatis BE-44"],
+  ["NF-07", "NFR-10", "Kompatibilitas Android", "Emulator Pixel 8 (API 37) dan minimal satu ponsel fisik", ST.N, "Emulator sudah dipakai pada SA-01 dan SA-04; ponsel fisik belum"],
+  ["NF-08", "NFR-12", "Cakupan unit test logika inti backend ≥ 70%", "Laporan JaCoCo", ST.N, "JaCoCo belum dipasang"],
+];
+
+// ---------------- Defect ----------------
+const DEF = [
+  ["DEF-01", "Backend – Ledger", "Kritis", "Dua transfer paralel dari rekening yang sama dapat menimpa saldo (lost update) sehingga saldo tidak sesuai jurnal", "Test transfer paralel (BE-44)", "Penguncian baris rekening sebelum posting (LedgerService.lock)", "Ditutup – retest lulus"],
+  ["DEF-02", "Android – Jaringan", "Tinggi", "Android 17 (API 37) memblokir koneksi ke backend di jaringan lokal; aplikasi varian online menampilkan \"Tidak dapat terhubung ke server\"", "Uji emulator varian online, 11 Nov 2026", "Izin ACCESS_LOCAL_NETWORK diminta saat aplikasi dibuka", "Ditutup – retest lulus (SA-01)"],
+  ["DEF-03", "Dokumentasi API", "Rendah", "backend/docs/API.md rusak: teks dalam backtick hilang dan karakter → / ± menjadi mojibake", "Pemeriksaan dokumen", "API.md dibangkitkan ulang dari openapi.json dengan encoding UTF-8", "Ditutup"],
+  ["DEF-04", "Backend – CORS", "Sedang", "Konfigurasi CORS backend tidak memuat daftar origin, sehingga panggilan peramban langsung ke port 8080 akan ditolak", "Pemeriksaan konfigurasi (belum terlihat di Web karena Web belum terhubung)", "Web memakai proxy Vite (SAD Bab VIII); alternatif: CorsConfigurationSource untuk localhost", "Terbuka – solusi sementara tersedia"],
+];
+
+// ---------------- Matriks keterlacakan ----------------
+const FR = [
+  ["FR-01", "Registrasi akun + OTP", "Must"], ["FR-02", "Verifikasi e-KYC", "Must"], ["FR-03", "Login password dan biometrik", "Must"],
+  ["FR-04", "PIN transaksi", "Must"], ["FR-05", "Sesi dan pemulihan", "Should"], ["FR-06", "Tampil/sembunyikan saldo", "Must"],
+  ["FR-07", "Grafik saldo", "Should"], ["FR-08", "Kantong simpanan", "Should"], ["FR-09", "Locking kantong", "Should"],
+  ["FR-10", "Transfer sesama bank", "Must"], ["FR-11", "Transfer antarbank", "Must"], ["FR-12", "Validasi rekening tujuan", "Must"],
+  ["FR-13", "Penerima favorit", "Should"], ["FR-14", "Bukti transfer", "Should"], ["FR-15", "Pindai QRIS (Mobile)", "Must"],
+  ["FR-16", "QRIS pribadi", "Must"], ["FR-17", "QRIS dinamis", "Could"], ["FR-18", "Pulsa dan paket data", "Must"],
+  ["FR-19", "Token listrik", "Must"], ["FR-20", "Tagihan lain", "Could"], ["FR-21", "Buat virtual card", "Should"],
+  ["FR-22", "Kelola kartu", "Should"], ["FR-23", "Riwayat + filter", "Must"], ["FR-24", "Detail transaksi", "Must"],
+  ["FR-25", "Dashboard bulanan", "Should"], ["FR-26", "Ekspor riwayat (Web)", "Could"], ["FR-27", "Profil pengguna", "Must"],
+  ["FR-28", "Pengaturan keamanan dan notifikasi", "Should"], ["FR-29", "Notifikasi transaksi", "Should"],
+];
+const hasFR = (s, fr) => {
+  // s: "FR-01, FR-02" or "FR-06–FR-09"
+  const n = +fr.slice(3);
+  return s.split(/,\s*/).some((part) => {
+    const m = part.trim().match(/^FR-(\d+)(?:–FR-(\d+))?/);
+    if (!m) return false;
+    const a = +m[1], b = m[2] ? +m[2] : a;
+    return n >= a && n <= b;
+  });
+};
+const ids = (list, idIdx, frIdx, fr) => list.filter((r) => hasFR(r[frIdx], fr)).map((r) => r[idIdx]);
+const beIds = BE.map((r, i) => ["BE-" + String(i + 1).padStart(2, "0"), r[3]]);
+const trace = FR.map(([fr, name, pr]) => {
+  const be = ids(beIds, 0, 1, fr), sa = ids(SA, 0, 6, fr), wb = ids(WB, 0, 4, fr), lp = ids(LP, 0, 4, fr);
+  return [fr, name, pr, be.join(", ") || "–", sa.join(", ") || "–", [...wb, ...lp].join(", ") || "–"];
+});
+const mustUncovered = trace.filter((r) => r[2] === "Must" && r[3] === "–" && r[4] === "–");
+
+// ---------------- Ringkasan ----------------
+const count = (list, idx, st) => list.filter((r) => r[idx] === st).length;
+const saL = count(SA, 7, ST.L), saN = count(SA, 7, ST.N);
+const nfL = count(NF, 4, ST.L), nfT = count(NF, 4, ST.T), nfN = count(NF, 4, ST.N);
+const be = RUN.backend, an = RUN.androidDemo, ao = RUN.androidOnline;
+
+const body = [
+  H1("BAB I  PENDAHULUAN"),
+  H2("1.1 Tujuan Dokumen"),
+  P("Dokumen ini adalah laporan pengujian sistem Diponegoro Digital Bank. Isinya mencakup strategi pengujian, lingkungan dan data uji, keterlacakan kebutuhan ke kasus uji, kasus uji per platform (Backend/API, Android, Web, lintas platform, dan non-fungsional), hasil eksekusi aktual, log defect, serta ringkasan. Rencana pengujian tingkat tinggi ditetapkan pada Dokumen 1 (PRJ-DDB-001) Bab III. Dokumen ini merinci dan melaporkan pelaksanaannya."),
+  H2("1.2 Ruang Lingkup"),
+  P("Pengujian mencakup delapan modul bisnis SRS (FR-01 sampai FR-29), aturan bisnis BR-01 sampai BR-07 yang terkait transaksi, Financial Transaction Core (ledger), klien Android varian demo dan online, klien Web, serta NFR terpilih. Di luar ruang lingkup: integrasi produksi dengan jaringan antarbank, QRIS, dan biller (digantikan simulator), aplikasi iOS, uji beban skala produksi, dan uji penetrasi formal."),
+  H2("1.3 Status Hasil Uji"),
+  table(["Status", "Arti"], [
+    ["Lulus", "Hasil aktual sama dengan hasil yang diharapkan; bukti tercatat"],
+    ["Gagal", "Hasil aktual berbeda; defect dicatat di Bab VII"],
+    ["Terblokir", "Kasus tidak dapat dieksekusi karena prasyarat belum tersedia; alasan dicatat"],
+    ["Belum dieksekusi", "Kasus sudah dirancang dan prasyarat tersedia, tetapi belum dijalankan"],
+  ], [2200, 6870], { boldFirst: true, size: 18 }),
+  CAP("Tabel 1.1 Status hasil uji"),
+  P("Seluruh hasil pada dokumen ini berasal dari eksekusi nyata. Kasus yang belum dijalankan tidak diberi hasil."),
+
+  H1("BAB II  STRATEGI PENGUJIAN"),
+  H2("2.1 Model dan Tingkat Pengujian"),
+  P("Pengujian mengikuti V-Model yang diterapkan secara iteratif (PRJ-DDB-001 3.1). Tabel 2.1 merangkum tingkat pengujian dan perwujudannya pada dokumen ini."),
+  table(["Tingkat", "Perwujudan", "Alat", "Bab"], [
+    ["Unit", "Test logika per kelas di Android (ledger, repository, use case)", "JUnit, Robolectric", "5.2"],
+    ["Integrasi", "Alur API end-to-end di backend; klien Android terhadap server tiruan dan backend sungguhan", "Spring Boot Test + H2 (MockMvc), MockWebServer", "5.1, 5.2"],
+    ["Sistem", "Kasus uji manual per platform dan lintas platform; NFR terpilih", "Emulator, ponsel, peramban, Swagger UI", "5.3–5.6"],
+    ["Penerimaan", "Skenario demo bersama dosen", "Dokumen 8", "–"],
+  ], [1500, 3970, 2600, 1000], { boldFirst: true, size: 18 }),
+  CAP("Tabel 2.1 Tingkat pengujian"),
+  H2("2.2 Prioritas"),
+  P("Kasus uji untuk FR berprioritas Must dijalankan lebih dahulu, termasuk alur alternatif transfer UC-01 A1–A6. Setiap FR Must wajib memiliki minimal satu kasus uji (Bab IV). Kasus dengan risiko kehilangan dana (atomisitas, idempotensi, refund, blokir PIN) diuji pada tingkat backend dan sistem."),
+  H2("2.3 Kriteria Masuk, Keluar, dan Keparahan Defect"),
+  P("Kriteria masuk dan keluar mengikuti PRJ-DDB-001 Tabel 3.3. Ringkasnya: pengujian sistem dimulai setelah build uji tersedia dan seluruh test otomatis lulus; pengujian dinyatakan selesai bila seluruh kasus FR Must telah dieksekusi, tidak ada defect Kritis atau Tinggi yang terbuka, dan hasil pengukuran NFR tercatat."),
+  table(["Keparahan", "Kriteria"], [
+    ["Kritis", "Kehilangan dana, data rusak, atau aplikasi tidak dapat dipakai"],
+    ["Tinggi", "Fungsi Must gagal tanpa solusi sementara"],
+    ["Sedang", "Fungsi Should/Could gagal, atau ada solusi sementara"],
+    ["Rendah", "Kosmetik atau dokumentasi"],
+  ], [2000, 7070], { boldFirst: true, size: 18 }),
+  CAP("Tabel 2.2 Tingkat keparahan defect"),
+
+  H1("BAB III  LINGKUNGAN DAN DATA UJI"),
+  H2("3.1 Lingkungan"),
+  table(["Lingkungan", "Konfigurasi", "Status"], [
+    ["Test otomatis backend", "Java 21, Spring Boot 4.1.2, profil test (H2 in-memory mode PostgreSQL); ./mvnw test", "Tersedia"],
+    ["Backend lokal untuk uji manual", "run-local.ps1 -H2 → http://localhost:8080 (Swagger UI /swagger-ui.html)", "Tersedia"],
+    ["Backend dengan PostgreSQL", "run-local.ps1 (profil dev)", "Belum dikonfigurasi"],
+    ["Gateway + kontainer", "docker compose (Nginx, backend, PostgreSQL 17)", "Belum tersedia (Docker belum terpasang)"],
+    ["Android – emulator", "Pixel 8, Android 17 (API 37); varian demo dan online (http://10.0.2.2:8080/)", "Tersedia"],
+    ["Android – ponsel fisik", "Varian online dengan -Pddb.baseUrl=http://<IP-laptop>:8080/ (Wi-Fi sama, hotspot, atau ngrok); langkah pada TUT-DDB-001-AND", "Belum dijalankan; merek dan versi Android dicatat saat eksekusi"],
+    ["Web", "Chrome, Firefox, Edge terbaru; Vite dev server dengan proxy /api", "Belum tersedia (Web belum terhubung ke backend)"],
+  ], [2300, 4570, 2200], { boldFirst: true, size: 18 }),
+  CAP("Tabel 3.1 Lingkungan pengujian"),
+  H2("3.2 Data Uji"),
+  table(["Data", "Nilai", "Kegunaan"], [
+    ["Akun demo", "demo / Demo@1234 / PIN 123456; rekening 1400123456", "Akun utama penguji"],
+    ["Nasabah lain", "andi, budi, citra; rekening 1400000002, 1400000003, 1400000004", "Penerima transfer, perangkat kedua"],
+    ["Antarbank ditolak", "BRI 9999999999", "Alur A6 dan refund (BR-05)"],
+    ["Antarbank timeout", "Mandiri 8888888888", "Alur A5 (status diproses)"],
+    ["e-KYC ditolak", "NIK berakhiran 0000", "FR-02 negatif"],
+    ["Pelanggan tidak ditemukan", "ID pelanggan PLN/tagihan berakhiran 0000", "FR-19, FR-20 negatif"],
+  ], [2300, 4170, 2600], { boldFirst: true, size: 18 }),
+  CAP("Tabel 3.2 Data uji simulasi"),
+  P("Akun dan kredensial demo hanya untuk lingkungan lokal dan demo. Seluruh data bersifat simulasi."),
+
+  H1("BAB IV  MATRIKS KETERLACAKAN"),
+  P("Tabel 4.1 memetakan setiap FR ke kasus uji. Kolom Backend berisi test otomatis (Tabel 5.1), kolom Android berisi kasus uji sistem Android (Tabel 5.3), dan kolom Web/Lintas berisi kasus uji Web (Tabel 5.4) dan lintas platform (Tabel 5.5)."),
+  table(["FR", "Kebutuhan", "Prioritas", "Backend (otomatis)", "Android (sistem)", "Web / Lintas"], trace, [800, 2000, 900, 2100, 1700, 1570], { size: 16, center: [2] }),
+  CAP("Tabel 4.1 Matriks keterlacakan FR ke kasus uji"),
+  P(mustUncovered.length === 0
+    ? "Seluruh FR berprioritas Must memiliki minimal satu kasus uji Backend dan satu kasus uji sistem. FR-15 (pindai QRIS) hanya berlaku di Android, dan FR-26 (ekspor riwayat) diuji di backend dan Web."
+    : "FR Must tanpa kasus uji: " + mustUncovered.map((r) => r[0]).join(", ") + "."),
+
+  H1("BAB V  KASUS UJI"),
+  H2("5.1 Backend/API (Test Integrasi Otomatis)"),
+  P(`Seluruh test berjalan terhadap API sungguhan (MockMvc) dengan basis data H2 dan jam yang dapat diatur (MutableClock) untuk menguji batas waktu. Hasil eksekusi ${be.date}: **${be.passed} dari ${be.total} lulus**, ${be.failed} gagal, ${be.skipped} dilewati, waktu ${be.time}.`),
+  table(["ID", "Kelas test", "Yang diuji", "Acuan", "Hasil"],
+    BE.map((r, i) => ["BE-" + String(i + 1).padStart(2, "0"), r[0].replace("HistoryProfileNotificationTest", "HistoryProfileNotif…").replace("PaymentTopUpCardFlowTest", "PaymentTopUpCard…"), r[2], r[3], be.failedNames.includes(r[1]) ? ST.G : ST.L]),
+    [750, 2100, 4020, 1400, 800], { center: [0, 4], size: 16 }),
+  CAP("Tabel 5.1 Kasus uji Backend/API otomatis"),
+  H2("5.2 Android (Test Unit dan Integrasi Otomatis)"),
+  P(`Varian demo dijalankan dengan ./gradlew :app:testDemoDebugUnitTest. Hasil ${an.date}: **${an.passed} lulus dari ${an.total}**, ${an.failed} gagal, ${an.skipped} dilewati (LiveBackendTest hanya berjalan pada varian online). Varian online (${ao.date}): ${ao.passed} dari ${ao.total} lulus, termasuk LiveBackendTest terhadap backend sungguhan.`),
+  table(["Kelas test", "Jumlah", "Cakupan", "Acuan"], AND, [2500, 800, 4070, 1700], { center: [1], size: 16 }),
+  CAP("Tabel 5.2 Test otomatis Android per kelas"),
+  H2("5.3 Kasus Uji Sistem Android"),
+  P("Kasus SA-01 sampai SA-20 sama dengan skenario U-01 sampai U-20 pada Panduan Uji Aplikasi di Ponsel (TUT-DDB-001-AND), sehingga penguji dapat memakai panduan tersebut langkah demi langkah. SA-21 sampai SA-28 ditambahkan untuk menutup FR yang belum tercakup. Kolom varian: D = demo, O = online."),
+  table(["ID", "Judul", "Prasyarat", "Langkah", "Hasil yang diharapkan", "Var.", "Acuan", "Status"],
+    SA.map((r) => r.slice(0, 8)), [650, 1250, 1100, 1900, 2000, 500, 900, 770], { center: [0, 5], size: 15 }),
+  CAP("Tabel 5.3 Kasus uji sistem Android"),
+  P("Bukti eksekusi yang sudah ada: " + SA.filter((r) => r[7] === ST.L).map((r) => `${r[0]} – ${r[8]}`).join("; ") + ". Kasus yang memerlukan ponsel fisik atau dua perangkat: " + SA.filter((r) => /fisik|dua perangkat/.test(r[8])).map((r) => r[0]).join(", ") + "."),
+  H2("5.4 Kasus Uji Web"),
+  P("Kasus uji Web disusun dari User Interface Map (Web) v0.3 dan ruang lingkup Web pada SAD-DDB-001 Bab VIII. Status seluruh kasus saat ini **Terblokir** karena aplikasi Web belum terhubung ke backend. Cakupan minimum Web adalah WB-01, WB-04, WB-05, dan WB-07."),
+  table(["ID", "Judul", "Langkah", "Hasil yang diharapkan", "Acuan", "Status"],
+    WB.map((r) => [...r, ST.T]), [700, 1700, 2300, 2470, 1100, 800], { center: [0], size: 16 }),
+  CAP("Tabel 5.4 Kasus uji Web"),
+  H2("5.5 Skenario Lintas Platform"),
+  P("Skenario lintas platform memverifikasi bahwa Android dan Web membaca ledger yang sama (NFR-08). Konsistensi antarperangkat Android tetap diuji melalui SA-17."),
+  table(["ID", "Judul", "Langkah", "Hasil yang diharapkan", "Acuan", "Status"],
+    LP.map((r) => [...r, ST.T]), [700, 1700, 2500, 2270, 1100, 800], { center: [0], size: 16 }),
+  CAP("Tabel 5.5 Skenario lintas platform"),
+  H2("5.6 Pengujian Non-Fungsional"),
+  table(["ID", "NFR", "Target", "Cara uji", "Status", "Catatan"], NF, [700, 800, 2000, 2470, 1000, 2100], { center: [0, 1], size: 16 }),
+  CAP("Tabel 5.6 Kasus uji non-fungsional"),
+
+  H1("BAB VI  HASIL EKSEKUSI"),
+  table(["Kelompok", "Jumlah", "Lulus", "Gagal", "Terblokir", "Belum dieksekusi"], [
+    ["Backend/API otomatis", String(be.total), String(be.passed), String(be.failed), "0", "0"],
+    ["Android otomatis (demo)", String(an.total), String(an.passed), String(an.failed), "0", String(an.skipped) + " (dilewati)"],
+    ["Android otomatis (online)", String(ao.total), String(ao.passed), String(ao.failed), "0", "0"],
+    ["Sistem Android", String(SA.length), String(saL), "0", "0", String(saN)],
+    ["Sistem Web", String(WB.length), "0", "0", String(WB.length), "0"],
+    ["Lintas platform", String(LP.length), "0", "0", String(LP.length), "0"],
+    ["Non-fungsional", String(NF.length), String(nfL), "0", String(nfT), String(nfN)],
+  ], [2770, 1100, 1100, 1100, 1300, 1700], { boldFirst: true, center: [1, 2, 3, 4, 5], size: 18 }),
+  CAP("Tabel 6.1 Ringkasan hasil eksekusi"),
+  P(`Test otomatis backend dan Android varian demo dijalankan ulang pada ${be.date} untuk dokumen ini. Hasil varian online berasal dari eksekusi ${ao.date} setelah integrasi Android–backend. Eksekusi kasus uji sistem manual mengikuti jadwal pengujian pada PRJ-DDB-001 3.7 dan hasilnya diisikan pada revisi dokumen ini beserta bukti (tangkapan layar atau rekaman).`),
+
+  H1("BAB VII  LOG DEFECT"),
+  P("Defect berikut ditemukan selama pengembangan dan pengujian awal. Defect baru dari eksekusi uji sistem ditambahkan dengan format yang sama."),
+  table(["ID", "Komponen", "Keparahan", "Deskripsi", "Ditemukan melalui", "Perbaikan", "Status"], DEF, [750, 1200, 900, 2300, 1400, 1520, 1000], { center: [0], size: 15 }),
+  CAP("Tabel 7.1 Log defect"),
+
+  H1("BAB VIII  RINGKASAN DAN TINDAK LANJUT"),
+  H2("8.1 Ringkasan"),
+  B(`Backend: ${be.passed}/${be.total} test integrasi lulus, mencakup seluruh FR Must yang relevan dengan backend serta BR transaksi (atomisitas, idempotensi, refund, blokir PIN).`),
+  B(`Android: ${an.passed}/${an.total} test varian demo lulus (${an.skipped} dilewati sesuai desain) dan ${ao.passed}/${ao.total} test varian online lulus. Uji sistem di emulator: ${saL} dari ${SA.length} kasus lulus, sisanya belum dieksekusi.`),
+  B("Web: seluruh kasus uji Web dan lintas platform terblokir karena Web belum terhubung ke backend. Konsistensi lintas platform Android–Web (NFR-08) belum terverifikasi."),
+  B("Defect: 4 tercatat; 1 Kritis dan 1 Tinggi sudah ditutup dengan retest; 1 Sedang terbuka dengan solusi sementara."),
+  H2("8.2 Status Kriteria Keluar"),
+  table(["Kriteria keluar", "Status"], [
+    ["Seluruh kasus FR Must dieksekusi", "Belum: kasus sistem Android dan Web belum dieksekusi seluruhnya"],
+    ["Tidak ada defect Kritis/Tinggi terbuka", "Terpenuhi per tanggal dokumen"],
+    ["Cakupan unit test logika inti backend ≥ 70% (JaCoCo)", "Belum diukur"],
+    ["Pengukuran NFR performa tercatat", "Belum (NF-01 sampai NF-03)"],
+    ["Laporan disetujui Project Manager", "Belum"],
+  ], [4500, 4570], { boldFirst: true, size: 18 }),
+  CAP("Tabel 8.1 Status kriteria keluar"),
+  H2("8.3 Tindak Lanjut"),
+  ...NL([
+    "Jalankan SA-01 sampai SA-28 pada emulator dan minimal satu ponsel fisik memakai TUT-DDB-001-AND; catat merek, versi Android, dan bukti per kasus.",
+    "Jalankan SA-08, SA-16, SA-17, SA-19 dengan dua perangkat (ponsel + emulator) pada varian online.",
+    "Ukur NF-01 sampai NF-03 pada backend lokal dan pasang JaCoCo untuk NF-08.",
+    "Eksekusi WB-01, WB-04, WB-05, WB-07 setelah halaman Web terhubung; bila belum terhubung, kasus Web tetap berstatus Terblokir dan pengujian sistem dinyatakan pada Android dan backend (PRJ-DDB-001 3.7).",
+    "Review oleh PIC Dokumen 6 (Steven Wibisana), lalu persetujuan Project Manager.",
+  ]),
+  H2("Referensi"),
+  ...NL([
+    "Kelompok Jaran Goyang. (2026). Software Requirements Specification PT Diponegoro Digital Bank (SRS-DDB-001) v0.1.",
+    "Kelompok Jaran Goyang. (2026). Project Document (PRJ-DDB-001) v0.9.2, Bab III Rencana Testing.",
+    "Kelompok Jaran Goyang. (2026). Architectural Design (SAD-DDB-001) v0.9.2; Functional Design (FSD-DDB-001) v0.9.1.",
+    "Kelompok Jaran Goyang. (2026). Panduan Uji Aplikasi di Ponsel (TUT-DDB-001-AND) v1.0.",
+    "ISO/IEC/IEEE 29119-3:2021. Software and systems engineering – Software testing – Test documentation.",
+  ]),
+];
+
+S.build(meta, body, OUT);
