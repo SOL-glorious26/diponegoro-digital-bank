@@ -35,5 +35,6 @@ documents_area/_temp_versi_lama/
 # ===== Sampah sistem =====
 .DS_Store
 Thumbs.db
+desktop.ini
 ~$*.docx
 ~$*.xlsx
