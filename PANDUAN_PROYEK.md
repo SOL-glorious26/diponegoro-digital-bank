@@ -215,22 +215,24 @@ Kode **FR** (Functional Requirement) berasal dari SRS. Kolom PIC menunjukkan pem
 | 📱 Android | 8 modul tim digabung jadi satu aplikasi dan terhubung ke backend. Ada 2 versi: `demo` (offline) dan `online` (pakai server). |
 | 🌐 Web | Semua halaman selesai dan terhubung ke backend yang sama |
 | 🧪 Uji sistem | Android **27/28** lulus · Web **15/15** · Lintas platform Android↔Web **4/4** · **11 bug ditemukan dan semuanya sudah diperbaiki** |
-| 📄 Dokumen | D00 (Work Plan), D01, D02, D03, D04B, D05W (UI Map Web dari Nabila), D06, D07A, D07B, Panduan Uji di Ponsel. Semua masih versi **0.9.x** (draf, menunggu review). |
+| 📄 Dokumen | D00 (Work Plan), D01, D02, D03, D04B, D05W (UI Map Web dari Nabila), D06, D07A, D07B, Panduan Uji di Ponsel. Semua masih versi **0.9.x** (draf, menunggu review). Ditambah draf awal **D04W** dan **D07W** v0.5 untuk dilengkapi PIC Web. |
 
 ### ⏳ Belum selesai: perlu dikerjakan
 
 | # | Pekerjaan | Siapa | Catatan |
 |---|---|---|---|
-| 1 | **D04A**: Detailed Design Android | Gracia | Belum ada |
-| 2 | **D04W**: Detailed Design Web | Rafi | Belum ada |
-| 3 | **D05A**: User Interface Map Android | Tim Android (lihat DWP) | Belum ada. Contoh format: D05W milik Nabila. |
-| 4 | **D07W**: Developer Manual Web | Rafi | Belum ada. Contoh format: D07A/D07B. |
-| 5 | **D08**: System Program Demo | Lihat DWP | Belum ada |
-| 6 | **D09A / D09W**: User Manual Android / Web | Lihat DWP | Belum ada |
-| 7 | Review ke-2 untuk D01, D02, D03, D04B, D07B | Steven | Menunggu |
-| 8 | Uji di HP fisik: scan QRIS pakai kamera (SA-08) dan NF-07 | Salomo | Satu-satunya uji yang masih tertunda |
-| 9 | Uji gateway + rate limit (NF-04) | Salomo | Menunggu Docker terpasang |
-| 10 | Semua dokumen dinaikkan ke **v1.0** (final + tanda tangan) | Salomo | Setelah semua review selesai |
+| 1 | **D04W**: Detailed Design Web | **Rafi** | 🟡 **Draf v0.5 sudah ada** (disiapkan PM dari kode). Tugasmu: baca sambil mencocokkan dengan kode di `code_area/apps/web`, lengkapi, lalu naikkan versi. |
+| 2 | **D07W**: Developer Manual Web | **Steven** (bagian komponen UI: **Nabila**) | 🟡 **Draf v0.5 sudah ada.** Steven: ikuti langkah Bab II–III di laptop sendiri dan catat hasilnya. Nabila: periksa Bab 5.3. |
+| 3 | **D04A**: Detailed Design Android | **Gracia** | ⏳ Belum ada. Contoh format: D04B dan D04W. |
+| 4 | **D05A**: User Interface Map Android | **Cecilia** | ⏳ Belum ada. Contoh format: D05W milik Nabila. |
+| 5 | **D08**: System Program Demo | **Rafi** | ⏳ Belum ada |
+| 6 | **D09A**: User Manual Android | **Grace** | ⏳ Belum ada |
+| 7 | **D09W**: User Manual Web | **Permata** | ⏳ Belum ada |
+| 8 | Review ke-2 untuk D01, D02, D03, D04B, D07B | Steven | Menunggu |
+| 9 | Uji di HP fisik: scan QRIS pakai kamera (SA-08) dan NF-07 | Salomo | Satu-satunya uji yang masih tertunda |
+| 10 | Uji gateway + rate limit (NF-04) | Salomo | Menunggu Docker terpasang |
+| 11 | Deploy Web + backend ke server publik (HTTPS) | Salomo | Opsional; saat ini aplikasi dijalankan lokal |
+| 12 | Semua dokumen dinaikkan ke **v1.0** (final + tanda tangan) | Salomo | Setelah semua review selesai |
 
 📌 **Pembagian tugas resmi dan format dokumen** ada di Work Plan:
 `documents_area/D00_DWP_Work_Plan/`. Template dari dosen ada di `documents_area/00_Referensi/PANDUAN_MODULE.docx`.
@@ -256,6 +258,8 @@ Semua dokumen ada di [`documents_area/`](documents_area). Satu folder per volume
 | `D06_System_Testing/` | Pengujian sistem | v0.9.5 |
 | `D07A_Developer_Manual_Android/` | Manual developer Android | v0.9.2 |
 | `D07B_Developer_Manual_Backend/` | Manual developer backend | v0.9.2 |
+| `D04W_Detailed_Design_Web/` | Desain detail Web (draf untuk Rafi) | v0.5 |
+| `D07W_Developer_Manual_Web/` | Manual developer Web (draf untuk Steven & Nabila) | v0.5 |
 | `TUT_Panduan_Uji_Ponsel/` | Cara instal & uji aplikasi di HP | v1.1 |
 
 **Aturan simpan dokumen:** simpan versi baru di folder volumenya. Kalau ada versi lama, beri tahu Salomo supaya dipindahkan dari folder.

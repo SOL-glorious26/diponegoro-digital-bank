@@ -1,6 +1,6 @@
 # documents_area — Diponegoro Digital Bank
 
-Diperbarui: 13 November 2026. Setiap folder hanya berisi **versi terbaru**. Versi lama ada di `_temp_versi_lama/`.
+Diperbarui: 14 November 2026. Setiap folder hanya berisi **versi terbaru**. Versi lama ada di `_temp_versi_lama/`.
 
 | Folder | Isi terbaru | PIC |
 |---|---|---|
@@ -14,11 +14,13 @@ Diperbarui: 13 November 2026. Setiap folder hanya berisi **versi terbaru**. Vers
 | `D06_System_Testing/` | v0.9.5 | Steven (disusun PM) |
 | `D07A_Developer_Manual_Android/` | v0.9.2 | Salomo |
 | `D07B_Developer_Manual_Backend/` | v0.9.2 | Salomo |
+| `D04W_Detailed_Design_Web/` | v0.5 (draf awal dari PM) | Rafi |
+| `D07W_Developer_Manual_Web/` | v0.5 (draf awal dari PM) | Steven (komponen UI: Nabila) |
 | `TUT_Panduan_Uji_Ponsel/` | v1.1 (artefak pendukung) | Salomo |
 | `_aset/` | Tanda tangan PM (dipakai saat versi final) | – |
 | `_temp_versi_lama/` | Versi lama + `project_brief_digital_banking_dummy.docx`. Boleh dihapus setelah semua dokumen v1.0. | – |
 
-Belum ada (milik anggota lain): D04A, D04W, D05A, D07W, D08, D09A, D09W.
+Belum ada: D04A (Gracia), D05A (Cecilia), D08 (Rafi), D09A (Grace), D09W (Permata).
 
 Aturan: versi baru disimpan di folder volumenya, lalu versi sebelumnya dipindah ke `_temp_versi_lama/`.
-Generator dokumen: `C:\salomo_ADMIN\profesional_life\projects\submit_progress_digital_banking_project\docs_generator\gen`.
+Generator dokumen: `code_area/docs_generator/gen` (D04W: `doc4w.js` + `figs6.py`, D07W: `doc7w.js`).
