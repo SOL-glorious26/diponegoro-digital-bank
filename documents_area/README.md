@@ -16,6 +16,7 @@ Diperbarui: 14 November 2026. Setiap folder hanya berisi **versi terbaru**. Vers
 | `D07B_Developer_Manual_Backend/` | v0.9.2 | Salomo |
 | `D04W_Detailed_Design_Web/` | v0.5 (draf awal dari PM) | Rafi |
 | `D07W_Developer_Manual_Web/` | v0.5 (draf awal dari PM) | Steven (komponen UI: Nabila) |
+| `TUT_Panduan_Menjalankan_Web/` | v1.0, tutorial menjalankan & menguji Web (artefak pendukung) | Salomo |
 | `TUT_Panduan_Uji_Ponsel/` | v1.1 (artefak pendukung) | Salomo |
 | `_aset/` | Tanda tangan PM (dipakai saat versi final) | – |
 | `_temp_versi_lama/` | Versi lama + `project_brief_digital_banking_dummy.docx`. Boleh dihapus setelah semua dokumen v1.0. | – |

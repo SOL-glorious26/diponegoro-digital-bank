@@ -75,7 +75,7 @@ code_area/apps/web/
 ├── index.html            halaman induk (div#root)
 ├── package.json          dependensi + skrip npm (dev, build, preview)
 ├── vite.config.js        port 5173 dan proxy /api → backend
-├── public/favicon.svg    logo
+├── public/              logo-mark.png, favicon.ico, apple-touch-icon.png
 └── src/
     ├── main.jsx          titik masuk + daftar route
     ├── styles.css        seluruh gaya (responsif)

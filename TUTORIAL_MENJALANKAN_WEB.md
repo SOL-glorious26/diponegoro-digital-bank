@@ -3,6 +3,8 @@
 Tutorial ini menuntun dari **laptop kosong** sampai aplikasi Web **berjalan dan teruji**.
 Ikuti urut dari atas. Setiap langkah diberi tanda **✅ Berhasil jika…** supaya kamu tahu langkahnya sudah benar sebelum lanjut.
 
+> 📄 Versi Word: `documents_area/TUT_Panduan_Menjalankan_Web/DDB_TUT_Panduan_Menjalankan_dan_Menguji_Web_v1.0.docx`
+>
 > Diuji langsung di Windows 11 pada 14 November 2026 (Node.js 24, Java 21, Chrome).
 > Hasil saat tutorial ini dibuat: tes API **38/38 lulus**, tes UI **20/20 lulus**, WB-11 dan WB-13–15 **lulus**.
 

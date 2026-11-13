@@ -57,7 +57,7 @@ try {
     await web.clickText("Simpan foto");
     await web.waitFor("!!document.querySelector('.field-error')");
     const invalidMsg = await web.evalJs("document.querySelector('.field-error').textContent");
-    const url = "http://localhost:5173/favicon.svg";
+    const url = "http://localhost:5173/logo-mark.png";
     await web.fill("#ph", url);
     await web.clickText("Simpan foto");
     await web.waitFor(`document.querySelectorAll('img.avatar[src="${url}"]').length >= 2`);

@@ -20,6 +20,16 @@ Agar bisa dibuka dari perangkat lain di Wi-Fi yang sama: `npm run dev -- --host`
 
 Build produksi: `npm run build` → folder `dist/` (berkas statis, dilayani di belakang API Gateway).
 
+## Logo
+
+Logo diambil dari logo resmi `documents_area/logo diponegoro.jpeg` (lambang "D" kuda, tanpa tulisan).
+Aset di `public/`: `logo-mark.png` (sidebar dan halaman masuk), `favicon.ico` (16/32/48 px), `apple-touch-icon.png`.
+Buat ulang bila logo resmi berubah:
+
+```
+python code_area\docs_generator\gen\make_web_logo.py "documents_area\logo diponegoro.jpeg" code_areapps\web\public
+```
+
 ## Struktur
 
 | Berkas | Isi |

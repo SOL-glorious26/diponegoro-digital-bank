@@ -19,7 +19,7 @@ const NAV = [
 export function Brand({ light }) {
   return (
     <div className={`brand ${light ? "brand-light" : ""}`}>
-      <img src="/favicon.svg" alt="" width={32} height={32} />
+      <img className="brand-mark" src="/logo-mark.png" alt="Logo Diponegoro" width={40} height={40} />
       <div>
         <strong>Diponegoro</strong>
         <span>Digital Bank</span>

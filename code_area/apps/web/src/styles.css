@@ -149,6 +149,7 @@ input[type="file"] { padding: 8px; }
 .auth-footer { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); text-align: center; font-size: 14px; }
 
 .brand { display: flex; align-items: center; gap: 10px; }
+.brand-mark { flex: none; border-radius: 9px; box-shadow: 0 0 0 1px rgba(242, 193, 78, .35); }
 .brand div { display: flex; flex-direction: column; line-height: 1.1; }
 .brand strong { font-size: 16px; }
 .brand span { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }

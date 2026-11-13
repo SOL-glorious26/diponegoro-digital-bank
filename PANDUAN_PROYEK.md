@@ -261,6 +261,7 @@ Semua dokumen ada di [`documents_area/`](documents_area). Satu folder per volume
 | `D04W_Detailed_Design_Web/` | Desain detail Web (draf untuk Rafi) | v0.5 |
 | `D07W_Developer_Manual_Web/` | Manual developer Web (draf untuk Steven & Nabila) | v0.5 |
 | `TUT_Panduan_Uji_Ponsel/` | Cara instal & uji aplikasi di HP | v1.1 |
+| `TUT_Panduan_Menjalankan_Web/` | Cara menjalankan & menguji aplikasi Web (versi Word dari `TUTORIAL_MENJALANKAN_WEB.md`) | v1.0 |
 
 **Aturan simpan dokumen:** simpan versi baru di folder volumenya. Kalau ada versi lama, beri tahu Salomo supaya dipindahkan dari folder.
 Setelah membuka .docx di Word, klik kanan Daftar Isi lalu pilih **Update Field**.
