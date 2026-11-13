@@ -21,9 +21,14 @@ Proyek ini membuat aplikasi bank digital dengan dua tampilan, yaitu **aplikasi A
 
 ## Menjalankan cepat
 
+> 📌 **Bingung cara menjalankan?** Ikuti [`TUTORIAL_MENJALANKAN_WEB.md`](TUTORIAL_MENJALANKAN_WEB.md), isinya langkah demi langkah dari nol sampai tes.
+>
+> ⚠️ **Perhatikan path-nya, guys!** Semua perintah di bawah dijalankan dari **folder utama repo** (`diponegoro-digital-bank`).
+> Folder `backend` ada **di dalam** folder `code_area`, jadi path-nya `code_area\backend`, bukan `backend` saja.
+
 ```powershell
 # 1. Backend (port 8080), tanpa perlu instal PostgreSQL
-cd code_area\backend (sesuaikan sama path folder backend yang berada di dalam folder code_area guys !!!); .\run-local.ps1 -H2
+cd code_area\backend; .\run-local.ps1 -H2
 
 # 2. Web → buka http://localhost:5173
 cd code_area\apps\web; npm install; npm run dev

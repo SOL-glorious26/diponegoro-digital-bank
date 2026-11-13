@@ -93,7 +93,7 @@ code_area/apps/web/
   code(`
 cd code_area\\backend
 .\\run-local.ps1 -H2
-# tunggu tulisan "Started DdbApplication" → backend aktif di http://localhost:8080
+# tunggu tulisan "Started DdbBackendApplication" → backend aktif di http://localhost:8080
 `),
   H2("3.2 Menjalankan Web"),
   P("Buka terminal kedua:"),
@@ -260,7 +260,7 @@ npm run build      # menghasilkan dist/ (index.html + assets/)
   H1("BAB X  TROUBLESHOOTING"),
   table(["Gejala", "Penyebab", "Solusi"], [
     ["\"Tidak dapat terhubung ke server. Pastikan backend berjalan.\"", "Backend mati atau port berbeda", "Jalankan backend (Bab III); periksa http://localhost:8080/actuator/health; atur DDB_API"],
-    ["npm : File ... npm.ps1 cannot be loaded", "Kebijakan eksekusi PowerShell", "Pakai npm.cmd run dev, atau Set-ExecutionPolicy -Scope CurrentUser RemoteSigned"],
+    ["npm : File ... npm.ps1 cannot be loaded (juga .\run-local.ps1)", "Kebijakan eksekusi PowerShell bawaan Windows = Restricted", "Sekali saja: Set-ExecutionPolicy -Scope CurrentUser RemoteSigned; atau pakai npm.cmd"],
     ["Port 5173 is in use", "Vite lain masih berjalan", "Tutup terminal lama atau jalankan npm run dev -- --port 5174"],
     ["Setelah buka tab baru harus login lagi", "Disengaja: refresh token di sessionStorage", "Bukan bug (SAD ADR-12)"],
     ["\"Sesi Anda telah berakhir\"", "Refresh token ditolak (logout semua perangkat, backend direstart dengan H2 sehingga data hilang)", "Login ulang; dengan profil H2 data kembali ke data demo setiap backend dijalankan"],
