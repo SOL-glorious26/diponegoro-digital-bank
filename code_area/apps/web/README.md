@@ -27,7 +27,7 @@ Aset di `public/`: `logo-mark.png` (sidebar dan halaman masuk), `favicon.ico` (1
 Buat ulang bila logo resmi berubah:
 
 ```
-python code_area\docs_generator\gen\make_web_logo.py "documents_area\logo diponegoro.jpeg" code_areapps\web\public
+python code_area\docs_generator\gen\make_web_logo.py "documents_area\logo diponegoro.jpeg" code_area\apps\web\public
 ```
 
 ## Struktur
