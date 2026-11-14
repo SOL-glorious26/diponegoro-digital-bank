@@ -4,7 +4,7 @@ Diperbarui: 14 November 2026. Setiap folder hanya berisi **versi terbaru**. Vers
 
 | Folder | Isi terbaru | PIC |
 |---|---|---|
-| `00_Referensi/` | Template/panduan dosen, Project Brief, SRS v0.1 | – |
+| `00_Referensi/` | Template/panduan dosen, Project Brief (docx + pdf), SRS v0.1, Annex-A SRS, draf SRS awal, job desk Mobile Lead | – |
 | `D00_DWP_Work_Plan/` | DWP-DDB-001 v1.3 | Salomo |
 | `D01_Project_Document/` | v0.9.3 | Salomo |
 | `D02_Architectural_Design/` | v0.9.4 | Salomo |
