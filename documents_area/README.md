@@ -11,7 +11,7 @@ Diperbarui: 14 November 2026. Setiap folder hanya berisi **versi terbaru**. Vers
 | `D03_Functional_Design/` | v0.9.2 | Salomo |
 | `D04B_Detailed_Design_Backend_DB/` | v0.9.2 | Salomo |
 | `D05W_UI_Map_Web/` | User Interface Map (Web) v0.3 (PDF) | Nabila |
-| `D06_System_Testing/` | v0.9.5 | Steven (disusun PM) |
+| `D06_System_Testing/` | v0.9.6 (Android 28/28, uji ponsel fisik) | Steven (disusun PM) |
 | `D07A_Developer_Manual_Android/` | v0.9.2 | Salomo |
 | `D07B_Developer_Manual_Backend/` | v0.9.2 | Salomo |
 | `D04W_Detailed_Design_Web/` | v0.5 (draf awal dari PM) | Rafi |

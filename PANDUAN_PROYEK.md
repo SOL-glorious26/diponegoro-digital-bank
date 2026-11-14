@@ -214,7 +214,7 @@ Kode **FR** (Functional Requirement) berasal dari SRS. Kolom PIC menunjukkan pem
 | 🗄️ Database | PostgreSQL berjalan: 18 tabel + data demo |
 | 📱 Android | 8 modul tim digabung jadi satu aplikasi dan terhubung ke backend. Ada 2 versi: `demo` (offline) dan `online` (pakai server). |
 | 🌐 Web | Semua halaman selesai dan terhubung ke backend yang sama |
-| 🧪 Uji sistem | Android **27/28** lulus · Web **15/15** · Lintas platform Android↔Web **4/4** · **11 bug ditemukan dan semuanya sudah diperbaiki** |
+| 🧪 Uji sistem | Android **28/28** lulus (termasuk uji di HP fisik) · Web **15/15** · Lintas platform Android↔Web **4/4** · **11 bug ditemukan dan semuanya sudah diperbaiki** |
 | 📄 Dokumen | D00 (Work Plan), D01, D02, D03, D04B, D05W (UI Map Web dari Nabila), D06, D07A, D07B, Panduan Uji di Ponsel. Semua masih versi **0.9.x** (draf, menunggu review). Ditambah draf awal **D04W** dan **D07W** v0.5 untuk dilengkapi PIC Web. |
 
 ### ⏳ Belum selesai: perlu dikerjakan
@@ -229,7 +229,7 @@ Kode **FR** (Functional Requirement) berasal dari SRS. Kolom PIC menunjukkan pem
 | 6 | **D09A**: User Manual Android | **Grace** | ⏳ Belum ada |
 | 7 | **D09W**: User Manual Web | **Permata** | ⏳ Belum ada |
 | 8 | Review ke-2 untuk D01, D02, D03, D04B, D07B | Steven | Menunggu |
-| 9 | Uji di HP fisik: scan QRIS pakai kamera (SA-08) dan NF-07 | Salomo | Satu-satunya uji yang masih tertunda |
+| 9 | ~~Uji di HP fisik: scan QRIS pakai kamera (SA-08) dan NF-07~~ | Salomo | ✅ Selesai 14 Nov 2026 (D06 v0.9.6) |
 | 10 | Uji gateway + rate limit (NF-04) | Salomo | Menunggu Docker terpasang |
 | 11 | Deploy Web + backend ke server publik (HTTPS) | Salomo | Opsional; saat ini aplikasi dijalankan lokal |
 | 12 | Semua dokumen dinaikkan ke **v1.0** (final + tanda tangan) | Salomo | Setelah semua review selesai |
@@ -255,7 +255,7 @@ Semua dokumen ada di [`documents_area/`](documents_area). Satu folder per volume
 | `D03_Functional_Design/` | Desain fungsional | v0.9.2 |
 | `D04B_Detailed_Design_Backend_DB/` | Desain detail backend & database | v0.9.2 |
 | `D05W_UI_Map_Web/` | Peta tampilan Web (Nabila) | v0.3 |
-| `D06_System_Testing/` | Pengujian sistem | v0.9.5 |
+| `D06_System_Testing/` | Pengujian sistem | v0.9.6 |
 | `D07A_Developer_Manual_Android/` | Manual developer Android | v0.9.2 |
 | `D07B_Developer_Manual_Backend/` | Manual developer backend | v0.9.2 |
 | `D04W_Detailed_Design_Web/` | Desain detail Web (draf untuk Rafi) | v0.5 |
