@@ -85,8 +85,8 @@ Diuji di emulator Pixel 8 (Android 37) pada 10 November 2026 — semua lulus.
 | Riwayat | Tab Riwayat → filter periode/jenis/status, Analitik | Semua transaksi di atas tercatat |
 | Navigasi | Back di Beranda | Keluar aplikasi (tidak kembali ke layar PIN) |
 
-**Perlu dicek manual di HP sungguhan:** pindai QRIS dengan kamera, tampilan notifikasi push,
-berbagi file ke aplikasi lain (WhatsApp, Drive), dan kesan pemakaian umum.
+**Uji manual di HP sungguhan (14 November 2026, Realme RMX3867, Android 16): lulus.** Pindai QRIS dengan kamera,
+notifikasi push, dan berbagi bukti transaksi ke WhatsApp berjalan dengan baik.
 
 ---
 

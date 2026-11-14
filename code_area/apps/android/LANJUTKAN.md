@@ -22,7 +22,7 @@ Lokasi project: `apps/android` (dipindah dari `submit_mobile/Mobile/Modul-salomo
 | `AppTourTest` (tur UI 24 layar) | ✅ Lulus |
 | Uji di emulator `Pixel_8` | ✅ **Selesai**: 5 alur utama lulus, 3 bug ditemukan & diperbaiki |
 | README diperbarui | ✅ Selesai (akun demo, data uji, batas, skenario semua modul) |
-| Uji manual di HP sungguhan | ⏳ Belum (kamera QRIS, notifikasi, berbagi file) — oleh pengguna |
+| Uji manual di HP sungguhan | ✅ **Selesai** 14 Nov 2026 (Realme RMX3867, Android 16): kamera QRIS, notifikasi, berbagi ke WhatsApp lulus |
 | Nilai usulan dikonfirmasi dosen/tim | ⏳ Belum (sudah ditandai sebagai usulan di README) |
 
 Akun demo: `demo` / `Demo@1234`, PIN `123456`.
