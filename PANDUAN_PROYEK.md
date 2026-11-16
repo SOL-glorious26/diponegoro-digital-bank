@@ -235,7 +235,8 @@ Kode **FR** (Functional Requirement) berasal dari SRS. Kolom PIC menunjukkan pem
 | 12 | Semua dokumen dinaikkan ke **v1.0** (final + tanda tangan) | Salomo | Setelah semua review selesai |
 
 📌 **Pembagian tugas resmi dan format dokumen** ada di Work Plan:
-`documents_area/D00_DWP_Work_Plan/`. Template dari dosen ada di `documents_area/00_Referensi/PANDUAN_MODULE.docx`.
+`documents_area/D00_DWP_Work_Plan/`. Semua dokumen pembagian kerja (modul coding, modul Android, 9 dokumen) dikumpulkan di folder
+[`pembagian_kerja/`](pembagian_kerja). Daftar bagian wajib tiap dokumen dari dosen ada di `documents_area/00_Referensi/Software Engineering Project.pdf`.
 
 **Tips untuk yang menulis dokumen:** lihat dulu dokumen yang sudah jadi sebagai contoh format (misalnya D04B untuk Detailed Design dan D07A untuk Developer Manual).
 Semua isi teknisnya sudah ada di kode, jadi kamu tidak perlu mengarang. Kalau bingung, tanya Salomo.
@@ -248,11 +249,11 @@ Semua dokumen ada di [`documents_area/`](documents_area). Satu folder per volume
 
 | Folder | Dokumen | Versi |
 |---|---|---|
-| `00_Referensi/` | SRS v0.1, Project Brief, panduan modul dosen | – |
+| `00_Referensi/` | SRS v0.1, Project Brief, daftar dokumen dari dosen, MDTA (`PANDUAN_MODULE.docx` = pembagian modul) | – |
 | `D00_DWP_Work_Plan/` | Rencana kerja dokumentasi (pembagian tugas) | v1.3 |
-| `D01_Project_Document/` | Dokumen proyek (jadwal, risiko, biaya COCOMO) | v0.9.3 |
-| `D02_Architectural_Design/` | Desain arsitektur | v0.9.4 |
-| `D03_Functional_Design/` | Desain fungsional | v0.9.2 |
+| `D01_Project_Document/` | Dokumen proyek (jadwal, risiko, biaya COCOMO) | v0.9.4 |
+| `D02_Architectural_Design/` | Desain arsitektur | v0.9.5 |
+| `D03_Functional_Design/` | Desain fungsional | v0.9.3 |
 | `D04B_Detailed_Design_Backend_DB/` | Desain detail backend & database | v0.9.2 |
 | `D05W_UI_Map_Web/` | Peta tampilan Web (Nabila) | v0.3 |
 | `D06_System_Testing/` | Pengujian sistem | v0.9.6 |
