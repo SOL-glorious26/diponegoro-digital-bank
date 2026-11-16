@@ -60,7 +60,7 @@ def gantt():
         ("Integrasi Android – Backend", "11-11", "11-11", "R"),
         ("API Gateway dan deployment", "12-11", "18-11", "P"),
         ("Pengujian sistem (emulator, peramban)", "11-11", "12-11", "R"),
-        ("Uji ponsel fisik + laporan Dok. 6", "17-11", "22-11", "P"),
+        ("Uji ponsel fisik (SA-08, NF-07)", "14-11", "14-11", "R"),
         ("Dokumentasi 9 kategori", "11-11", "23-11", "P"),
     ]
     ms = [("Project Brief + SRS", "02-10"), ("Pengumpulan progres", "07-10"), ("Backend 8 modul", "11-11"),
@@ -77,8 +77,8 @@ def gantt():
         ax.text(D(d) + dt.timedelta(days=1), len(rows) + (1.15 if j % 2 == 0 else 0.7), lab, fontsize=8,
                 ha="right" if j == len(ms) - 1 else ("left" if j == 0 else "center"), color="#C00000",
                 bbox=dict(fc="white", ec="none", pad=0.5))
-    ax.axvline(dt.date(2026, 11, 13), color=GREY, lw=1.4)
-    ax.text(dt.date(2026, 11, 12), 0.35, "status 12 Nov", fontsize=8, ha="right", color=GREY)
+    ax.axvline(dt.date(2026, 11, 17), color=GREY, lw=1.4)
+    ax.text(dt.date(2026, 11, 16), 0.2, "status 16 Nov", fontsize=8, ha="right", color=GREY, bbox=dict(fc="white", ec="none", pad=0.4))
     ax.set_xlim(dt.date(2026, 9, 15), dt.date(2026, 11, 24)); ax.set_ylim(0, len(rows) + 1.6)
     ax.xaxis.set_major_locator(mdates.WeekdayLocator(byweekday=mdates.TU))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%d/%m"))
@@ -101,7 +101,7 @@ def vmodel():
          ("Pengujian Integrasi\n(API, lintas platform)", 5.6, 1.9)]
     for t, x, y in L: box(ax, x, y, 2.2, 0.8, t, fs=9)
     for t, x, y in R: box(ax, x, y, 2.2, 0.8, t, fc="#E2EFDA", ec="#375623", fs=9)
-    box(ax, 3.6, 0.5, 2.8, 0.8, "Implementasi + Pengujian Unit\n(63/58 test Android, 45 test backend)", fc=LGREY, ec=GREY, fs=9)
+    box(ax, 3.6, 0.5, 2.8, 0.8, "Implementasi + Pengujian Unit\n(63/58 test Android, 47 test backend)", fc=LGREY, ec=GREY, fs=9)
     for (a, b) in [((1.3, 3.9), (2.3, 3.7)), ((2.3, 2.9), (3.3, 2.7)), ((3.3, 1.9), (4.2, 1.3))]:
         arrow(ax, *a, *b)
     for (a, b) in [((5.8, 1.3), (6.6, 1.9)), ((6.9, 2.7), (7.6, 2.9)), ((7.9, 3.7), (8.6, 3.9))]:
@@ -118,9 +118,9 @@ def vmodel():
 # ---------------------------------------------------------------- Risk heat map (Doc 1)
 def risk():
     risks = {  # id: (peluang 1-3, dampak 1-3)
-        "R1": (2, 3), "R2": (1, 2), "R3": (1, 3), "R4": (1, 3), "R5": (2, 2), "R6": (3, 2), "R7": (2, 2),
+        "R1": (2, 3), "R2": (1, 2), "R3": (1, 3), "R4": (1, 3), "R5": (1, 2), "R6": (3, 2), "R7": (2, 2),
         "R8": (1, 2), "R9": (1, 2), "R10": (3, 3), "R11": (1, 3), "R12": (1, 3), "R13": (2, 2), "R14": (2, 1), "R15": (2, 2),
-        "R16": (2, 2), "R17": (2, 2)}
+        "R16": (1, 2), "R17": (2, 2)}
     fig, ax = plt.subplots(figsize=(6.2, 4.6))
     col = {2: "#E2EFDA", 3: "#E2EFDA", 4: "#FFF2CC", 5: "#FCE4D6", 6: "#F8CBAD", 7: "#F4B183", 9: "#E06666"}
     for p in (1, 2, 3):
