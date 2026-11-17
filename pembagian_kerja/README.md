@@ -2,11 +2,11 @@
 
 Folder ini mengumpulkan semua dokumen tentang pembagian kerja proyek Diponegoro Digital Bank.
 Isinya **salinan**; dokumen aslinya tetap ada di lokasi semula (lihat kolom "Asal").
-Dikumpulkan: 16 November 2026.
+Dikumpulkan: 16 November 2026. Diperbarui: 17 November 2026 (MDTA v0.2).
 
 | No | Berkas | Isi | Asal |
 |---|---|---|---|
-| 01 | `01_Pembagian_Modul_Coding_MDTA-DDB-001_v0.1.docx` | **Module Decomposition & Task Allocation** (4 Okt 2026): 8 modul bisnis, pembagian ke Android/Web/Backend/Database, PIC, dependency, urutan pengerjaan, RACI | `documents_area/00_Referensi/PANDUAN_MODULE.docx` |
+| 01 | `01_Pembagian_Modul_Coding_MDTA-DDB-001_v0.2.docx` | **Module Decomposition & Task Allocation**: 8 modul bisnis, pembagian ke Android/Web/Backend/Database, PIC, dependency, urutan pengerjaan, RACI. **v0.2 (17 Nov 2026)**: semua butir "Perlu Ditentukan" sudah diisi keputusan dari kode (teks hijau), slot Backend diisi Salomo | v0.1 asli (4 Okt 2026): `documents_area/00_Referensi/PANDUAN_MODULE.docx`; skrip: `code_area/docs_generator/gen/patch_mdta_02.py` |
 | 02 | `02_Pembagian_Modul_Android_submit_mobile_README.md` | **Pembagian coding modul Android** per anggota tim Mobile | `code_area/submit_mobile/README.md` |
 | 03 | `03_Pembagian_9_Dokumen_DWP-DDB-001_v1.3.docx` | **Pembagian 9 dokumen**: PIC tiap volume, 125 tugas (Bab III), alur review, Definition of Done | `documents_area/D00_DWP_Work_Plan/` |
 | 04 | `04_Job_Desk_Mobile_Lead_Salomo.md` | Job desk Mobile Team Lead / Mobile Architect (Salomo) | `documents_area/00_Referensi/` |
