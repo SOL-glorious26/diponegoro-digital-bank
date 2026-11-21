@@ -7,14 +7,14 @@ const RUN = require("./doc6_results.json");
 
 const meta = {
   docLabel: "Dokumen 6", title: "Pengujian Sistem", subtitle: "System Testing Android, Web, Backend/API, dan Lintas Platform",
-  code: "STD-DDB-001", version: "0.9.6", statusShort: "Draf Desain Uji dan Hasil Awal",
+  code: "STD-DDB-001", version: "0.9.7", statusShort: "Draf Desain Uji dan Hasil Awal",
   status: "Draf – desain kasus uji lengkap; hasil test otomatis aktual; eksekusi uji sistem manual berjalan; menunggu review PIC (Steven Wibisana) dan persetujuan Project Manager",
   module: "Pengujian Sistem Diponegoro Digital Bank (8 modul bisnis, Financial Transaction Core, klien Android dan Web)",
   createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager) – draf awal untuk PIC Dokumen 6",
   updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager)",
   team: "Kelompok Jaran Goyang – PIC: Steven Wibisana; eksekusi Android: Gracia, Grace; eksekusi Web: Permata; data uji dan backend: Salomo",
   refs: "SRS-DDB-001 v0.1; PRJ-DDB-001 v0.9.2 Bab III; SAD-DDB-001 v0.9.2; FSD-DDB-001 v0.9.1; SDD-DDB-001-BE v0.9.1; TUT-DDB-001-AND v1.0; User Interface Map (Web) v0.3",
-  date: "14 November 2026", logo: LOGO,
+  date: "21 November 2026", logo: LOGO,
   revisions: [
     ["0.9", "11 Nov 2026", "Salomo P.G. Hokoyoku", "Draf awal: strategi, lingkungan, matriks keterlacakan FR-01–FR-29, kasus uji Backend/API, Android, Web, lintas platform, dan non-fungsional; hasil aktual test otomatis; log defect dari pengembangan."],
     ["0.9.1", "11 Nov 2026", "Salomo P.G. Hokoyoku", "Aplikasi Web terhubung ke backend: kasus uji Web dieksekusi dengan uji UI otomatis (Chrome headless) dan uji kontrak API; status WB dan LP diperbarui; DEF-04 diperbarui."],
@@ -23,6 +23,7 @@ const meta = {
     ["0.9.4", "12 Nov 2026", "Salomo P.G. Hokoyoku", "Kasus uji Web WB-13 (grafik saldo, FR-07), WB-14 (foto profil, FR-27), WB-15 (ubah dan kunci kantong, FR-08/09) ditambahkan dan lulus; DEF-11 ditutup penuh (layar Sesi Android); regresi Web, peramban, dan lintas platform lulus."],
     ["0.9.5", "12 Nov 2026", "Salomo P.G. Hokoyoku", "DEF-04 ditutup: CORS dikonfigurasi di backend dan gateway; BE-46 dan BE-47 (47 test backend lulus); APK rilis bertanda tangan diuji ulang (SA dan LP lulus); seluruh defect ditutup."],
     ["0.9.6", "14 Nov 2026", "Salomo P.G. Hokoyoku", "Uji di ponsel fisik Realme RMX3867 (Android 16): SA-08 (pindai QRIS dengan kamera) lulus sehingga uji sistem Android 28/28; NF-07 lulus; notifikasi push dan berbagi bukti juga lulus di ponsel fisik; lingkungan ponsel fisik dan kriteria keluar diperbarui."],
+    ["0.9.7", "21 Nov 2026", "Salomo P.G. Hokoyoku", "Regresi setelah pembaruan tampilan Android (tema baru, layar Login, PIN dengan keypad, Beranda, bottom navigation, komponen bersama; ViewModel, repository, API, dan backend tidak berubah): test otomatis Android varian demo 63/64 dan varian online 57/58 lulus (masing-masing 1 dilewati); DarkModeShotsTest ditambahkan; skrip uji sistem dan lintas platform disesuaikan; eksekusi ulang SA dan LP pada build baru dicatat sebagai tindak lanjut."],
   ],
 };
 
@@ -89,7 +90,7 @@ const AND = [
   ["VirtualCardUseCasesTest", "8", "Buat kartu, e-KYC wajib, detail dengan PIN, akses pengguna lain, bekukan, limit, cakupan domestik", "FR-21, FR-22"],
   ["HistoryAndProfileTest", "7", "Urutan dan paginasi riwayat, filter + pencarian, ringkasan bulanan, detail jurnal, profil dengan OTP, ubah PIN/password, notifikasi", "FR-23–FR-25, FR-27–FR-29"],
   ["ApiClientTest (MockWebServer)", "8", "Bearer token, refresh sekali saat 401, sesi berakhir, pesan error, offline, Idempotency-Key, format waktu", "FR-04, FR-05, NFR-05"],
-  ["AppTourTest + ReceiptAndDialogShotsTest (Robolectric, varian demo)", "5", "Tur seluruh layar, dialog PIN, bukti transfer berhasil/ditolak, struk PLN", "FR-14, NFR-08"],
+  ["AppTourTest + DarkModeShotsTest + ReceiptAndDialogShotsTest (Robolectric, varian demo)", "6", "Tur seluruh layar, mode gelap (login, PIN, Beranda), dialog PIN, bukti transfer berhasil/ditolak, struk PLN", "FR-14, NFR-08"],
   ["LiveBackendTest (varian online)", "1", "Nasabah baru dari registrasi sampai transaksi di backend sungguhan (dilewati pada varian demo)", "FR-01–FR-04, FR-10, FR-15, FR-18, FR-21, FR-29"],
   ["ExampleUnitTest", "1", "Test bawaan templat proyek", "–"],
 ];
@@ -297,7 +298,8 @@ const body = [
     [750, 2100, 4020, 1400, 800], { center: [0, 4], size: 16 }),
   CAP("Tabel 5.1 Kasus uji Backend/API otomatis"),
   H2("5.2 Android (Test Unit dan Integrasi Otomatis)"),
-  P(`Varian demo dijalankan dengan ./gradlew :app:testDemoDebugUnitTest. Hasil ${an.date}: **${an.passed} lulus dari ${an.total}**, ${an.failed} gagal, ${an.skipped} dilewati (LiveBackendTest hanya berjalan pada varian online). Varian online (${ao.date}): ${ao.passed} dari ${ao.total} lulus, termasuk LiveBackendTest terhadap backend sungguhan.`),
+  P(`Varian demo dijalankan dengan ./gradlew :app:testDemoDebugUnitTest. Hasil ${an.date}: **${an.passed} lulus dari ${an.total}**, ${an.failed} gagal, ${an.skipped} dilewati (LiveBackendTest hanya berjalan pada varian online). Varian online (${ao.date}): ${ao.passed} dari ${ao.total} lulus, ${ao.skipped} dilewati (LiveBackendTest hanya berjalan bila backend aktif dan parameter -Pddb.liveUrl diberikan; eksekusi terakhirnya terhadap backend sungguhan lulus pada 11 November 2026).`),
+  P("Pembaruan tampilan Android (21 November 2026) mengganti tema, font, ikon aplikasi, layar Login, layar PIN (keypad angka; PIN dikirim otomatis pada digit keenam), Beranda, bottom navigation (QRIS di tengah, tab Kantong), serta komponen bersama (panel, kolom input, tombol). ViewModel, repository, integrasi API, dan backend tidak diubah. Seluruh test di atas dijalankan ulang setelah pembaruan tersebut; AppTourTest disesuaikan dengan label dan alur PIN yang baru, dan DarkModeShotsTest ditambahkan untuk memeriksa mode gelap."),
   table(["Kelas test", "Jumlah", "Cakupan", "Acuan"], AND, [2500, 800, 4070, 1700], { center: [1], size: 16 }),
   CAP("Tabel 5.2 Test otomatis Android per kelas"),
   H2("5.3 Kasus Uji Sistem Android"),
@@ -309,6 +311,7 @@ const body = [
   P("APK rilis bertanda tangan (build-rilis.ps1, 12 November 2026) diuji ulang di emulator dengan SA-01, SA-07, SA-09, SA-10, SA-13, dan skenario lintas platform LP-01 sampai LP-04; seluruhnya lulus."),
   P("Uji di ponsel fisik (14 November 2026) memakai Realme RMX3867 (Android 16) dengan varian online yang terhubung ke backend lokal (profil H2) lewat kabel USB (adb reverse). SA-08 dijalankan manual: QR dari layar Terima QRIS pada perangkat kedua dipindai dengan kamera, penerima dan nominal tampil, pembayaran dengan PIN berhasil, dan saldo kedua akun berubah. Pada perangkat yang sama, login akun demo, notifikasi push (SA-16), dan berbagi bukti transaksi ke WhatsApp juga lulus."),
   P("Dua kendala lingkungan ditemui dan diatasi tanpa perubahan kode, sehingga tidak dicatat sebagai defect: (1) APK yang dibangun dengan alamat bawaan emulator (http://10.0.2.2:8080/) menampilkan \"Tidak dapat terhubung ke server\" di ponsel fisik, diatasi dengan membangun ulang memakai -Pddb.baseUrl dan adb reverse; (2) ponsel Realme menolak pemasangan lewat USB (INSTALL_FAILED_VERIFICATION_FAILURE) sampai opsi pengembang \"Nonaktifkan pemantauan izin\" diaktifkan dan dialog pemasangan disetujui."),
+  P("Status pada Tabel 5.3 berasal dari build sebelum pembaruan tampilan Android (21 November 2026). Skrip pengujian/android/sa-android.mjs, pengujian/lib/android-flows.mjs, dan pengujian/lintas-platform/lp-cross.mjs sudah disesuaikan dengan layar baru (tombol Masuk, label kolom username, PIN melalui keypad, menu Kartu) dan lolos pemeriksaan sintaks; eksekusi ulang SA dan LP pada build baru belum dilakukan saat revisi ini dan dicatat pada Bab 8.3."),
   P("Keterbatasan: sebagian besar kasus dijalankan di emulator; di ponsel fisik baru SA-08, notifikasi push, login, dan berbagi bukti yang dijalankan; pengetikan lewat adb di emulator sesekali meleset sehingga skrip memeriksa panjang isian PIN sebelum dikirim; login biometrik diuji pada mode simulasi aplikasi."),
   H2("5.4 Kasus Uji Web"),
   P("Kasus uji Web disusun dari User Interface Map (Web) v0.3 dan SRS (WB-13 sampai WB-15 ditambahkan setelah pemeriksaan ulang cakupan FR-07, FR-08/FR-09, dan FR-27 di Web), serta ruang lingkup Web pada SAD-DDB-001 Bab VIII. Aplikasi Web (folder apps/web/, React + Vite) terhubung ke backend sejak 11 November 2026. Kasus dieksekusi dengan uji UI otomatis di Chrome headless (pengujian/web/ui-e2e.mjs) terhadap backend lokal; tangkapan layar disimpan sebagai bukti. Kontrak API yang dipakai Web juga diperiksa dengan pengujian/web/api-smoke.mjs (38 pemeriksaan, seluruhnya lulus). Cakupan minimum Web (WB-01, WB-04, WB-05, WB-07) sudah tercapai."),
@@ -330,14 +333,14 @@ const body = [
   table(["Kelompok", "Jumlah", "Lulus", "Gagal", "Terblokir", "Belum dieksekusi"], [
     ["Backend/API otomatis", String(be.total), String(be.passed), String(be.failed), "0", "0"],
     ["Android otomatis (demo)", String(an.total), String(an.passed), String(an.failed), "0", String(an.skipped) + " (dilewati)"],
-    ["Android otomatis (online)", String(ao.total), String(ao.passed), String(ao.failed), "0", "0"],
+    ["Android otomatis (online)", String(ao.total), String(ao.passed), String(ao.failed), "0", ao.skipped ? String(ao.skipped) + " (dilewati)" : "0"],
     ["Sistem Android", String(SA.length), String(saL), "0", "0", String(saN)],
     ["Sistem Web", String(WB.length), String(count(WB, 5, ST.L)), "0", "0", String(count(WB, 5, ST.N))],
     ["Lintas platform", String(LP.length), String(count(LP, 5, ST.L)), "0", "0", String(count(LP, 5, ST.N))],
     ["Non-fungsional", String(NF.length), String(nfL), "0", String(nfT), String(nfN)],
   ], [2770, 1100, 1100, 1100, 1300, 1700], { boldFirst: true, center: [1, 2, 3, 4, 5], size: 18 }),
   CAP("Tabel 6.1 Ringkasan hasil eksekusi"),
-  P(`Test otomatis backend dan Android varian demo dijalankan ulang pada ${be.date} untuk dokumen ini. Hasil varian online berasal dari eksekusi ${ao.date} setelah integrasi Android–backend. Eksekusi kasus uji sistem manual mengikuti jadwal pengujian pada PRJ-DDB-001 3.7 dan hasilnya diisikan pada revisi dokumen ini beserta bukti (tangkapan layar atau rekaman).`),
+  P(`Test otomatis backend dijalankan ulang pada ${be.date}. Test otomatis Android varian demo dan online dijalankan ulang pada ${ao.date} setelah pembaruan tampilan Android. Eksekusi kasus uji sistem manual mengikuti jadwal pengujian pada PRJ-DDB-001 3.7 dan hasilnya diisikan pada revisi dokumen ini beserta bukti (tangkapan layar atau rekaman).`),
 
   H1("BAB VII  LOG DEFECT"),
   P("Defect berikut ditemukan selama pengembangan dan pengujian awal. Defect baru dari eksekusi uji sistem ditambahkan dengan format yang sama."),
@@ -347,7 +350,7 @@ const body = [
   H1("BAB VIII  RINGKASAN DAN TINDAK LANJUT"),
   H2("8.1 Ringkasan"),
   B(`Backend: ${be.passed}/${be.total} test integrasi lulus, mencakup seluruh FR Must yang relevan dengan backend serta BR transaksi (atomisitas, idempotensi, refund, blokir PIN).`),
-  B(`Android: ${an.passed}/${an.total} test varian demo lulus (${an.skipped} dilewati sesuai desain) dan ${ao.passed}/${ao.total} test varian online lulus. Uji sistem Android: ${saL} dari ${SA.length} kasus lulus (SA-08 di ponsel fisik Realme RMX3867, Android 16; kasus lain di emulator).`),
+  B(`Android: ${an.passed}/${an.total} test varian demo lulus (${an.skipped} dilewati sesuai desain) dan ${ao.passed}/${ao.total} test varian online lulus (${ao.skipped} dilewati), dijalankan ulang setelah pembaruan tampilan. Uji sistem Android: ${saL} dari ${SA.length} kasus lulus (SA-08 di ponsel fisik Realme RMX3867, Android 16; kasus lain di emulator).`),
   B(`Web: ${count(WB, 5, ST.L)} dari ${WB.length} kasus lulus melalui uji UI otomatis; cakupan minimum Web tercapai.`),
   B(`Lintas platform: ${count(LP, 5, ST.L)} dari ${LP.length} skenario lulus; saldo, riwayat, QRIS, dan sesi konsisten antara Android dan Web (NFR-08 terverifikasi pada lingkungan lokal).`),
   B((() => { const open = DEF.filter((d) => d[6].startsWith("Terbuka")).length; return `Defect: ${DEF.length} tercatat; ${DEF.length - open} ditutup dengan retest` + (open ? `; ${open} terbuka dengan solusi sementara terverifikasi.` : "; tidak ada defect terbuka."); })()),
@@ -362,6 +365,7 @@ const body = [
   CAP("Tabel 8.1 Status kriteria keluar"),
   H2("8.3 Tindak Lanjut"),
   ...NL([
+    "Jalankan ulang SA-01 sampai SA-28 dan LP-01 sampai LP-04 pada build Android dengan tampilan baru (emulator dan ponsel fisik), lalu perbarui status Tabel 5.3 dan 5.5.",
     "Jalankan NF-04 (rate limit gateway) setelah Docker terpasang.",
     "Review oleh PIC Dokumen 6 (Steven Wibisana), lalu persetujuan Project Manager.",
   ]),

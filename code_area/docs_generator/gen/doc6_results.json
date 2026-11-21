@@ -1,5 +1,25 @@
 {
-  "backend": { "date": "12 November 2026 (setelah perbaikan DEF-04)", "total": 47, "passed": 47, "failed": 0, "skipped": 0, "time": "±68 detik", "failedNames": [] },
-  "androidDemo": { "date": "12 November 2026 (setelah perbaikan DEF-05, DEF-07, DEF-08, DEF-10, DEF-11)", "total": 63, "passed": 62, "failed": 0, "skipped": 1 },
-  "androidOnline": { "date": "11 November 2026 pukul 13.23 WIB", "total": 58, "passed": 58, "failed": 0, "skipped": 0 }
+  "backend": {
+    "date": "12 November 2026 (setelah perbaikan DEF-04)",
+    "total": 47,
+    "passed": 47,
+    "failed": 0,
+    "skipped": 0,
+    "time": "±68 detik",
+    "failedNames": []
+  },
+  "androidDemo": {
+    "date": "21 November 2026 (regresi setelah pembaruan tampilan)",
+    "total": 64,
+    "passed": 63,
+    "failed": 0,
+    "skipped": 1
+  },
+  "androidOnline": {
+    "date": "21 November 2026",
+    "total": 58,
+    "passed": 57,
+    "failed": 0,
+    "skipped": 1
+  }
 }
