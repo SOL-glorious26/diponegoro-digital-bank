@@ -45,7 +45,7 @@ Mockup dan design system: kanvas desain "DDB Quiet Luxury" (tautan dari PM).
 | Dokumen | Yang perlu disesuaikan | PIC |
 |---|---|---|
 | D06 v0.9.7 | Sudah diperbarui. Setelah SA/LP dijalankan ulang, perbarui status Tabel 5.3 dan 5.5 | Salomo / Steven |
-| D01 v0.9.4, D07A v0.9.2 | Angka test otomatis Android masih versi lama (62/63, 58/58) → 63/64 dan 57/58 | Salomo |
+| D01 v0.9.5, D07A v0.9.3, DWP v1.4 | **Sudah** disamakan (21 Nov sore): angka test Android 63/64 dan 57/58; D07A juga memuat tema, layar, dan inventaris 112 berkas yang baru; DWP memuat status semua volume per 21 Nov | Salomo |
 | D05A UI Map Android | Tangkapan layar Login, PIN, Beranda, bottom navigation harus diambil ulang; nama menu "Kartu" | Cecilia |
 | D04A Detailed Design Android | Bila memuat tangkapan layar atau deskripsi layar PIN (kolom teks + tombol), sesuaikan dengan keypad | Gracia |
 | D09A User Manual Android | Pakai tampilan baru sejak awal | Grace |
@@ -60,6 +60,6 @@ Anggota harus **unduh ulang repo** sebelum mengambil tangkapan layar baru.
 | # | Pekerjaan | PIC |
 |---|---|---|
 | 1 | Uji tampilan baru di HP fisik (Realme), lalu jalankan ulang SA dan LP | Salomo |
-| 2 | Samakan angka uji Android di D01, D07A, DWP | Salomo |
+| 2 | ~~Samakan angka uji Android di D01, D07A, DWP~~ (selesai 21 Nov) | Salomo |
 | 3 | Ambil ulang tangkapan layar untuk D05A, D04A, D09A, presentasi | Cecilia, Gracia, Grace, Salomo |
 | 4 | Semua dokumen ke v1.0 + tanda tangan | Salomo |

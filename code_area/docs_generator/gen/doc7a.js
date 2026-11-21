@@ -42,7 +42,9 @@ const manual = {
   "virtualcard/domain/repository/VirtualCardRepository.kt": "Kontrak modul Virtual Card (buat, detail, bekukan, limit, otorisasi pembelian) dan AuthGateway untuk verifikasi PIN.",
   "virtualcard/domain/usecase/VirtualCardUseCases.kt": "Use case kartu virtual: daftar, buat dengan cakupan penggunaan, lihat detail dengan PIN, bekukan/aktifkan, atur limit.",
   "virtualcard/presentation/state/VirtualCardUiState.kt": "State UI kartu virtual dan dialog yang sedang terbuka (mengikuti activity diagram).",
-  "ui/theme/Theme.kt": "DigitalBankTheme (Material 3 terang/gelap) dan ChartColors per mode.",
+  "ui/theme/Theme.kt": "DigitalBankTheme: skema warna Material 3 terang/gelap (tanpa dynamic color), bentuk (sudut 10/14/20 dp), DdbColors (emas, dana masuk, panel, garis, logo) lewat DdbTheme.colors, dan ChartColors per mode.",
+  "ui/theme/Brand.kt": "DdbMark (tanda logo Diponegoro dari logo asli, diwarnai navy di mode terang dan emas di mode gelap) dan GoldRule (garis aksen emas).",
+  "core/ui/Buttons.kt": "DdbButton dan DdbOutlinedButton: tombol bersudut 10 dp, tinggi minimum 48 dp, tanpa bayangan. Layar memakainya lewat import alias (import …DdbButton as Button).",
   "core/util/AppResult.kt": "Hasil operasi bersama: Success(data) atau Failure(message), dengan helper map dan onFailure.",
   "core/storage/KeyValueStore.kt": "Penyimpanan preferensi kecil (mis. sembunyikan saldo): SharedPrefsStore di aplikasi, InMemoryStore di test.",
   "history/presentation/HistoryViewModels.kt": "HistoryViewModel (filter, pencarian, paginasi), TransactionDetailViewModel, dan ViewModel analitik bulanan.",
@@ -69,37 +71,37 @@ const manual = {
   "authentication/domain/usecase/RecoveryUseCases.kt": "Use case pemulihan akun: minta OTP, reset password, reset PIN.",
   "authentication/domain/usecase/RegistrationUseCases.kt": "Use case registrasi, kirim dan verifikasi OTP, kirim e-KYC.",
   "authentication/domain/usecase/SessionUseCases.kt": "Use case daftar sesi aktif, logout, logout dari semua perangkat.",
-  "authentication/presentation/components/AuthComponents.kt": "Komponen bersama layar autentikasi: AuthScreenContainer, MessageBanner, LoadingButton, AuthTextField, PasswordField, PinField, DemoOtpCard.",
+  "authentication/presentation/components/AuthComponents.kt": "Komponen bersama layar autentikasi: AuthScreenContainer (logo, garis emas, judul), MessageBanner, LoadingButton, AuthTextField, PasswordField, PinField, DemoOtpCard, serta PinDots dan PinKeypad untuk layar PIN.",
   "authentication/presentation/navigation/AuthNavGraph.kt": "Navigasi utama aplikasi: alur autentikasi (login, registrasi, OTP, e-KYC, PIN, pemulihan), lalu seluruh rute fitur (AppRoutes) dengan MainBottomBar.",
   "authentication/presentation/navigation/AuthRoutes.kt": "Konstanta rute layar autentikasi.",
   "authentication/presentation/screen/EkyScreen.kt": "EkycScreen: input NIK dan simulasi swafoto untuk verifikasi identitas.",
   "authentication/presentation/screen/HomeScreen.kt": "Diimpor sebagai SessionsScreen: daftar sesi aktif per perangkat, logout satu atau semua perangkat.",
-  "authentication/presentation/screen/LoginScreen.kt": "Layar login (password dan biometrik simulasi) serta tautan registrasi dan pemulihan.",
+  "authentication/presentation/screen/LoginScreen.kt": "Layar login (tombol Masuk dan Masuk dengan biometrik simulasi) serta tautan registrasi dan pemulihan; teks akun demo hanya pada varian demo.",
   "authentication/presentation/screen/OtpScreen.kt": "Layar verifikasi OTP; menampilkan kode demo (DemoOtpCard).",
-  "authentication/presentation/screen/PinScreens.kt": "CreatePinScreen (membuat PIN) dan EnterPinScreen (membuka aplikasi setelah login).",
+  "authentication/presentation/screen/PinScreens.kt": "CreatePinScreen (membuat PIN) dan EnterPinScreen (membuka aplikasi setelah login: enam titik dan keypad angka, PIN dikirim otomatis pada digit keenam).",
   "authentication/presentation/screen/RecoveryScreen.kt": "Layar pemulihan akun bertahap: identitas, OTP, password/PIN baru.",
   "authentication/presentation/screen/RegisterScreen.kt": "Formulir registrasi akun baru.",
   "authentication/presentation/state/AuthEvent.kt": "Event satu kali dari AuthViewModel ke UI (mis. navigasi).",
   "authentication/presentation/state/AuthUiState.kt": "State UI autentikasi: pengguna, loading, pesan, OTP aktif, status PIN dan sesi.",
   "authentication/presentation/viewmodel/AuthViewModel.kt": "ViewModel alur autentikasi; mengamati CoreModule.sessionExpired untuk kembali ke login saat refresh token ditolak.",
   "authentication/presentation/viewmodel/RecoveryViewModel.kt": "ViewModel alur pemulihan akun.",
-  "core/navigation/AppRoutes.kt": "Rute fitur (home, history, history/detail/{txId}, history/analytics, account/chart, account/pockets, transfer, qris/pay, qris/receive, topup, profile, …) dan tab bawah.",
+  "core/navigation/AppRoutes.kt": "Rute fitur (home, history, history/detail/{txId}, history/analytics, account/chart, account/pockets, transfer, qris/pay, qris/receive, topup, profile, …) dan MainBottomBar: lima tab (Beranda, Riwayat, QRIS di tengah, Kantong, Profil).",
   "core/network/ApiModels.kt": "DTO @Serializable yang sesuai dengan request/response backend (AuthTokens, UserDto, AccountDto, TransactionDto, JournalLineDto, dsb.).",
   "core/network/Mappers.kt": "Konversi DTO ke model aplikasi: TransactionDto.toLedger(viewer), JournalLineDto.toLedger, UserDto.toUser, dan pembuat idemKey().",
   "core/ui/Charts.kt": "Grafik Canvas tanpa library: LineChart, GroupedBarChart, Legend, compactRupiah.",
-  "core/ui/Components.kt": "Komponen UI bersama: ScreenScaffold, SectionCard, InfoRow, ErrorText, InfoText, StatusChip, SignedAmount, PinDialog, MoneyField, DividerLine, EmptyState, HighlightCard.",
+  "core/ui/Components.kt": "Komponen UI bersama: ScreenScaffold (app bar rata), SectionCard (panel bergaris tipis tanpa bayangan), InfoRow, ErrorText, InfoText, StatusChip, SignedAmount (dana masuk biru), PinDialog, MoneyField, DividerLine, EmptyState, HighlightCard, ddbFieldColors.",
   "core/ui/ReceiptView.kt": "ReceiptCard: tampilan bukti transaksi di layar.",
   "core/util/HashUtil.kt": "Hash SHA-256 untuk penyimpanan PIN/password pada repository demo.",
   "core/util/Money.kt": "formatRupiah, parseRupiah, formatDateTime, formatDate, formatAccountNumber (zona WIB).",
   "history/presentation/HistoryScreens.kt": "HistoryScreen (filter, cari, paginasi), TransactionDetailScreen (detail + bukti), AnalyticsScreen (ringkasan bulanan).",
-  "home/HomeScreen.kt": "Dashboard utama: saldo (bisa disembunyikan), aksi cepat, ringkasan bulan ini, notifikasi terbaru; meminta izin notifikasi Android 13+.",
+  "home/HomeScreen.kt": "Dashboard utama: header (logo, notifikasi, profil), sapaan, saldo sebagai fokus (bisa disembunyikan), aksi cepat berikon garis, ringkasan bulan ini, transaksi terakhir; meminta izin notifikasi Android 13+.",
   "home/HomeViewModel.kt": "ViewModel Beranda: menggabungkan rekening, ringkasan riwayat, dan notifikasi.",
   "payment/presentation/PaymentScreens.kt": "QrisPayScreen (pindai kamera/galeri, konfirmasi, PIN) dan QrisReceiveScreen (QRIS pribadi statis/dinamis).",
   "profile/presentation/ProfileScreens.kt": "ProfileScreen, SecurityScreen (password, PIN, biometrik), NotificationSettingsScreen, NotificationsScreen.",
   "topup/presentation/TopUpScreen.kt": "Layar top-up pulsa, paket data, token PLN, dan tagihan dengan konfirmasi PIN.",
   "transfer/presentation/TransferScreen.kt": "Layar transfer bertahap: pilih bank/favorit, inquiry, nominal, konfirmasi biaya, PIN, bukti.",
-  "ui/theme/Color.kt": "Palet warna aplikasi (terang dan gelap).",
-  "ui/theme/Type.kt": "Tipografi Material 3.",
+  "ui/theme/Color.kt": "Palet merek: Midnight Navy #0B1D33, Diponegoro Blue #0B3D91, Muted Gold #B69A62, warna latar/garis mode terang dan gelap, warna grafik dan status.",
+  "ui/theme/Type.kt": "Tipografi Material 3 dengan Plus Jakarta Sans (bobot 400/500/600; font di res/font, lisensi OFL di app/licenses); angka tabular untuk nominal.",
   "virtualcard/presentation/screen/VirtualCardScreen.kt": "Layar kartu virtual: daftar, buat, lihat detail dengan PIN, bekukan, atur limit, simulasi pembelian.",
   "virtualcard/presentation/viewmodel/VirtualCardViewModel.kt": "ViewModel kartu virtual; dialog mengikuti activity diagram Virtual Card.",
 };
@@ -124,7 +126,7 @@ const order = ["(root)", "core", "authentication", "account", "transfer", "payme
 if (order.filter((g) => groups[g]).length !== Object.keys(groups).length) throw new Error("unknown group " + Object.keys(groups));
 const pic = { authentication: "Salomo", virtualcard: "Salomo", account: "Grace", topup: "Grace", transfer: "Cecilia", history: "Cecilia", payment: "Gracia", profile: "Gracia" };
 const total = rows.length, totalLines = rows.reduce((a, r) => a + r.lines, 0);
-if (total !== 110) throw new Error("expected 110 files, got " + total);
+if (total !== 112) throw new Error("expected 112 files, got " + total);
 const invRows = [];
 order.forEach((g) => {
   const pkg = g === "(root)" ? "com.diponegoro.digitalbank" : `com.diponegoro.digitalbank.${g}`;
@@ -134,17 +136,18 @@ order.forEach((g) => {
 
 const meta = {
   docLabel: "Dokumen 7 – Volume Android", title: "Developer Manual", subtitle: "Panduan Pengembang dan Keterangan Source Code – Aplikasi Android Diponegoro Digital Bank",
-  code: "DVM-DDB-001-AND", version: "0.9.2", statusShort: "Draf Lengkap untuk Review",
+  code: "DVM-DDB-001-AND", version: "0.9.3", statusShort: "Draf Lengkap untuk Review",
   status: "Draf lengkap – menunggu penulisan/penelaahan bagian QRIS dan Profile (Gracia Riyanto), uji keterikutan setup oleh anggota tim, dan persetujuan Project Manager",
   module: "Developer Manual – Aplikasi Android (apps/android, 8 business module)", createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend & Integrasi Android)",
   updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager)", team: "Kelompok Jaran Goyang – Mobile: Salomo (Auth, Virtual Card), Cecilia Adelaide Penlaana (Transfer, History), Gracia Riyanto (QRIS, Profile), Grace (Account, Top-up)",
   refs: "SAD-DDB-001 v0.9.1; FSD-DDB-001 v0.9.1; DVM-DDB-001-BE v0.9.1; apps/android/README.md; kode aplikasi per 11 November 2026",
-  date: "12 November 2026", logo: LOGO,
+  date: "21 November 2026", logo: LOGO,
   revisions: [
     ["0.1", "11 Nov 2026", "Salomo P.G. Hokoyoku", "Outline Developer Manual Android."],
     ["0.9", "11 Nov 2026", "Salomo P.G. Hokoyoku", `Draf lengkap: setup, varian demo/online, arsitektur, keterangan ${total} berkas source code, pola pengembangan, pengujian, troubleshooting.`],
     ["0.9.1", "12 Nov 2026", "Salomo P.G. Hokoyoku", "Proyek dipindah ke apps/android; perbaikan hasil uji sistem STD-DDB-001: waktu sesi dengan tanggal (DEF-05), back stack OTP (DEF-07), login sebelum e-KYC diarahkan ke e-KYC (DEF-08), status blokir PIN setelah pemulihan (DEF-10), pesan Riwayat saat server tidak terjangkau (DEF-11)."],
     ["0.9.2", "12 Nov 2026", "Salomo P.G. Hokoyoku", "Bagian 3.5 APK rilis bertanda tangan (keystore, build-rilis.ps1, verifikasi apksigner); troubleshooting pemasangan APK rilis; keterbatasan diperbarui (layar Sesi saat server tidak terjangkau, DEF-11)."],
+    ["0.9.3", "21 Nov 2026", "Salomo P.G. Hokoyoku", "Tampilan Android baru: tema (ui/theme: Color, Theme, Type, Brand), font Plus Jakarta Sans, ikon dari logo asli, layar Login, PIN dengan keypad, Beranda, bottom navigation lima tab, komponen bersama (Components.kt, Buttons.kt); inventaris berkas diperbarui (112 berkas); jumlah test Android 64 (demo) dan 58 (online)."],
   ],
 };
 
@@ -160,7 +163,7 @@ const body = [
   H2("1.3 Ringkasan Teknologi"),
   table(["Komponen", "Versi / Keterangan"], [
     ["Bahasa", "Kotlin 2.2.10"],
-    ["UI", "Jetpack Compose + Material 3, Navigation Compose"],
+    ["UI", "Jetpack Compose + Material 3 (tema DDB, font Plus Jakarta Sans), Navigation Compose"],
     ["Arsitektur", "MVVM (ViewModel + StateFlow), dependency injection manual (tanpa Hilt)"],
     ["Build", "Gradle Wrapper 9.6.0, Android Gradle Plugin 9.4.1, Kotlin DSL"],
     ["SDK", "minSdk 24 (Android 7.0), targetSdk dan compileSdk 37 (Android 17)"],
@@ -198,7 +201,7 @@ apps/android/
 └── app/
     ├── build.gradle.kts           flavor demo/online, BuildConfig.ONLINE dan BASE_URL
     └── src/
-        ├── main/                  kode bersama kedua varian (110 berkas Kotlin)
+        ├── main/                  kode bersama kedua varian (112 berkas Kotlin)
         │   ├── AndroidManifest.xml
         │   ├── java/com/diponegoro/digitalbank/
         │   └── res/xml/network_security_config.xml   (HTTP polos ditolak)
@@ -206,7 +209,7 @@ apps/android/
         │   ├── AndroidManifest.xml                    (izin ACCESS_LOCAL_NETWORK)
         │   └── res/xml/network_security_config.xml   (HTTP polos diizinkan untuk LAN)
         ├── test/                  unit test kedua varian (11 berkas)
-        ├── testDemo/              test UI Robolectric khusus demo (AppTourTest)
+        ├── testDemo/              test UI Robolectric khusus demo (AppTourTest, DarkModeShotsTest)
         └── androidTest/           instrumented test (contoh bawaan)
 `),
   CAP("Gambar 2.1 Struktur proyek Android"),
@@ -324,7 +327,7 @@ keytool -genkeypair -keystore keystore/ddb-release.jks -storetype PKCS12 -alias 
   CAP("Tabel 4.3 Kontrol keamanan aplikasi"),
 
   H1("BAB V  NAVIGASI DAN LAYAR"),
-  P("AuthNavGraph adalah graf navigasi tunggal. Setelah login dan PIN berhasil, pengguna masuk ke rute fitur pada AppRoutes dengan bilah navigasi bawah (MainBottomBar)."),
+  P("AuthNavGraph adalah graf navigasi tunggal. Setelah login dan PIN berhasil, pengguna masuk ke rute fitur pada AppRoutes dengan bilah navigasi bawah (MainBottomBar) berisi lima tab: Beranda, Riwayat, QRIS (tombol bulat di tengah), Kantong, dan Profil. Layar PIN setelah login memakai keypad angka; PIN dikirim otomatis saat digit keenam diketuk. Dialog PIN transaksi (PinDialog) tetap memakai kolom teks."),
   table(["Rute", "Layar", "Modul"], [
     ["home", "HomeScreen (dashboard)", "Home"],
     ["history, history/detail/{txId}, history/analytics", "HistoryScreen, TransactionDetailScreen, AnalyticsScreen", "History"],
@@ -384,7 +387,7 @@ class RemoteTransferRepository(
   H2("7.3 Menambah Layar"),
   ...NL([
     "Tambahkan konstanta rute di core/navigation/AppRoutes.kt.",
-    "Buat composable layar di paket presentation modul, memakai ScreenScaffold dan komponen di core/ui/Components.kt agar tampilan seragam.",
+    "Buat composable layar di paket presentation modul, memakai ScreenScaffold dan komponen di core/ui/Components.kt agar tampilan seragam. Untuk tombol, impor import com.diponegoro.digitalbank.core.ui.DdbButton as Button (atau DdbOutlinedButton as OutlinedButton); warna diambil dari MaterialTheme.colorScheme dan DdbTheme.colors, bukan kode warna langsung.",
     "Daftarkan composable(route) di AuthNavGraph.kt, ambil ViewModel dengan viewModel(factory = …).",
     "Tambahkan pemanggilan navigasi dari Beranda atau layar terkait.",
   ]),
@@ -398,8 +401,8 @@ class RemoteTransferRepository(
   H2("8.1 Menjalankan Test"),
   code(`
 export JAVA_HOME="/c/Program Files/Android/Android Studio/jbr"
-./gradlew :app:testDemoDebugUnitTest      # 63 test (1 test live dilewati), ±1 menit
-./gradlew :app:testOnlineDebugUnitTest    # 58 test (tanpa AppTourTest)
+./gradlew :app:testDemoDebugUnitTest      # 64 test (1 test live dilewati), ±2 menit
+./gradlew :app:testOnlineDebugUnitTest    # 58 test (tanpa test testDemo; LiveBackendTest dilewati bila -Pddb.liveUrl tidak diisi)
 # Uji live ke backend yang sedang berjalan di laptop:
 ./gradlew :app:testOnlineDebugUnitTest -Pddb.liveUrl=http://localhost:8080/
 # Laporan: app/build/reports/tests/testDemoDebugUnitTest/index.html
@@ -415,10 +418,10 @@ export JAVA_HOME="/c/Program Files/Android/Android Studio/jbr"
     ["VirtualCardUseCasesTest", "8", "Buat, detail dengan PIN, bekukan, limit, otorisasi pembelian"],
     ["ApiClientTest", "8", "MockWebServer: header Bearer, refresh 401, pesan error, offline, pemetaan DTO"],
     ["LiveBackendTest", "1", "Login → saldo → transfer ke backend sungguhan (hanya bila ddb.liveUrl diisi)"],
-    ["AppTourTest (testDemo)", "5", "Robolectric + Compose: menelusuri layar utama varian demo"],
+    ["AppTourTest (testDemo)", "6", "Robolectric + Compose: AppTourTest (tur layar utama varian demo), DarkModeShotsTest (login, PIN, Beranda mode gelap), ReceiptAndDialogShotsTest (dialog PIN, bukti transaksi); tangkapan layar di app/build/screenshots"],
     ["ExampleUnitTest", "1", "Contoh bawaan proyek"],
   ], [2700, 900, 5470], { boldFirst: true, center: [1], size: 18 }),
-  CAP("Tabel 8.1 Kelas test Android (11 berkas test utama + 1 berkas testDemo, ±1.091 baris)"),
+  CAP("Tabel 8.1 Kelas test Android (11 berkas test utama + 1 berkas testDemo, ±1.327 baris)"),
   H2("8.2 Menulis Test Baru"),
   code(`
 class TransferRepositoryTest {

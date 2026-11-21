@@ -4,10 +4,10 @@ account\data/AccountRepository.kt | 31 | AccountRepository | Modul Account (FR-0
 account\data/LocalAccountRepository.kt | 230 | LocalAccountRepository | Account module (FR-06 – FR-09). Saldo & kantong disimpan di ledger bersama; repository ini menyimpan metadata kantong (tujuan, target, aturan kunci).
 account\data/RemoteAccountRepository.kt | 104 | RemoteAccountRepository | Account lewat backend: saldo dan kantong adalah akun ledger server; aturan BR-06 dijalankan server.
 account\domain/AccountModels.kt | 45 | LockRule,Pocket,AccountOverview,BalancePeriod | Aturan kunci kantong (FR-09).
-account\presentation/AccountScreens.kt | 255 |  | 
+account\presentation/AccountScreens.kt | 260 |  | 
 account\presentation/AccountViewModels.kt | 164 | BalanceChartUiState,BalanceChartViewModel,PocketDialog,PocketsUiState | FR-07: grafik perubahan saldo harian / mingguan / bulanan, dihitung dari ledger.
 authentication\data\repository/MockAuthRepository.kt | 371 | MockAuthRepository | Implementasi in-memory. Data hilang saat proses aplikasi dimatikan.  Akun demo : username "demo" / password "Demo@1234" / PIN "123456" e-KYC     : NIK yang berakhiran "0000" akan DITOLAK, selain itu DISETUJUI.
-authentication\data\repository/RemoteAuthRepository.kt | 303 | RemoteAuthRepository | AuthRepository versi online (FR-01 – FR-05): seluruh aturan (OTP, e-KYC, blokir PIN, sesi) dijalankan backend; kelas ini hanya memetakan alur aplikasi ke endpoint /api/v1/auth dan /me.  Perbedaan alur yang dijembatani di
+authentication\data\repository/RemoteAuthRepository.kt | 309 | RemoteAuthRepository | AuthRepository versi online (FR-01 – FR-05): seluruh aturan (OTP, e-KYC, blokir PIN, sesi) dijalankan backend; kelas ini hanya memetakan alur aplikasi ke endpoint /api/v1/auth dan /me.  Perbedaan alur yang dijembatani di
 authentication\di/AuthModule.kt | 53 | AuthModule | Manual DI sederhana (tanpa Hilt) supaya cepat untuk prototype.
 authentication\domain\model/AuthEnums.kt | 14 | AccountStatus,OtpPurpose,OtpStatus,EkycStatus | 
 authentication\domain\model/AuthResult.kt | 6 | AuthResult | 
@@ -24,27 +24,27 @@ authentication\domain\usecase/PinUseCases.kt | 27 | GetTransactionPinUseCase,Cre
 authentication\domain\usecase/RecoveryUseCases.kt | 37 | RecoveryRequest,RequestRecoveryUseCase,ResetPasswordUseCase,ResetPinUseCase | 
 authentication\domain\usecase/RegistrationUseCases.kt | 60 | RegisterUserUseCase,SendOtpUseCase,VerifyOtpUseCase,SubmitEkycUseCase | 
 authentication\domain\usecase/SessionUseCases.kt | 20 | GetActiveSessionsUseCase,LogoutUseCase,LogoutAllDevicesUseCase | 
-authentication\presentation\components/AuthComponents.kt | 153 |  | 
-authentication\presentation\navigation/AuthNavGraph.kt | 309 |  | 
+authentication\presentation\components/AuthComponents.kt | 302 |  | 
+authentication\presentation\navigation/AuthNavGraph.kt | 310 |  | 
 authentication\presentation\navigation/AuthRoutes.kt | 15 | AuthRoutes | 
 authentication\presentation\screen/EkyScreen.kt | 79 |  | 
-authentication\presentation\screen/HomeScreen.kt | 77 |  | 
-authentication\presentation\screen/LoginScreen.kt | 73 |  | 
+authentication\presentation\screen/HomeScreen.kt | 86 |  | 
+authentication\presentation\screen/LoginScreen.kt | 146 |  | 
 authentication\presentation\screen/OtpScreen.kt | 41 |  | 
-authentication\presentation\screen/PinScreens.kt | 62 |  | 
+authentication\presentation\screen/PinScreens.kt | 138 |  | 
 authentication\presentation\screen/RecoveryScreen.kt | 100 |  | 
 authentication\presentation\screen/RegisterScreen.kt | 41 |  | 
 authentication\presentation\state/AuthEvent.kt | 5 | AuthEvent | 
 authentication\presentation\state/AuthUiState.kt | 23 | AuthUiState | 
 authentication\presentation\state/RecoveryUiState.kt | 15 | RecoveryStep,RecoveryUiState | 
-authentication\presentation\viewmodel/AuthViewModel.kt | 333 | AuthViewModel | 
+authentication\presentation\viewmodel/AuthViewModel.kt | 355 | AuthViewModel | 
 authentication\presentation\viewmodel/RecoveryViewModel.kt | 106 | RecoveryViewModel | 
 core\di/CoreModule.kt | 106 | CoreModule | Komponen lintas modul (MDTA 2.2): Financial Transaction Core, notifikasi, keamanan transaksi.
 core\di/FeatureModule.kt | 51 | FeatureModule | Repository setiap business module. Varian demo: ledger & guard in-memory bersama. Varian online (CoreModule.online): implementasi Remote* ke backend bersama (Fase 5).
 core\ledger/DemoData.kt | 80 | DemoData | Data simulasi untuk akun demo agar riwayat, grafik saldo, dan dashboard langsung berisi. Semua pihak & nominal fiktif (SRS 2.5: data bersifat simulasi).
 core\ledger/Ledger.kt | 249 | Ledger | Financial Transaction Core (BR-03, BR-04, NFR-07) — implementasi in-memory.  - Double-entry: setiap transaksi adalah kumpulan baris jurnal yang jumlahnya 0. - Atomik: validasi + posting dilakukan di bawah satu Mutex; gag
 core\ledger/LedgerModels.kt | 109 | AccountKind,LedgerAccount,TxCategory,TxStatus | Rekening pada buku besar. EXTERNAL mewakili pihak luar (jaringan antarbank, merchant, biller).
-core\navigation/AppRoutes.kt | 56 | AppRoutes,Tab | 
+core\navigation/AppRoutes.kt | 116 | AppRoutes,Tab | 
 core\network/ApiClient.kt | 170 | ApiClient,IsoTime | Klien REST ke backend bersama (DAFTAR_PEKERJAAN 5.1, SAD-DDB-001 Bab VI). - Menyisipkan "Authorization: Bearer <accessToken>" pada setiap permintaan. - Saat 401, menukar refresh token (POST /auth/refresh) satu kali lalu 
 core\network/ApiModels.kt | 153 |  | 
 core\network/DdbApi.kt | 103 | DdbApi | Kontrak REST backend (base URL berakhir "/", path relatif "api/v1/...").
@@ -58,18 +58,19 @@ core\receipt/ReceiptSharer.kt | 81 | ReceiptSharer | Membuat bukti transaksi seb
 core\security/InactivityMonitor.kt | 17 | InactivityMonitor | FR-05: mencatat interaksi terakhir pengguna untuk timeout sesi otomatis.
 core\security/TransactionGuard.kt | 41 | TransactionGuard | Pemeriksaan yang wajib dilewati setiap transaksi keuangan: - FR-02: transaksi keuangan hanya aktif setelah e-KYC disetujui. - FR-04 / BR-02: PIN 6 digit, blokir sementara setelah 3 kali salah (logika di AuthRepository).
 core\storage/KeyValueStore.kt | 26 | KeyValueStore,SharedPrefsStore,InMemoryStore | Penyimpanan preferensi kecil (mis. pilihan sembunyikan saldo, FR-06).
+core\ui/Buttons.kt | 74 |  | Tombol utama: isi warna tinta (navy di mode terang, gading di mode gelap).
 core\ui/Charts.kt | 271 | ChartPoint | 
-core\ui/Components.kt | 263 |  | 
+core\ui/Components.kt | 290 |  | 
 core\ui/ReceiptView.kt | 46 |  | 
 core\util/AppResult.kt | 17 | AppResult | Hasil operasi bersama untuk modul Account, Transfer, Payment, Top-up, History, dan Profile.
 core\util/HashUtil.kt | 10 | HashUtil | 
 core\util/Money.kt | 31 |  | 
-history\data/HistoryRepository.kt | 50 | DateRange,HistoryFilter,HistoryItem,HistoryPage | Modul Transaction History & Dashboard (FR-23 – FR-25). Implementasi: - LocalHistoryRepository  : dihitung dari ledger in-memory (varian demo) - RemoteHistoryRepository : backend /api/v1/history (varian online)
+history\data/HistoryRepository.kt | 51 | DateRange,HistoryFilter,HistoryItem,HistoryPage | Modul Transaction History & Dashboard (FR-23 – FR-25). Implementasi: - LocalHistoryRepository  : dihitung dari ledger in-memory (varian demo) - RemoteHistoryRepository : backend /api/v1/history (varian online)
 history\data/LocalHistoryRepository.kt | 92 | LocalHistoryRepository | Modul Transaction History & Dashboard (FR-23 – FR-25). Semua angka dihitung dari ledger.
 history\data/RemoteHistoryRepository.kt | 53 | RemoteHistoryRepository | Riwayat, detail (dengan jurnal), dan ringkasan bulanan dari backend; semua angka dihitung server dari ledger.
-history\presentation/HistoryScreens.kt | 183 |  | 
+history\presentation/HistoryScreens.kt | 190 |  | 
 history\presentation/HistoryViewModels.kt | 162 | HistoryUiState,HistoryViewModel,DetailUiState,TransactionDetailViewModel | FR-23: riwayat + filter + pencarian + paginasi.
-home/HomeScreen.kt | 214 | QuickAction | 
+home/HomeScreen.kt | 320 | QuickAction | 
 home/HomeViewModel.kt | 78 | HomeUiState,HomeViewModel | 
 payment\data/LocalPaymentRepository.kt | 137 | LocalPaymentRepository | Modul Payment (QRIS) — FR-15, FR-16, FR-17.
 payment\data/PaymentRepository.kt | 36 | ScannedQris,DemoQr,QrisRules,PaymentRepository | Hasil pindai yang sudah divalidasi, siap ditampilkan sebelum PIN (FR-15).
@@ -96,9 +97,10 @@ transfer\data/TransferRepository.kt | 25 | TransferRepository | Modul Transfer (
 transfer\domain/TransferModels.kt | 46 | Bank,Recipient,FavoriteRecipient,TransferQuote | Hasil validasi rekening tujuan (FR-12): nama penerima tampil sebelum PIN diminta.
 transfer\presentation/TransferScreen.kt | 212 |  | 
 transfer\presentation/TransferViewModel.kt | 164 | TransferStep,TransferUiState,TransferViewModel | UC-01 Transfer Dana.
-ui\theme/Color.kt | 22 |  | 
-ui\theme/Theme.kt | 63 | ChartColors | Warna grafik yang dipilih per mode (bukan hasil inversi otomatis).
-ui\theme/Type.kt | 34 |  | 
+ui\theme/Brand.kt | 36 |  | Tanda logo Diponegoro (D + kepala kuda) dari logo asli, diwarnai sesuai mode: navy di mode terang, emas di mode gelap. Rasio asli 630 × 720.
+ui\theme/Color.kt | 39 |  | 
+ui\theme/Theme.kt | 145 | ChartColors | Warna grafik yang dipilih per mode (bukan hasil inversi otomatis).
+ui\theme/Type.kt | 46 |  | 
 virtualcard\data\repository/MockVirtualCardRepository.kt | 113 | MockVirtualCardRepository | Implementasi in-memory (simulator penerbit kartu). Data hilang saat proses aplikasi dimatikan. Nomor kartu dibuat acak dengan check digit Luhn agar formatnya realistis, tetapi bukan kartu nyata.
 virtualcard\data\repository/RemoteVirtualCardRepository.kt | 97 | RemoteVirtualCardRepository | Virtual Card lewat backend (FR-21, FR-22). Server hanya mengirim nomor tersamar; nomor lengkap & CVV (terenkripsi AES-GCM di server) dibuka lewat revealDetails setelah PIN valid.
 virtualcard\di/VirtualCardModule.kt | 63 | VirtualCardModule | Manual DI, mengikuti pola AuthModule.
