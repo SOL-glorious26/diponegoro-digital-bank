@@ -216,7 +216,8 @@ private fun NavGraphBuilder.appGraph(navController: NavHostController, auth: Aut
     secured(AppRoutes.POCKETS, navController, auth) { u, _ ->
         val vm: PocketsViewModel = viewModel(factory = PocketsViewModel.factory(u.userId))
         val s by vm.state.collectAsState()
-        PocketsScreen(s, vm, back)
+        // Kantong juga tab di bottom bar: tampilkan bar, tombol kembali tidak perlu.
+        PocketsScreen(s, vm, onBack = null) { bottomBar() }
     }
 
     // ---------------- Transfer (FR-10 – FR-14)

@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.DigitalBank" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Warna jendela disamakan dengan latar Compose agar tidak ada kilatan putih saat aplikasi dibuka. -->
+    <style name="Theme.DigitalBank" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/ddb_background_light</item>
+        <item name="android:statusBarColor">@color/ddb_background_light</item>
+        <item name="android:navigationBarColor">@color/ddb_background_light</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
 </resources>

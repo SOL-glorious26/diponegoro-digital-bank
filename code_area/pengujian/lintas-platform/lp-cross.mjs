@@ -4,6 +4,7 @@
 import path from "node:path";
 import { writeFileSync } from "node:fs";
 import * as A from "../lib/adbui.mjs";
+import { keypadPin } from "../lib/android-flows.mjs";
 import { launch, sleep } from "../lib/cdp.mjs";
 
 const OUT = path.resolve(process.argv[2] || "hasil/lp");
@@ -22,14 +23,12 @@ async function androidLogin(user = "demo") {
   A.clearApp();
   for (const p of ["ACCESS_LOCAL_NETWORK", "POST_NOTIFICATIONS"]) { try { A.adb("shell", "pm", "grant", A.PKG, "android.permission." + p); } catch { /* */ } }
   A.restartApp();
-  await A.waitText(/^Login$/, 30000);
-  await A.typeInto(/Username \/ email/, user);
+  await A.waitText(/^Masuk$/, 30000);
+  await A.typeInto(/^Username, email/, user);
   await A.typeInto(/^Password$/, "Demo@1234");
   A.back(); await sleep(400);
-  await A.tap(/^Login$/);
-  await A.waitText(/PIN \(6 digit\)/);
-  await A.typeInto(/PIN \(6 digit\)/, "123456");
-  await A.tap(/^Konfirmasi PIN$/);
+  await A.tap(/^Masuk$/);
+  await keypadPin("123456");
   await A.waitText(/^Saldo rekening utama$/, 20000);
 }
 async function androidPin() {
@@ -152,7 +151,7 @@ try {
   await A.tap(/^Logout dari semua perangkat$/);
   await sleep(1000);
   await A.tapIfPresent(/^(Ya|Logout|Keluar|Lanjutkan)$/);
-  await A.waitText(/^Login$/, 20000);
+  await A.waitText(/^Masuk$/, 20000);
   // aksi berikutnya di Web
   await web.go("/riwayat");
   await web.waitFor("location.pathname === '/login'", 15000);

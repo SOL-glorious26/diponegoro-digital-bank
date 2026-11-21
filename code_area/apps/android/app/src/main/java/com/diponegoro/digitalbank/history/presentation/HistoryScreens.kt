@@ -13,7 +13,7 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
+import com.diponegoro.digitalbank.core.ui.DdbOutlinedButton as OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -72,7 +72,8 @@ fun HistoryScreen(
         ChipRow("Periode", DateRange.entries, filter.range, { it!!.label }) { r ->
             viewModel.updateFilter { it.copy(range = r ?: DateRange.ALL) }
         }
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        // Bisa digeser bila layar sempit, agar label tombol tidak terpotong ke baris kedua.
+        Row(Modifier.horizontalScroll(rememberScrollState()), verticalAlignment = Alignment.CenterVertically) {
             TextButton(onClick = { showFilters = !showFilters }) {
                 Text(if (showFilters) "Sembunyikan filter lain" else "Filter jenis & status")
             }

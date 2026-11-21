@@ -9,12 +9,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
+import com.diponegoro.digitalbank.core.ui.DdbButton as Button
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
+import com.diponegoro.digitalbank.core.ui.DdbOutlinedButton as OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -77,8 +77,13 @@ fun BalanceChartScreen(state: BalanceChartUiState, onSelect: (BalancePeriod) -> 
 }
 
 @Composable
-fun PocketsScreen(state: PocketsUiState, viewModel: PocketsViewModel, onBack: () -> Unit) {
-    ScreenScaffold(title = "Kantong Simpanan", onBack = onBack) {
+fun PocketsScreen(
+    state: PocketsUiState,
+    viewModel: PocketsViewModel,
+    onBack: (() -> Unit)?,
+    bottomBar: @Composable () -> Unit = {}
+) {
+    ScreenScaffold(title = "Kantong Simpanan", onBack = onBack, bottomBar = bottomBar) {
         SectionCard {
             InfoRow("Saldo rekening utama", formatRupiah(state.mainBalance), emphasize = true)
             InfoRow("Total di kantong", formatRupiah(state.pockets.sumOf { it.balance }))

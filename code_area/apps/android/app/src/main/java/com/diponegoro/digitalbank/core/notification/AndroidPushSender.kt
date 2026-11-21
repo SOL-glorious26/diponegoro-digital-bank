@@ -42,7 +42,7 @@ class AndroidPushSender(private val context: Context) : PushSender {
             PendingIntent.FLAG_IMMUTABLE
         )
         val built = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.ic_launcher_monochrome_ddb)
             .setContentTitle(notification.title)
             .setContentText(notification.message)
             .setStyle(NotificationCompat.BigTextStyle().bigText(notification.message))

@@ -77,7 +77,7 @@ const pwNew = "Rahasia123";
 await run("SA-21", "registrasi → OTP → e-KYC → PIN sampai transaksi aktif (+ tombol Kembali setelah OTP, DEF-07)", async () => {
   newUser = "sa" + Date.now().toString(36);
   F.freshStart();
-  await A.waitText(/^Login$/, 30000);
+  await A.waitText(/^Masuk$/, 30000);
   await A.tap(/Daftar/);
   await A.typeInto(/^Username$/, newUser);
   await A.typeInto(/^Email$/, newUser + "@mail.test");
@@ -95,9 +95,9 @@ await run("SA-21", "registrasi → OTP → e-KYC → PIN sampai transaksi aktif 
   if (!/Verifikasi e-KYC/.test(afterBack)) { A.restartApp(); await sleep(2500); }
   if (!A.find(/^Verifikasi e-KYC$/)) {
     // aplikasi tertutup oleh tombol Kembali: masuk lagi, alur harus berlanjut ke e-KYC
-    await A.waitText(/^Login$/, 20000);
-    await A.typeInto(/Username \/ email/, newUser); await A.typeInto(/^Password$/, pwNew); A.back(); await sleep(300);
-    await A.tap(/^Login$/);
+    await A.waitText(/^Masuk$/, 20000);
+    await A.typeInto(/^Username, email/, newUser); await A.typeInto(/^Password$/, pwNew); A.back(); await sleep(300);
+    await A.tap(/^Masuk$/);
     await A.waitText(/^Verifikasi e-KYC$/);
   }
   await A.typeInto(/^NIK KTP \(16 digit\)$/, "3374010101010001"); A.back(); await sleep(400);
@@ -106,18 +106,16 @@ await run("SA-21", "registrasi → OTP → e-KYC → PIN sampai transaksi aktif 
   await A.waitText(/^Lanjut ke Login$/, 25000);
   shot("SA21-1-ekyc-disetujui");
   await A.tap(/^Lanjut ke Login$/);
-  await A.waitText(/^Login$/);
-  await A.typeInto(/Username \/ email/, newUser); await A.typeInto(/^Password$/, pwNew); A.back(); await sleep(300);
-  await A.tap(/^Login$/);
+  await A.waitText(/^Masuk$/);
+  await A.typeInto(/^Username, email/, newUser); await A.typeInto(/^Password$/, pwNew); A.back(); await sleep(300);
+  await A.tap(/^Masuk$/);
   await A.waitText(/^Buat PIN Transaksi$/, 20000);
   const fields = A.dump().filter((n) => n.editable);
   expect(fields.length >= 2, "layar buat PIN tidak muncul: " + A.screenText().slice(0, 200));
   for (const f of fields.slice(0, 2)) { A.tapXY(f.x, f.y); await sleep(300); A.typeText("246810"); await sleep(300); }
   A.back(); await sleep(300);
   await A.tap(/^(Simpan PIN|Buat PIN|Simpan|Lanjut)$/);
-  await A.waitText(/PIN \(6 digit\)/, 20000);
-  await A.typeInto(/PIN \(6 digit\)/, "246810");
-  await A.tap(/^Konfirmasi PIN$/);
+  await F.keypadPin("246810");
   await A.waitText(/^Saldo rekening utama$/, 25000);
   shot("SA21-2-beranda-pengguna-baru");
   return `pengguna ${newUser}; Kembali dari e-KYC tidak menuju OTP; saldo awal ${F.balanceText()}`;
@@ -126,7 +124,7 @@ await run("SA-21", "registrasi → OTP → e-KYC → PIN sampai transaksi aktif 
 await run("SA-22", "e-KYC NIK berakhiran 0000 ditolak, transaksi tetap terkunci", async () => {
   const u = "sb" + Date.now().toString(36);
   F.freshStart();
-  await A.waitText(/^Login$/, 30000);
+  await A.waitText(/^Masuk$/, 30000);
   await A.tap(/Daftar/);
   await A.typeInto(/^Username$/, u); await A.typeInto(/^Email$/, u + "@mail.test"); await A.typeInto(/^Password$/, pwNew); A.back(); await sleep(300);
   await A.tap(/^Daftar$/);
@@ -349,7 +347,7 @@ await run("SA-13", "virtual card: buat, detail dengan PIN, bekukan", async () =>
   // pengguna baru: akun demo bisa sudah mencapai batas 5 kartu (FR-21) dari jalan uji sebelumnya
   const nu = await apiNewUser();
   await F.login(nu.u, nu.pw, nu.pin);
-  await A.tap(/^Virtual Card$/);
+  await A.tap(/^Kartu$/);
   await A.tap(/Buat Virtual Card/);
   await A.tap(/^Domestik$/);
   await A.tap(/^Buat kartu$/);
@@ -363,7 +361,7 @@ await run("SA-13", "virtual card: buat, detail dengan PIN, bekukan", async () =>
   const det = A.screenText();
   shot("SA13-2-detail");
   expect(/CVV/i.test(det) && /\d{4} ?\d{4} ?\d{4} ?\d{4}/.test(det), "nomor lengkap/CVV tidak tampil setelah PIN");
-  await F.home(nu.u, nu.pw, nu.pin); await A.tap(/^Virtual Card$/); await sleep(1200); // tombol Bekukan ada di halaman Virtual Card
+  await F.home(nu.u, nu.pw, nu.pin); await A.tap(/^Kartu$/); await sleep(1200); // tombol Bekukan ada di halaman Virtual Card
   await A.tap(/^Bekukan$/);
   await sleep(1500);
   await A.tapIfPresent(/^(Ya|Lanjutkan)$/); // aplikasi tidak memakai dialog konfirmasi; jangan ketuk "Bekukan" kartu lain
@@ -486,14 +484,12 @@ await run("SA-15", "ubah profil (email) dengan OTP", async () => {
 await run("SA-02", "PIN salah 3 kali → diblokir sementara (akun baru)", async () => {
   expect(newUser, "SA-21 harus berjalan lebih dulu");
   F.freshStart();
-  await A.waitText(/^Login$/, 30000);
-  await A.typeInto(/Username \/ email/, newUser); await A.typeInto(/^Password$/, pwNew); A.back(); await sleep(300);
-  await A.tap(/^Login$/);
+  await A.waitText(/^Masuk$/, 30000);
+  await A.typeInto(/^Username, email/, newUser); await A.typeInto(/^Password$/, pwNew); A.back(); await sleep(300);
+  await A.tap(/^Masuk$/);
   const msgs = [];
   for (let i = 0; i < 3; i++) {
-    await A.waitText(/PIN \(6 digit\)/);
-    await A.typeInto(/PIN \(6 digit\)/, "000000");
-    await A.tap(/^Konfirmasi PIN$/);
+    await F.keypadPin("000000");
     await sleep(2000);
     // abaikan teks petunjuk statis "Salah 3 kali akan memblokir PIN sementara"
     msgs.push(A.dump().map((n) => n.text).find((t) => /PIN salah|sisa|diblokir/i.test(t) && !/akan memblokir/i.test(t)) || "(tidak ada pesan)");
@@ -524,16 +520,16 @@ await run("SA-23", "login biometrik (simulasi token perangkat) tanpa password", 
   await A.tap(/^Keluar$/);
   await sleep(1500);
   await A.tapIfPresent(/^(Ya|Keluar|Logout)$/);
-  await A.waitText(/^Login$/, 20000);
+  await A.waitText(/^Masuk$/, 20000);
   const btn = await A.waitText(/biometrik|sidik jari/i, 10000);
   shot("SA23-2-tombol-biometrik");
   A.tapXY(btn.x, btn.y); await sleep(1500);
   // prototipe: dialog "Autentikasi Biometrik (Simulasi)" menggantikan sensor sidik jari/wajah
-  await A.waitText(/Autentikasi Biometrik/, 10000);
+  await A.waitText(/Autentikasi biometrik/i, 10000);
   shot("SA23-3-dialog-simulasi");
   await A.tap(/^Autentikasi$/); await sleep(2500);
-  await A.waitText(/PIN \(6 digit\)|^Saldo rekening utama$/, 20000);
-  if (A.find(/PIN \(6 digit\)/)) { await A.typeInto(/PIN \(6 digit\)/, "123456"); await A.tap(/^Konfirmasi PIN$/); }
+  await A.waitText(/^Masukkan PIN$|^Saldo rekening utama$/, 20000);
+  if (A.find(/^Masukkan PIN$/)) { await F.keypadPin("123456"); }
   await A.waitText(/^Saldo rekening utama$/, 20000);
   // matikan lagi agar kondisi akun demo kembali seperti semula
   await F.home(); await A.tap(/^Profil$/); await A.tap(/^Keamanan/); await A.waitText(/^Login biometrik$/);
@@ -546,7 +542,7 @@ await run("SA-18", "diam > 5 menit → diminta login ulang", async () => {
   await F.login();
   await sleep(6 * 60 * 1000); // pengecekan aplikasi tiap 10 detik + panggilan logout; jangan menyentuh layar sebelum lewat
   // Aplikasi seharusnya sudah kembali ke halaman login sendiri; bila belum, aksi berikutnya harus ditolak.
-  if (!A.find(/^Login$/)) { await A.tapIfPresent(/^Riwayat$/); await A.waitText(/^Login$/, 30000); }
+  if (!A.find(/^Masuk$/)) { await A.tapIfPresent(/^Riwayat$/); await A.waitText(/^Masuk$/, 30000); }
   const msg = A.dump().map((n) => n.text).find((t) => /berakhir/i.test(t));
   shot("SA18-timeout-sesi");
   expect(msg, "halaman login tanpa pesan sesi berakhir");

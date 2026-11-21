@@ -1,5 +1,7 @@
 package com.diponegoro.digitalbank.core.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -29,6 +31,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -41,6 +45,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -50,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import com.diponegoro.digitalbank.core.ledger.Direction
 import com.diponegoro.digitalbank.core.ledger.TxStatus
 import com.diponegoro.digitalbank.core.util.formatRupiah
+import com.diponegoro.digitalbank.ui.theme.DdbTheme
 import com.diponegoro.digitalbank.ui.theme.StatusError
 import com.diponegoro.digitalbank.ui.theme.StatusSuccess
 import com.diponegoro.digitalbank.ui.theme.StatusWarning
@@ -66,9 +72,14 @@ fun ScreenScaffold(
     content: @Composable ColumnScope.() -> Unit
 ) {
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text(title) },
+                title = { Text(title, style = MaterialTheme.typography.titleLarge) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    scrolledContainerColor = MaterialTheme.colorScheme.background
+                ),
                 navigationIcon = {
                     if (onBack != null) {
                         IconButton(onClick = onBack) {
@@ -86,8 +97,8 @@ fun ScreenScaffold(
                 .fillMaxSize()
                 .padding(padding)
                 .then(if (scrollable) Modifier.verticalScroll(rememberScrollState()) else Modifier)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             content = content
         )
     }
@@ -100,11 +111,18 @@ fun SectionCard(
     contentPadding: PaddingValues = PaddingValues(16.dp),
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Card(modifier = modifier.fillMaxWidth()) {
-        Column(Modifier.padding(contentPadding), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            if (title != null) Text(title, style = MaterialTheme.typography.titleMedium)
-            content()
-        }
+    // Panel bergaris tipis, tanpa bayangan (design system: "garis, bukan bayangan").
+    Column(
+        modifier
+            .fillMaxWidth()
+            .clip(MaterialTheme.shapes.medium)
+            .background(DdbTheme.colors.panel)
+            .border(1.dp, DdbTheme.colors.line, MaterialTheme.shapes.medium)
+            .padding(contentPadding),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        if (title != null) Text(title, style = MaterialTheme.typography.titleMedium)
+        content()
     }
 }
 
@@ -160,7 +178,7 @@ fun StatusChip(status: TxStatus) {
 @Composable
 fun SignedAmount(amount: Long, direction: Direction, failed: Boolean = false) {
     val (prefix, color) = when (direction) {
-        Direction.IN -> "+" to StatusSuccess
+        Direction.IN -> "+" to DdbTheme.colors.incoming
         Direction.OUT -> "−" to MaterialTheme.colorScheme.onSurface
         Direction.INTERNAL -> "" to MaterialTheme.colorScheme.onSurfaceVariant
     }
@@ -227,6 +245,9 @@ fun MoneyField(
         prefix = { Text("Rp ") },
         singleLine = true,
         enabled = enabled,
+        shape = MaterialTheme.shapes.small,
+        colors = ddbFieldColors(),
+        textStyle = MaterialTheme.typography.bodyLarge.copy(fontFeatureSettings = "tnum"),
         supportingText = supportingText?.let { { Text(it) } },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         modifier = modifier.fillMaxWidth()
@@ -247,17 +268,23 @@ fun EmptyState(text: String) {
     )
 }
 
+/** Blok sorotan (mis. ringkasan nominal): tanpa isi warna, hanya garis tipis. */
 @Composable
 fun HighlightCard(content: @Composable ColumnScope.() -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
-        )
-    ) {
-        Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(6.dp), content = content)
-    }
+    SectionCard(contentPadding = PaddingValues(20.dp), content = content)
 }
+
+/** Warna kolom input bersama: border tipis, menebal ke warna tinta saat fokus, latar panel. */
+@Composable
+fun ddbFieldColors() = OutlinedTextFieldDefaults.colors(
+    unfocusedBorderColor = DdbTheme.colors.lineStrong,
+    focusedBorderColor = MaterialTheme.colorScheme.onSurface,
+    focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+    unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+    focusedContainerColor = DdbTheme.colors.panel,
+    unfocusedContainerColor = DdbTheme.colors.panel,
+    disabledContainerColor = DdbTheme.colors.panel,
+    cursorColor = MaterialTheme.colorScheme.onSurface
+)
 
 val Transparent = Color.Transparent

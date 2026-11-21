@@ -12,14 +12,12 @@ export function freshStart() {
 
 export async function login(user = "demo", password = "Demo@1234", pin = "123456") {
   freshStart();
-  await A.waitText(/^Login$/, 30000);
-  await A.typeInto(/Username \/ email/, user);
+  await A.waitText(/^Masuk$/, 30000);
+  await A.typeInto(/^Username, email/, user);
   await A.typeInto(/^Password$/, password);
   A.back(); await sleep(400);
-  await A.tap(/^Login$/);
-  await A.waitText(/PIN \(6 digit\)/);
-  await A.typeInto(/PIN \(6 digit\)/, pin);
-  await A.tap(/^Konfirmasi PIN$/);
+  await A.tap(/^Masuk$/);
+  await keypadPin(pin);
   await A.waitText(/^Saldo rekening utama$/, 20000);
 }
 
@@ -36,8 +34,14 @@ export async function pin(value = "123456") {
   }
   await A.tap(/^Konfirmasi$/);
 }
-// Layar PIN setelah login dikenali dari tombol "Konfirmasi PIN" (dialog PIN lain memakai "Konfirmasi").
-const isLoginPin = (nodes = A.dump()) => !!A.find(/^Konfirmasi PIN$/, nodes);
+// Layar PIN setelah login dikenali dari judul "Masukkan PIN" (dialog PIN transaksi berjudul "Masukkan PIN Transaksi").
+const isLoginPin = (nodes = A.dump()) => !!A.find(/^Masukkan PIN$/, nodes);
+
+// Layar PIN setelah login memakai keypad angka (tanpa kolom teks); PIN terkirim otomatis pada digit keenam.
+export async function keypadPin(value) {
+  await A.waitText(/^Masukkan PIN$/);
+  for (const d of value) await A.tap(new RegExp(`^${d}$`));
+}
 
 // Beranda dikenali dari tombol "Terima QRIS" (hanya ada di Beranda; "Saldo rekening utama" juga ada di layar lain).
 const isHome = (nodes = A.dump()) => !!A.find(/^Terima QRIS$/, nodes) && !!A.find(/^Saldo rekening utama$/, nodes);
@@ -46,17 +50,16 @@ const appInFront = () => A.adb("shell", "dumpsys", "window").match(/mCurrentFocu
 // Masuk lagi tanpa menghapus data aplikasi (dipakai bila sesi berakhir atau aplikasi dibuka ulang).
 export async function relogin(user = "demo", password = "Demo@1234", pinValue = "123456") {
   if (!appInFront()) { A.restartApp(); await sleep(2500); }
-  await A.waitText(/^Login$|PIN \(6 digit\)|^Saldo rekening utama$/, 30000);
-  if (A.find(/^Login$/) && A.find(/Username \/ email/)) {
-    await A.typeInto(/Username \/ email/, user);
+  await A.waitText(/^Masuk$|^Masukkan PIN$|^Saldo rekening utama$/, 30000);
+  if (A.find(/^Masuk$/) && A.find(/^Username, email/)) {
+    await A.typeInto(/^Username, email/, user);
     await A.typeInto(/^Password$/, password);
     A.back(); await sleep(400);
-    await A.tap(/^Login$/);
-    await A.waitText(/PIN \(6 digit\)/);
+    await A.tap(/^Masuk$/);
+    await A.waitText(/^Masukkan PIN$/);
   }
-  if (A.find(/PIN \(6 digit\)/)) {
-    await A.typeInto(/PIN \(6 digit\)/, pinValue);
-    await A.tap(/^Konfirmasi PIN$/);
+  if (A.find(/^Masukkan PIN$/)) {
+    await keypadPin(pinValue);
   }
   await A.waitText(/^Saldo rekening utama$/, 20000);
 }
@@ -65,7 +68,7 @@ export async function home(user, password, pinValue) {
   for (let i = 0; i < 8 && !isHome(); i++) {
     // Jangan menekan Kembali dari layar login/PIN atau di luar aplikasi: masuk lagi.
     const nodes = A.dump();
-    if (!appInFront() || A.find(/Username \/ email/, nodes) || isLoginPin(nodes)) { await relogin(user, password, pinValue); continue; }
+    if (!appInFront() || A.find(/^Username, email/, nodes) || isLoginPin(nodes)) { await relogin(user, password, pinValue); continue; }
     if (A.find(/^Batal$/, nodes) && A.find(/PIN/, nodes)) { await A.tapIfPresent(/^Batal$/); await sleep(700); continue; }
     if (await A.tapIfPresent(/^Beranda$/)) { await sleep(900); continue; }
     A.back(); await sleep(800);

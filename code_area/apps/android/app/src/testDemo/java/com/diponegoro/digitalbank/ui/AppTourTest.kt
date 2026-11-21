@@ -130,14 +130,14 @@ class AppTourTest {
     @Test
     fun screensTour() {
         // Authentication
-        waitForText("Login dengan Biometrik")
+        waitForText("Masuk dengan biometrik")
         rule.shot("01_login")
-        type("Username / email", "demo")
+        type("Username, email", "demo")
         type("Password", "Demo@1234")
-        click("Login")
-        waitForText("Masukkan PIN Transaksi")
-        type("PIN (6 digit)", "123456")
-        click("Konfirmasi PIN")
+        click("Masuk")
+        waitForText("Masukkan PIN")
+        rule.shot("01b_pin")
+        "123456".forEach { click(it.toString()) } // keypad: PIN terkirim otomatis pada digit keenam
         waitForText("Saldo rekening utama")
         rule.shot("02_beranda")
 
@@ -236,7 +236,7 @@ class AppTourTest {
         rule.shot("22_topup_konfirmasi")
         back()
 
-        click("Virtual Card")
+        click("Kartu")
         waitForText("+ Buat Virtual Card")
         rule.shot("23_virtual_card")
         back()
@@ -245,6 +245,50 @@ class AppTourTest {
         rule.pump(transitionMs)
         waitForText("Dalam aplikasi", substring = true)
         rule.shot("24_notifikasi")
+    }
+}
+
+/** Tampilan mode gelap: login, PIN, dan Beranda dengan qualifier "night". */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [34], qualifiers = "night-xxhdpi")
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+class DarkModeShotsTest {
+
+    @get:Rule
+    val rule = createAndroidComposeRule<MainActivity>()
+
+    private fun waitForText(text: String) {
+        var waited = 0L
+        while (rule.onAllNodesWithText(text).fetchSemanticsNodes().isEmpty()) {
+            if (waited > 8_000) throw AssertionError("Teks tidak muncul: $text")
+            rule.pump(); waited += 200
+        }
+    }
+
+    private fun click(text: String) {
+        rule.onAllNodesWithText(text).onLast().performSemanticsAction(SemanticsActions.OnClick)
+        rule.pump(1_000)
+    }
+
+    private fun type(label: String, value: String) {
+        rule.onAllNodes(hasSetTextAction() and hasText(label, substring = true)).onLast()
+            .performSemanticsAction(SemanticsActions.SetText) { it(AnnotatedString(value)) }
+        rule.pump()
+    }
+
+    @Test
+    fun loginPinHomeDark() {
+        waitForText("Masuk")
+        rule.shot("40_gelap_login")
+        type("Username, email", "demo")
+        type("Password", "Demo@1234")
+        click("Masuk")
+        waitForText("Masukkan PIN")
+        "12".forEach { click(it.toString()) }
+        rule.shot("41_gelap_pin")
+        "3456".forEach { click(it.toString()) }
+        waitForText("Saldo rekening utama")
+        rule.shot("42_gelap_beranda")
     }
 }
 

@@ -1,7 +1,9 @@
 package com.diponegoro.digitalbank.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -9,32 +11,108 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
 private val LightColors = lightColorScheme(
-    primary = Navy,
-    onPrimary = Color.White,
-    primaryContainer = NavyContainer,
-    onPrimaryContainer = Color(0xFF001A43),
-    secondary = Gold,
+    primary = LightInk,
+    onPrimary = LightBackground,
+    primaryContainer = Color(0xFFE7EAEF),
+    onPrimaryContainer = LightInk,
+    secondary = DiponegoroBlue,
     onSecondary = Color.White,
-    secondaryContainer = Color(0xFFFFE7B0),
-    onSecondaryContainer = Color(0xFF3B2A00),
-    background = Color(0xFFF7F8FC),
-    surface = Color(0xFFFFFFFF),
-    surfaceVariant = Color(0xFFE6E9F2),
-    error = StatusError
+    secondaryContainer = Color(0xFFE3EAF6),
+    onSecondaryContainer = LightInk,
+    tertiary = MutedGold,
+    onTertiary = LightInk,
+    background = LightBackground,
+    onBackground = LightInk,
+    surface = LightBackground,
+    onSurface = LightInk,
+    surfaceVariant = Color(0xFFECEAE4),
+    onSurfaceVariant = LightInkSecondary,
+    surfaceTint = Color.Transparent,
+    surfaceContainerLowest = LightPanel,
+    surfaceContainerLow = Color(0xFFFAFAF8),
+    surfaceContainer = Color(0xFFF0EFEA),
+    surfaceContainerHigh = LightPanel,          // dialog
+    surfaceContainerHighest = Color(0xFFECEAE4),
+    outline = LightLineStrong,
+    outlineVariant = LightLine,
+    error = StatusError,
+    onError = Color.White,
+    errorContainer = Color(0xFFF6E4E3),
+    onErrorContainer = Color(0xFF5C1414)
 )
 
 private val DarkColors = darkColorScheme(
-    primary = NavyLight,
-    onPrimary = Color(0xFF00225C),
-    primaryContainer = NavyContainerDark,
-    onPrimaryContainer = Color(0xFFDCE6FF),
-    secondary = GoldLight,
-    onSecondary = Color(0xFF3B2A00),
-    background = Color(0xFF111318),
-    surface = Color(0xFF181B22),
-    surfaceVariant = Color(0xFF2A2E38)
+    primary = DarkInk,
+    onPrimary = MidnightNavy,
+    primaryContainer = Color(0xFF16273F),
+    onPrimaryContainer = DarkInk,
+    secondary = DarkBlue,
+    onSecondary = Color(0xFF07152E),
+    secondaryContainer = Color(0xFF15284A),
+    onSecondaryContainer = DarkInk,
+    tertiary = DarkGold,
+    onTertiary = MidnightNavy,
+    background = DarkBackground,
+    onBackground = DarkInk,
+    surface = DarkBackground,
+    onSurface = DarkInk,
+    surfaceVariant = Color(0xFF132236),
+    onSurfaceVariant = DarkInkSecondary,
+    surfaceTint = Color.Transparent,
+    surfaceContainerLowest = Color(0xFF050B14),
+    surfaceContainerLow = Color(0xFF0A1524),
+    surfaceContainer = DarkPanel,
+    surfaceContainerHigh = Color(0xFF0F2138),   // dialog
+    surfaceContainerHighest = Color(0xFF13263F),
+    outline = DarkLineStrong,
+    outlineVariant = DarkLine,
+    error = Color(0xFFE59A97),
+    onError = Color(0xFF3B0A0A),
+    errorContainer = Color(0xFF3A1618),
+    onErrorContainer = Color(0xFFF6D6D5)
+)
+
+/** Warna merek di luar skema Material: aksen emas, dana masuk, panel, garis, logo. */
+@Immutable
+data class DdbColors(
+    val gold: Color,
+    val incoming: Color,
+    val link: Color,
+    val panel: Color,
+    val line: Color,
+    val lineStrong: Color,
+    val mark: Color,
+    val pinFilled: Color,
+    val pinEmpty: Color
+)
+
+private val LightDdb = DdbColors(
+    gold = MutedGold, incoming = DiponegoroBlue, link = DiponegoroBlue, panel = LightPanel,
+    line = LightLine, lineStrong = LightLineStrong, mark = MidnightNavy,
+    pinFilled = MidnightNavy, pinEmpty = Color(0xFF8A929C)
+)
+private val DarkDdb = DdbColors(
+    gold = DarkGold, incoming = DarkBlue, link = DarkBlue, panel = DarkPanel,
+    line = DarkLine, lineStrong = DarkLineStrong, mark = Color(0xFFD6BE8C),
+    pinFilled = DarkGold, pinEmpty = Color(0xFF4A5B73)
+)
+
+val LocalDdbColors = staticCompositionLocalOf { LightDdb }
+
+object DdbTheme {
+    val colors: DdbColors
+        @Composable get() = LocalDdbColors.current
+}
+
+private val DdbShapes = Shapes(
+    extraSmall = RoundedCornerShape(6.dp),
+    small = RoundedCornerShape(10.dp),     // tombol, input
+    medium = RoundedCornerShape(14.dp),    // panel
+    large = RoundedCornerShape(20.dp),     // bottom sheet
+    extraLarge = RoundedCornerShape(28.dp) // dialog
 )
 
 /** Warna grafik yang dipilih per mode (bukan hasil inversi otomatis). */
@@ -45,7 +123,7 @@ val LocalChartColors = staticCompositionLocalOf {
     ChartColors(ChartBlueLight, ChartOrangeLight, ChartBlueLight)
 }
 
-/** Tema brand tetap (tanpa dynamic color) agar tampilan konsisten dengan aplikasi web (NFR-08). */
+/** Tema merek tetap (tanpa dynamic color). Mengikuti mode terang/gelap sistem. */
 @Composable
 fun DigitalBankTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -53,10 +131,14 @@ fun DigitalBankTheme(
 ) {
     val chartColors = if (darkTheme) ChartColors(ChartBlueDark, ChartOrangeDark, ChartBlueDark)
     else ChartColors(ChartBlueLight, ChartOrangeLight, ChartBlueLight)
-    CompositionLocalProvider(LocalChartColors provides chartColors) {
+    CompositionLocalProvider(
+        LocalChartColors provides chartColors,
+        LocalDdbColors provides if (darkTheme) DarkDdb else LightDdb
+    ) {
         MaterialTheme(
             colorScheme = if (darkTheme) DarkColors else LightColors,
             typography = Typography,
+            shapes = DdbShapes,
             content = content
         )
     }
