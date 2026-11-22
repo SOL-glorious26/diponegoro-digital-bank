@@ -18,7 +18,7 @@ Satu backend dipakai bersama oleh aplikasi Android dan aplikasi Web.
 | `docs_generator/` | Generator dokumen .docx (D02, D03, D04B, D06, D07A, D07B, Panduan Uji) dan gambar diagram. |
 | `_arsip/` | Berkas lama yang tidak dipakai lagi (zip lama, cadangan Android sebelum Fase 5, prototipe Web tim). Disimpan, tidak dihapus. |
 
-Catatan kerja: `RECAP_PROGRES_2026-11-11.md` (ringkasan terbaru), `LANJUTKAN.md`, `DAFTAR_PEKERJAAN.md`.
+Catatan kerja: `DAFTAR_PEKERJAAN.md`; progres terbaru di folder `progress_update/`.
 
 ## Menjalankan cepat
 
