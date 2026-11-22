@@ -78,7 +78,7 @@ await run("SA-21", "registrasi → OTP → e-KYC → PIN sampai transaksi aktif 
   newUser = "sa" + Date.now().toString(36);
   F.freshStart();
   await A.waitText(/^Masuk$/, 30000);
-  await A.tap(/Daftar/);
+  await A.tap(/^Buka rekening$/);
   await A.typeInto(/^Username$/, newUser);
   await A.typeInto(/^Email$/, newUser + "@mail.test");
   await A.typeInto(/^Password$/, pwNew); A.back(); await sleep(300);
@@ -125,7 +125,7 @@ await run("SA-22", "e-KYC NIK berakhiran 0000 ditolak, transaksi tetap terkunci"
   const u = "sb" + Date.now().toString(36);
   F.freshStart();
   await A.waitText(/^Masuk$/, 30000);
-  await A.tap(/Daftar/);
+  await A.tap(/^Buka rekening$/);
   await A.typeInto(/^Username$/, u); await A.typeInto(/^Email$/, u + "@mail.test"); await A.typeInto(/^Password$/, pwNew); A.back(); await sleep(300);
   await A.tap(/^Daftar$/);
   await A.waitText(/^Verifikasi OTP$/);
@@ -348,7 +348,7 @@ await run("SA-13", "virtual card: buat, detail dengan PIN, bekukan", async () =>
   const nu = await apiNewUser();
   await F.login(nu.u, nu.pw, nu.pin);
   await A.tap(/^Kartu$/);
-  await A.tap(/Buat Virtual Card/);
+  await A.tap(/Buat kartu virtual/);
   await A.tap(/^Domestik$/);
   await A.tap(/^Buat kartu$/);
   await sleep(2500);
@@ -361,7 +361,7 @@ await run("SA-13", "virtual card: buat, detail dengan PIN, bekukan", async () =>
   const det = A.screenText();
   shot("SA13-2-detail");
   expect(/CVV/i.test(det) && /\d{4} ?\d{4} ?\d{4} ?\d{4}/.test(det), "nomor lengkap/CVV tidak tampil setelah PIN");
-  await F.home(nu.u, nu.pw, nu.pin); await A.tap(/^Kartu$/); await sleep(1200); // tombol Bekukan ada di halaman Virtual Card
+  await F.home(nu.u, nu.pw, nu.pin); await A.tap(/^Kartu$/); await sleep(1200); // tombol Bekukan ada di halaman Kartu
   await A.tap(/^Bekukan$/);
   await sleep(1500);
   await A.tapIfPresent(/^(Ya|Lanjutkan)$/); // aplikasi tidak memakai dialog konfirmasi; jangan ketuk "Bekukan" kartu lain
@@ -371,7 +371,7 @@ await run("SA-13", "virtual card: buat, detail dengan PIN, bekukan", async () =>
 });
 
 await run("SA-14", "riwayat: filter Keluar, detail, analitik", async () => {
-  await F.home();
+  await F.login(); // SA-13 memakai pengguna baru; kembalikan sesi ke akun demo untuk kasus berikutnya
   await A.tap(/^Riwayat$/);
   await A.tap(/^Filter jenis & status$/);
   const keluar = A.dump().filter((n) => n.text === "Keluar").pop();
@@ -506,7 +506,7 @@ const biometricSwitch = () => {
   return label && nodes.find((n) => n.clickable && n.x > 700 && Math.abs(n.y - label.y) < 40);
 };
 await run("SA-23", "login biometrik (simulasi token perangkat) tanpa password", async () => {
-  await F.home();
+  await F.login(); // SA-02 memblokir PIN pengguna baru; mulai lagi dari akun demo
   await A.tap(/^Profil$/);
   await A.tap(/^Keamanan/);
   await A.waitText(/^Login biometrik$/);

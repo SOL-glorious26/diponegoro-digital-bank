@@ -237,7 +237,7 @@ class AppTourTest {
         back()
 
         click("Kartu")
-        waitForText("+ Buat Virtual Card")
+        waitForText("+ Buat kartu virtual")
         rule.shot("23_virtual_card")
         back()
 

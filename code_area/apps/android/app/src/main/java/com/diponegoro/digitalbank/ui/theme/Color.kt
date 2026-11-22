@@ -35,5 +35,8 @@ val ChartOrangeDark = Color(0xFFD95926)
 
 // Status (selalu disertai ikon + label, bukan warna saja). Nada diredam agar tidak mencolok.
 val StatusSuccess = Color(0xFF2F6B4F)
-val StatusWarning = Color(0xFF8A6A1F)
+val StatusWarning = Color(0xFF7A5C16)
 val StatusError = Color(0xFF9E2A2B)
+val StatusSuccessDark = Color(0xFF7FC4A0)
+val StatusWarningDark = Color(0xFFD9B45F)
+val StatusErrorDark = Color(0xFFE59A97)

@@ -13,6 +13,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import com.diponegoro.digitalbank.core.ui.DdbOutlinedButton as OutlinedButton
+import com.diponegoro.digitalbank.core.ui.ScreenScaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -26,7 +27,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.diponegoro.digitalbank.authentication.presentation.components.AuthScreenContainer
 import com.diponegoro.digitalbank.authentication.presentation.components.AuthTextField
 import com.diponegoro.digitalbank.authentication.presentation.components.LoadingButton
 import com.diponegoro.digitalbank.authentication.presentation.components.MessageBanner
@@ -66,11 +66,12 @@ fun VirtualCardScreen(
     onSimulate: (amount: String, international: Boolean) -> Unit,
     onDismissDialog: () -> Unit
 ) {
-    AuthScreenContainer(
-        title = "Virtual Card",
-        subtitle = "Buat dan kelola kartu virtual untuk transaksi online"
-    ) {
-        TextButton(onClick = onBack) { Text("← Kembali ke Home") }
+    ScreenScaffold(title = "Kartu", onBack = onBack) {
+        Text(
+            "Buat dan kelola kartu virtual untuk transaksi online",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
 
         if (!state.financialEnabled) {
             Text(
@@ -82,7 +83,7 @@ fun VirtualCardScreen(
         if (state.dialog == null) MessageBanner(state.errorMessage, state.infoMessage)
 
         LoadingButton(
-            text = "+ Buat Virtual Card",
+            text = "+ Buat kartu virtual",
             isLoading = state.isLoading && state.dialog == null,
             enabled = state.financialEnabled,
             onClick = onCreate
@@ -92,7 +93,7 @@ fun VirtualCardScreen(
             if (state.isLoading) {
                 CircularProgressIndicator()
             } else {
-                Text("Belum ada virtual card.", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("Belum ada kartu virtual.", color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
 
@@ -219,7 +220,7 @@ private fun CreateCardDialog(
     var scope by rememberSaveable { mutableStateOf(CardScope.DOMESTIC) }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Buat Virtual Card") },
+        title = { Text("Buat kartu virtual") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("Pilih cakupan penggunaan kartu:")

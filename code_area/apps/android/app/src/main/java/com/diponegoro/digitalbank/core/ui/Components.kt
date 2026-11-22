@@ -56,9 +56,6 @@ import com.diponegoro.digitalbank.core.ledger.Direction
 import com.diponegoro.digitalbank.core.ledger.TxStatus
 import com.diponegoro.digitalbank.core.util.formatRupiah
 import com.diponegoro.digitalbank.ui.theme.DdbTheme
-import com.diponegoro.digitalbank.ui.theme.StatusError
-import com.diponegoro.digitalbank.ui.theme.StatusSuccess
-import com.diponegoro.digitalbank.ui.theme.StatusWarning
 
 /** Kerangka layar standar: app bar dengan tombol kembali + konten yang bisa di-scroll. */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -158,9 +155,9 @@ fun InfoText(message: String?) {
 @Composable
 fun StatusChip(status: TxStatus) {
     val (color, icon) = when (status) {
-        TxStatus.SUCCESS -> StatusSuccess to Icons.Filled.CheckCircle
-        TxStatus.PROCESSING -> StatusWarning to Icons.Filled.Schedule
-        TxStatus.FAILED -> StatusError to Icons.Filled.Error
+        TxStatus.SUCCESS -> DdbTheme.colors.success to Icons.Filled.CheckCircle
+        TxStatus.PROCESSING -> DdbTheme.colors.warning to Icons.Filled.Schedule
+        TxStatus.FAILED -> MaterialTheme.colorScheme.error to Icons.Filled.Error
     }
     Surface(color = color.copy(alpha = 0.12f), shape = MaterialTheme.shapes.small) {
         Row(

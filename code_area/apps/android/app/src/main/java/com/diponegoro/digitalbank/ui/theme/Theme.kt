@@ -69,13 +69,13 @@ private val DarkColors = darkColorScheme(
     surfaceContainerHighest = Color(0xFF13263F),
     outline = DarkLineStrong,
     outlineVariant = DarkLine,
-    error = Color(0xFFE59A97),
+    error = StatusErrorDark,
     onError = Color(0xFF3B0A0A),
     errorContainer = Color(0xFF3A1618),
     onErrorContainer = Color(0xFFF6D6D5)
 )
 
-/** Warna merek di luar skema Material: aksen emas, dana masuk, panel, garis, logo. */
+/** Warna merek di luar skema Material: aksen emas, dana masuk, panel, garis, logo, status. */
 @Immutable
 data class DdbColors(
     val gold: Color,
@@ -86,18 +86,22 @@ data class DdbColors(
     val lineStrong: Color,
     val mark: Color,
     val pinFilled: Color,
-    val pinEmpty: Color
+    val pinEmpty: Color,
+    val success: Color,
+    val warning: Color
 )
 
 private val LightDdb = DdbColors(
     gold = MutedGold, incoming = DiponegoroBlue, link = DiponegoroBlue, panel = LightPanel,
     line = LightLine, lineStrong = LightLineStrong, mark = MidnightNavy,
-    pinFilled = MidnightNavy, pinEmpty = Color(0xFF8A929C)
+    pinFilled = MidnightNavy, pinEmpty = Color(0xFF8A929C),
+    success = StatusSuccess, warning = StatusWarning
 )
 private val DarkDdb = DdbColors(
     gold = DarkGold, incoming = DarkBlue, link = DarkBlue, panel = DarkPanel,
     line = DarkLine, lineStrong = DarkLineStrong, mark = Color(0xFFD6BE8C),
-    pinFilled = DarkGold, pinEmpty = Color(0xFF4A5B73)
+    pinFilled = DarkGold, pinEmpty = Color(0xFF4A5B73),
+    success = StatusSuccessDark, warning = StatusWarningDark
 )
 
 val LocalDdbColors = staticCompositionLocalOf { LightDdb }

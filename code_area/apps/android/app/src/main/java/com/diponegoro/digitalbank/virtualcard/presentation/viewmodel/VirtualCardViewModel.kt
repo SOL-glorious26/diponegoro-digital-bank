@@ -90,7 +90,7 @@ class VirtualCardViewModel(
                         isLoading = false,
                         dialog = null,
                         cards = listOf(r.data) + s.cards,
-                        infoMessage = "Virtual card ${r.data.maskedNumber} berhasil dibuat (status: Aktif)"
+                        infoMessage = "Kartu virtual ${r.data.maskedNumber} berhasil dibuat (status: Aktif)"
                     )
                 }
             }
