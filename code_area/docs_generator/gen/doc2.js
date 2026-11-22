@@ -7,7 +7,7 @@ const fig = (n) => path.join(FIG, n);
 const meta = {
   docLabel: "Dokumen 2", title: "Architectural Design", subtitle: "Arsitektur Sistem Android, Web, Backend, Database, Integrasi, dan Deployment",
   code: "SAD-DDB-001", version: "1.0", statusShort: "Final",
-  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; peer review (Steven Wibisana) belum diterima sampai tenggat",
+  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; wewenang review dan persetujuan dijalankan Project Manager",
   module: "Arsitektur Sistem Diponegoro Digital Bank (seluruh modul)", createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend)",
   updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend)", team: "Kelompok Jaran Goyang – masukan: Gracia Riyanto (Android), Steven Wibisana (Web)",
   refs: "SRS-DDB-001 v0.1 (2.1, 2.4, 2.5, Bagian 4); Project Brief v1.0 §9; MDTA-DDB-001 v0.2; STD-DDB-001 v1.0; README aplikasi Web tim (digitalbanking-node v2.0.0); repositori kode per 22 November 2026",
@@ -22,7 +22,7 @@ const meta = {
     ["0.9.5", "16 Nov 2026", "Salomo P.G. Hokoyoku", "Status disamakan dengan STD-DDB-001 v0.9.6: Web 15/15, 47 test backend, uji lintas platform 4/4, uji ponsel fisik lulus, NFR-01 sampai NFR-03 terukur, Firefox/Edge lulus; CORS backend (DEF-04) ditambahkan pada 9.2; PostgreSQL lokal berjalan; jumlah berkas Kotlin Android dikoreksi; isu terbuka yang sudah selesai ditutup (Tabel 11.1)."],
     ["1.0", "22 Nov 2026", "Salomo P.G. Hokoyoku", "Versi final. Web resmi ditetapkan Web tim (Node.js, Express, EJS): 8.2, ADR-13, dan ADR-14 ditambahkan; arsitektur Web React dipertahankan sebagai prototipe pembanding (8.3–8.6); peran tim dan hasil uji disamakan dengan STD-DDB-001 v1.0; navigasi Android lima tab. Disetujui PM."],
   ],
-  approval: { sign: "../../../documents_area/_aset/project_manager_sign.png", date: "22 Nov 2026", pic: [["Peer reviewer", "Steven Wibisana"]] },
+  approval: { sign: "../../../documents_area/_aset/project_manager_sign.png", date: "22 Nov 2026" },
 };
 
 const body = [

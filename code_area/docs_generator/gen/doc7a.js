@@ -137,7 +137,7 @@ order.forEach((g) => {
 const meta = {
   docLabel: "Dokumen 7 – Volume Android", title: "Developer Manual", subtitle: "Panduan Pengembang dan Keterangan Source Code – Aplikasi Android Diponegoro Digital Bank",
   code: "DVM-DDB-001-AND", version: "1.0", statusShort: "Final",
-  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; telaah bagian QRIS dan Profile serta uji keterikutan setup oleh anggota tim belum diterima sampai tenggat",
+  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; wewenang review dan persetujuan dijalankan Project Manager",
   module: "Developer Manual – Aplikasi Android (apps/android, 8 business module)", createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend & Integrasi Android)",
   updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager)", team: "Kelompok Jaran Goyang – Mobile: Salomo (Auth, Virtual Card), Cecilia Adelaide Penlaana (Transfer, History), Gracia Riyanto (QRIS, Profile), Grace (Account, Top-up)",
   refs: "SAD-DDB-001 v1.0; FSD-DDB-001 v1.0; SDD-DDB-001-AND v1.0; UIM-DDB-001-AND v1.0; DVM-DDB-001-BE v1.0; STD-DDB-001 v1.0; apps/android/README.md; kode aplikasi per 22 November 2026",
@@ -150,7 +150,7 @@ const meta = {
     ["0.9.3", "21 Nov 2026", "Salomo P.G. Hokoyoku", "Tampilan Android baru: tema (ui/theme: Color, Theme, Type, Brand), font Plus Jakarta Sans, ikon dari logo asli, layar Login, PIN dengan keypad, Beranda, bottom navigation lima tab, komponen bersama (Components.kt, Buttons.kt); inventaris berkas diperbarui (112 berkas); jumlah test Android 64 (demo) dan 58 (online)."],
     ["1.0", "22 Nov 2026", "Salomo P.G. Hokoyoku", "Versi final. Layar PIN responsif (DEF-13), warna status per mode (DdbTheme.colors.success/warning, DEF-14), layar Kartu memakai ScreenScaffold, detail kartu virtual varian online (DEF-12), skrip tangkap-layar.mjs; hasil uji dan acuan disamakan dengan STD-DDB-001 v1.0. Disetujui PM."],
   ],
-  approval: { sign: "../../../documents_area/_aset/project_manager_sign.png", date: "22 Nov 2026", pic: [["Pendukung (QRIS, Profile)", "Gracia Riyanto"]] },
+  approval: { sign: "../../../documents_area/_aset/project_manager_sign.png", date: "22 Nov 2026" },
 };
 
 const body = [

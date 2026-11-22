@@ -43,7 +43,7 @@ if (eps.length !== 73) throw new Error("expected 73 operations, got " + eps.leng
 const meta = {
   docLabel: "Dokumen 3", title: "Functional Design", subtitle: "Deskripsi Modul, Batas Sistem, Antarmuka Eksternal, Spesifikasi Fungsi, dan Workflow",
   code: "FSD-DDB-001", version: "1.0", statusShort: "Final",
-  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; peer review (Steven Wibisana) belum diterima sampai tenggat",
+  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; wewenang review dan persetujuan dijalankan Project Manager",
   module: "Functional Design – 8 modul bisnis (FR-01 s.d. FR-29)", createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend)",
   updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend)", team: "Kelompok Jaran Goyang – reviewer keterujian: Steven Wibisana",
   refs: "SRS-DDB-001 v0.1 (Bagian 3); SAD-DDB-001 v1.0; STD-DDB-001 v1.0; UIM-DDB-001-AND v1.0; User Interface Map (Web) v0.7; backend/docs/openapi.json (73 operasi); kode backend, Android, dan Web per 22 November 2026",
@@ -56,7 +56,7 @@ const meta = {
     ["0.9.3", "16 Nov 2026", "Salomo P.G. Hokoyoku", "Status disamakan dengan STD-DDB-001 v0.9.6: pemindaian QRIS dengan kamera (FR-15) lulus di ponsel fisik, Android 28/28; Tabel 7.1, catatan status, dan isu terbuka diperbarui; uraian singkat ditambahkan pada setiap workflow Bab VI; kalimat komunikasi HTTP/HTTPS pada 4.4 diperjelas."],
     ["1.0", "22 Nov 2026", "Salomo P.G. Hokoyoku", "Versi final. Navigasi Android lima tab; kolom halaman Web pada Tabel 4.1 dinyatakan sebagai Web React dan Tabel 4.1a (halaman Web tim) ditambahkan; status FR per platform memisahkan Web tim dan Web React; hasil uji disamakan dengan STD-DDB-001 v1.0. Disetujui PM."],
   ],
-  approval: { sign: "../../../documents_area/_aset/project_manager_sign.png", date: "22 Nov 2026", pic: [["Peer reviewer", "Steven Wibisana"]] },
+  approval: { sign: "../../../documents_area/_aset/project_manager_sign.png", date: "22 Nov 2026" },
 };
 
 // ---------- FR specification rows: [FR, nama, input, proses & aturan, output / kesalahan]

@@ -1,0 +1,70 @@
+// D09W User Manual – Web (USM-DDB-001-WEB). Usage: node doc9w.js <folder tangkapan layar Web> <out.docx> <logo.jpeg> <tanda_tangan.png>
+const S = require("./ddbstyle");
+const { P, H1, H2, B, NL, CAP, table, img } = S;
+const path = require("path");
+const [, , LAYAR, OUT, LOGO, SIGN] = process.argv;
+const meta = {
+  docLabel: "Dokumen 9 – Volume Web", title: "User Manual", subtitle: "Panduan Pengguna Aplikasi Web Diponegoro Digital Bank",
+  code: "USM-DDB-001-WEB", version: "1.0", statusShort: "Final",
+  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; wewenang review dan persetujuan dijalankan Project Manager",
+  module: "User Manual – Aplikasi Web (Node/Express/EJS)", createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager)",
+  updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager)", team: "Kelompok Jaran Goyang – Web Application Team (PIC volume menurut DWP: Permata Surya Cahyana)",
+  refs: "SRS-DDB-001 v0.1; FSD-DDB-001 v1.0; User Interface Map (Web) v0.7; STD-DDB-001 v1.0; DVM-DDB-001-WEB v1.0; build 22 November 2026",
+  date: "22 November 2026", logo: LOGO,
+  revisions: [["1.0", "22 Nov 2026", "Salomo P.G. Hokoyoku", "Versi pertama untuk Web resmi tim Web, dengan tangkapan layar dari aplikasi yang dijalankan terhadap backend asli pada 22 November 2026. Disetujui PM."]],
+  approval: { sign: SIGN, date: "22 Nov 2026" },
+};
+let bab = 0, g = 0;
+const CH = (t) => { bab++; g = 0; return H1(`BAB ${["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][bab - 1]}  ${t}`); };
+const shot = (f, t, w = 500) => [img(path.join(LAYAR, f + ".png"), w, { alt: t }), CAP(`Gambar ${bab}.${++g} ${t}`)];
+const body = [
+  CH("PENDAHULUAN"),
+  H2("1.1 Tentang Aplikasi"),
+  P("Aplikasi Web Diponegoro Digital Bank dipakai melalui peramban untuk membuka rekening, mentransfer uang, membayar, dan melihat riwayat. Data di Web sama dengan di aplikasi Android karena memakai server yang sama. **Semua uang, OTP, dan layanan luar hanya simulasi.**"),
+  H2("1.2 Yang Anda Butuhkan"),
+  table(["Kebutuhan", "Keterangan"], [["Peramban", "Chrome, Edge, atau Firefox terbaru"], ["Alamat", "http://localhost:3000 (Web dan server dijalankan oleh pengelola)"], ["Akun contoh", "Username demo, kata sandi Demo@1234, PIN 123456"]], [2500, 6570]),
+  CAP("Tabel 1.1 Kebutuhan pengguna"),
+  H2("1.3 Fitur yang Tersedia"),
+  table(["Tersedia di Web", "Hanya di Android"], [["Daftar, e-KYC, PIN, masuk, lupa sandi/PIN", "Login biometrik (simulasi), kelola sesi dan perangkat"], ["Dashboard dan saldo", "Grafik saldo, analitik bulanan, kantong"], ["Transfer sesama dan antarbank", "Penerima favorit"], ["Top up, pulsa, token PLN, tagihan, e-wallet, QRIS contoh", "Paket data, pindai kamera, QRIS pribadi"], ["Riwayat dan ekspor CSV/PDF", "Kartu virtual"], ["Ubah profil dan kata sandi", "Ubah PIN, notifikasi"]], [4535, 4535], { size: 19 }),
+  CAP("Tabel 1.2 Fitur Web dibandingkan Android"),
+  CH("MEMBUKA REKENING"),
+  H2("2.1 Mendaftar"),
+  ...NL(["Di halaman masuk, klik **Daftar akun**.", "Isi username, email atau No. HP, dan kata sandi dua kali, lalu klik **Daftar**.", "Masukkan kode OTP yang tampil di layar (mode demo), lalu klik **Verifikasi & Lanjut**. Klik **Kirim ulang kode** bila kedaluwarsa."]),
+  ...shot("WEB-02-daftar", "Formulir pendaftaran", 460), ...shot("WEB-03-otp", "Verifikasi OTP", 460),
+  H2("2.2 e-KYC dan PIN"),
+  ...NL(["Isi NIK 16 digit, nama, dan nama berkas swafoto (simulasi), lalu klik **Kirim Data e-KYC**. Halaman menyegarkan diri sampai disetujui.", "Buat PIN 6 digit dua kali, lalu klik **Simpan PIN**. Dashboard terbuka."]),
+  P("NIK berakhiran 0000 ditolak pada simulasi. Ikon mata menampilkan atau menyembunyikan kata sandi dan PIN."),
+  ...shot("WEB-04-ekyc", "Halaman e-KYC", 460), ...shot("WEB-05-pin", "Membuat PIN transaksi", 460),
+  CH("MASUK DAN DASHBOARD"),
+  ...NL(["Buka alamat Web. Isi username, email, atau No. HP pada kolom **Email / No. HP**, isi kata sandi, lalu klik **Login**.", "Dashboard menampilkan saldo, nomor rekening, pintasan, dan lima transaksi terakhir.", "Pakai menu di kiri: Dashboard, Transfer, Pembayaran, Riwayat, Profil, dan Keluar."]),
+  ...shot("WEB-01-masuk", "Halaman masuk"), ...shot("WEB-06-dashboard", "Dashboard"),
+  P("Bila lupa kata sandi atau PIN, klik **Lupa sandi?**, isi identitas, pilih yang dipulihkan, klik **Kirim Kode OTP**, lalu isi kode dan nilai baru."),
+  ...shot("WEB-11-lupa-sandi", "Pemulihan kata sandi atau PIN", 460),
+  CH("TRANSFER"),
+  H2("4.1 Mengirim Uang"),
+  ...NL(["Buka **Transfer**, pilih tab **Sesama Bank (DDB)** atau **Ke Bank Lain**.", "Isi rekening tujuan (dan bank), nominal minimal Rp5.000, serta catatan bila perlu. Klik **Lanjut ke Konfirmasi**.", "Periksa nama penerima, biaya, dan total.", "Masukkan PIN, lalu klik **Konfirmasi & Kirim**. Detail transaksi akan terbuka."]),
+  ...shot("WEB-07-transfer", "Formulir transfer"), ...shot("WEB-07b-transfer-konfirmasi", "Konfirmasi transfer"),
+  H2("4.2 Arti Status"),
+  table(["Status", "Arti", "Yang dilakukan"], [["Berhasil", "Dana terkirim", "Simpan bukti dengan Cetak / PDF bila perlu"], ["Diproses", "Bank tujuan belum menjawab", "Klik Cek status; jangan mengirim ulang"], ["Gagal", "Ditolak bank tujuan", "Dana dikembalikan otomatis"]], [1500, 3500, 4070]),
+  CAP("Tabel 4.1 Arti status transfer"),
+  ...shot("WEB-09c-antarbank-diproses", "Transfer antarbank Diproses dengan tombol Cek status", 400),
+  CH("PEMBAYARAN"),
+  table(["Tab", "Yang diisi", "PIN"], [["Top Up", "Sumber dana dan nominal Rp1.000 – Rp10.000.000", "Tidak"], ["Pulsa", "Nomor HP dan nominal (biaya Rp1.500)", "Ya"], ["Token PLN", "ID pelanggan/nomor meter dan nominal (biaya Rp2.500)", "Ya"], ["Tagihan", "Jenis tagihan dan nomor pelanggan", "Ya"], ["E-wallet", "E-wallet, nomor HP, dan nominal", "Ya"], ["QRIS", "Contoh kode atau isi kode, serta nominal bila kode statis", "Ya"]], [1700, 5870, 1500], { boldFirst: true, center: [2] }),
+  CAP("Tabel 5.1 Jenis pembayaran"),
+  ...NL(["Buka **Pembayaran** dan pilih tab.", "Isi data lalu klik **Lanjut ke Konfirmasi**.", "Periksa rincian, masukkan PIN, lalu klik **Bayar Sekarang**."]),
+  ...shot("WEB-08b-pulsa", "Membeli pulsa"), ...shot("WEB-08c-pulsa-konfirmasi", "Konfirmasi pembayaran"), ...shot("WEB-08-topup", "Top up saldo (simulasi)"),
+  P("Gambar QR pada tab QRIS hanya tampilan. Untuk mencoba, pilih salah satu contoh kode. Token listrik tampil di detail transaksi. Tagihan yang sudah lunas tidak dapat dibayar lagi pada periode yang sama."),
+  CH("RIWAYAT DAN EKSPOR"),
+  ...NL(["Buka **Riwayat**. Saring menurut jenis, kata kunci, dan tanggal, lalu klik **Terapkan**.", "Klik **Detail** untuk melihat rincian dan jurnal.", "Klik **CSV** atau **PDF** pada \"Ekspor sesuai filter\" untuk mengunduh."]),
+  ...shot("WEB-09-riwayat", "Riwayat transaksi", 420),
+  CH("PROFIL"),
+  ...NL(["Buka **Profil**, ubah username, email, atau No. HP, lalu klik **Simpan Perubahan**.", "Masukkan kode OTP yang tampil, lalu klik **Konfirmasi**.", "Untuk mengganti kata sandi, isi kata sandi lama dan yang baru dua kali, lalu klik **Ubah Kata Sandi**."]),
+  ...shot("WEB-10-profil", "Profil dan ubah kata sandi"),
+  P("Klik **Keluar** setelah selesai, terutama di komputer bersama. Bila Anda keluar dari semua perangkat melalui Android, sesi Web juga berakhir."),
+  CH("PEMECAHAN MASALAH"),
+  table(["Masalah", "Solusi"], [["\"Tidak dapat terhubung ke backend\"", "Server belum berjalan; hubungi pengelola"], ["Login ditolak", "Periksa identitas dan kata sandi; pakai Lupa sandi"], ["\"Rekening tujuan tidak valid\"", "Periksa nomor rekening dan bank"], ["\"ID pelanggan tidak ditemukan\"", "Periksa ID pelanggan PLN atau nomor tagihan"], ["PIN salah atau diblokir", "Salah tiga kali memblokir 5 menit; tunggu atau pulihkan PIN"], ["\"Token keamanan tidak valid\"", "Muat ulang halaman lalu ulangi"], ["\"Sesi Anda telah berakhir\"", "Masuk kembali"]], [3500, 5570]),
+  CAP("Tabel 8.1 Pemecahan masalah"),
+  H2("Referensi"),
+  ...NL(["FSD-DDB-001 v1.0, Functional Design.", "User Interface Map (Web) v0.7.", "USM-DDB-001-AND v1.0, User Manual Android.", "DVM-DDB-001-WEB v1.0, Developer Manual Web."]),
+];
+S.build(meta, body, OUT);

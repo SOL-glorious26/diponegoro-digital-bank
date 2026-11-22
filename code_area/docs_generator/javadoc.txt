@@ -58,7 +58,7 @@ profile/ProfileController.java | 136 |
 profile/ProfileService.java | 139 | Modul Profile: FR-27 (profil + OTP) dan FR-28 (keamanan).
 security/AuthUser.java | 25 | Pengguna yang sedang login. Di controller cukup tulis parameter @AuthenticationPrincipal AuthUser me.
 security/JwtService.java | 74 | Access token JWT berumur pendek (NFR-06). Klaim: sub = userId, sid = sessionId. Token yang sesinya sudah diakhiri (logout / logout semua perangkat) ditolak oleh SessionJwtConverter walaupun belum kedaluwarsa (FR-05).
-security/SecurityConfig.java | 63 | 
+security/SecurityConfig.java | 89 | 
 security/SessionJwtConverter.java | 59 | Mengubah JWT valid menjadi AuthUser, sekaligus memeriksa sesi di database (FR-05):  sesi yang sudah logout / logout semua perangkat → ditolak; tidak aktif lebih dari #IDLE_TIMEOUT → sesi berakhir otomatis; selain itu last_seen_at diperbarui (paling sering tiap
 topup/PaidBill.java | 24 | Tagihan yang sudah dibayar per periode — mencegah pembayaran ganda (FR-20).
 topup/TopUpCatalog.java | 73 | Katalog produk top-up (sama dengan aplikasi Android). Nilai biaya adalah usulan.

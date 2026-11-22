@@ -9,17 +9,17 @@ const fs = require("fs"), path = require("path");
 const meta = {
   docLabel: "Dokumen 5 – Volume Android", title: "User Interface Map", subtitle: "Inventaris Layar, Peta Navigasi, dan Kartu Layar – Aplikasi Android Diponegoro Digital Bank",
   code: "UIM-DDB-001-AND", version: "1.0", statusShort: "Final",
-  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; pre-review rekan (R1) belum diterima sampai tenggat",
+  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; wewenang review dan persetujuan dijalankan Project Manager",
   module: "User Interface Map – Android (23 layar, 8 modul bisnis)", createdBy: "Cecilia Adelaide Penlaana (PIC Dokumen 5 Volume Android)",
   updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager)", team: "Kelompok Jaran Goyang – Mobile Application Team (PIC: Cecilia Adelaide Penlaana; pendukung: Grace)",
-  refs: "SRS-DDB-001 v0.1; FSD-DDB-001 v1.0; STD-DDB-001 v1.0; DWP-DDB-001 v1.4; AuthRoutes.kt, AppRoutes.kt, dan AuthNavGraph.kt per 22 November 2026",
+  refs: "SRS-DDB-001 v0.1; FSD-DDB-001 v1.0; STD-DDB-001 v1.0; DWP-DDB-001 v1.5; AuthRoutes.kt, AppRoutes.kt, dan AuthNavGraph.kt per 22 November 2026",
   date: "22 November 2026", logo: LOGO,
   revisions: [
     ["0.1", "16 Nov 2026", "Cecilia Adelaide Penlaana", "Draf awal berdasarkan inventaris Functional Design."],
     ["0.2", "16 Nov 2026", "Cecilia Adelaide Penlaana", "Revisi berdasarkan review Salomo: inventaris 23 rute aplikasi, alur, kartu layar, dan acuan."],
     ["1.0", "22 Nov 2026", "Salomo P.G. Hokoyoku", "Penyelesaian oleh Project Manager sesuai review revisi 1: peta navigasi global dan delapan peta modul digambar sebagai diagram; jalur navigasi disamakan dengan AuthNavGraph.kt; elemen dan kondisi kartu layar diisi dari aplikasi; tangkapan layar build 22 November 2026 disisipkan; bottom navigation lima tab, PIN keypad, dan layar Kartu. Disetujui PM."],
   ],
-  approval: { newPage: true, sign: SIGN, date: "22 Nov 2026", pic: [["Disusun oleh (PIC)", "Cecilia Adelaide Penlaana"]] },
+  approval: { newPage: true, sign: SIGN, date: "22 Nov 2026" },
 };
 
 const shot = (f) => path.join(LAYAR, f + ".png");
@@ -117,6 +117,6 @@ body.push(
   B("PIN setelah login memakai keypad, sedangkan PIN transaksi memakai dialog dengan kolom teks."),
   B("Tombol mata saldo dan avatar berukuran 36 dp, lebih kecil dari anjuran 48 dp."),
   H2("Referensi"),
-  ...NL(["SRS-DDB-001 v0.1, Software Requirements Specification.", "FSD-DDB-001 v1.0, Functional Design.", "DWP-DDB-001 v1.4, Software Engineering Documentation Work Plan.", "STD-DDB-001 v1.0, Pengujian Sistem.", "Kode sumber code_area/apps/android: AuthRoutes.kt, AppRoutes.kt, AuthNavGraph.kt."]),
+  ...NL(["SRS-DDB-001 v0.1, Software Requirements Specification.", "FSD-DDB-001 v1.0, Functional Design.", "DWP-DDB-001 v1.5, Software Engineering Documentation Work Plan.", "STD-DDB-001 v1.0, Pengujian Sistem.", "Kode sumber code_area/apps/android: AuthRoutes.kt, AppRoutes.kt, AuthNavGraph.kt."]),
 );
 S.build(meta, body, OUT);

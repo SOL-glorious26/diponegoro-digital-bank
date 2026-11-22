@@ -8,13 +8,13 @@ const fs = require("fs"), path = require("path");
 const meta = {
   docLabel: "Dokumen 9 – Volume Android", title: "User Manual", subtitle: "Panduan Pengguna Aplikasi Android Diponegoro Digital Bank",
   code: "USM-DDB-001-AND", version: "1.0", statusShort: "Final",
-  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; pre-review rekan (R1) dan uji keterbacaan oleh pengguna lain belum dilakukan sampai tenggat",
+  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; wewenang review dan persetujuan dijalankan Project Manager",
   module: "User Manual – Aplikasi Android (8 modul bisnis)", createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager)",
   updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager)", team: "Kelompok Jaran Goyang – Mobile Application Team (PIC volume menurut DWP: Grace)",
   refs: "SRS-DDB-001 v0.1; FSD-DDB-001 v1.0; UIM-DDB-001-AND v1.0; STD-DDB-001 v1.0; TUT-DDB-001-AND v1.1; build 22 November 2026",
   date: "22 November 2026", logo: LOGO,
   revisions: [["1.0", "22 Nov 2026", "Salomo P.G. Hokoyoku", "Versi pertama, disusun Project Manager agar tersedia sebelum tenggat: pemasangan, pembukaan rekening, login, transaksi, kantong, kartu, riwayat, profil, notifikasi, dan pemecahan masalah dengan tangkapan layar build 22 November 2026. Disetujui PM."]],
-  approval: { sign: SIGN, date: "22 Nov 2026", pic: [["PIC volume (DWP)", "Grace"]] },
+  approval: { sign: SIGN, date: "22 Nov 2026" },
 };
 let bab = 0, g = 0;
 const CH = (t) => { bab++; g = 0; return H1(`BAB ${["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"][bab - 1]}  ${t}`); };

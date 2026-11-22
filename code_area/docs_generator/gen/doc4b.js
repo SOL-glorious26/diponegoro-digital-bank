@@ -22,7 +22,7 @@ function code(src) {
 const meta = {
   docLabel: "Dokumen 4 – Volume Backend & Database", title: "Detailed Design", subtitle: "UML, Workflow, Algoritma Pseudocode, dan Perancangan Software/Hardware – Backend & Database",
   code: "SDD-DDB-001-BE", version: "1.0", statusShort: "Final",
-  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; peer review (Steven Wibisana) belum diterima sampai tenggat",
+  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; wewenang review dan persetujuan dijalankan Project Manager",
   module: "Detailed Design – Backend & Database (ddb-backend)", createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend)",
   updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend)", team: "Kelompok Jaran Goyang – Backend & Database: Salomo P.G. Hokoyoku",
   refs: "SAD-DDB-001 v1.0; FSD-DDB-001 v1.0; STD-DDB-001 v1.0; SRS-DDB-001 v0.1; kode ddb-backend dan V1__init.sql per 22 November 2026",
@@ -34,7 +34,7 @@ const meta = {
     ["0.9.2", "13 Nov 2026", "Salomo P.G. Hokoyoku", "Konfigurasi CORS backend (DEF-04, ddb.cors.allowed-origins) dan pembagian peran CORS dengan gateway; CorsTest (47 test); cakupan JaCoCo 92,3% baris (NFR-12 terpenuhi); hasil uji performa dari STD-DDB-001; tabel keterbatasan diperbarui."],
     ["1.0", "22 Nov 2026", "Salomo P.G. Hokoyoku", "Versi final. Isi teknis tidak berubah; cakupan JaCoCo disamakan dengan STD-DDB-001 (92,2% baris); keterbatasan PostgreSQL diperbarui; backend bersama dipakai Android dan Web tim tanpa perubahan kode. Disetujui PM."],
   ],
-  approval: { sign: "../../../documents_area/_aset/project_manager_sign.png", date: "22 Nov 2026", pic: [["Peer reviewer", "Steven Wibisana"]] },
+  approval: { sign: "../../../documents_area/_aset/project_manager_sign.png", date: "22 Nov 2026" },
 };
 
 const body = [

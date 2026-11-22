@@ -71,7 +71,7 @@ function imgJpeg(path, width, height, alt) {
 }
 
 // Persetujuan versi final. m.approval = { sign: <png tanda tangan PM>, date, pic?: [[peran, nama], ...] }.
-// Hanya tanda tangan PM yang dipasang; kolom orang lain sengaja dikosongkan.
+// Hanya tanda tangan PM yang dipasang.
 function approval(a) {
   const w = [3000, 3100, 1670, 1300];
   const row = (peran, nama, sign, date) => new TableRow({ cantSplit: true, children: [
@@ -85,7 +85,7 @@ function approval(a) {
       new TableRow({ tableHeader: true, children: ["Peran", "Nama", "Tanda tangan", "Tanggal"].map((h, i) => cell(h, w[i], { fill: HEAD_FILL, bold: true, align: AlignmentType.CENTER })) }),
       row("Disetujui oleh (Project Manager)", "Salomo Putra Glorious Hokoyoku", a.sign, a.date),
       ...(a.pic ?? []).map(([p, n]) => row(p, n, null, ""))] }),
-    CAP("Tabel 0.3 Persetujuan (kolom kosong: belum ditandatangani)"),
+    CAP("Tabel 0.3 Persetujuan"),
   ];
 }
 

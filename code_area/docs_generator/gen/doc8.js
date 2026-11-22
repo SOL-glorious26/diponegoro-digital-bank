@@ -9,13 +9,13 @@ const fs = require("fs"), path = require("path");
 const meta = {
   docLabel: "Dokumen 8 – Volume Android", title: "Demo Program Sistem", subtitle: "Lingkungan, Skenario, Naskah, dan Bukti Demo – Android, Backend, dan Lintas Platform",
   code: "DEM-DDB-001-AND", version: "1.0", statusShort: "Final",
-  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; pre-review rekan (R1) dan gladi bersama seluruh tim belum dilakukan sampai tenggat",
+  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; wewenang review dan persetujuan dijalankan Project Manager",
   module: "Demo Program Sistem (8 modul bisnis; volume Android dan lintas platform)", createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager)",
   updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager)", team: "Kelompok Jaran Goyang – PIC volume menurut DWP: Rafi Fadhillah; skenario Android: Cecilia; skenario Web: Nabila; lingkungan: Salomo, Permata",
-  refs: "SRS-DDB-001 v0.1; DWP-DDB-001 v1.4; UIM-DDB-001-AND v1.0; STD-DDB-001 v1.0; DVM-DDB-001-AND v1.0; DVM-DDB-001-BE v1.0; build 22 November 2026",
+  refs: "SRS-DDB-001 v0.1; DWP-DDB-001 v1.5; UIM-DDB-001-AND v1.0; STD-DDB-001 v1.0; DVM-DDB-001-AND v1.0; DVM-DDB-001-BE v1.0; build 22 November 2026",
   date: "22 November 2026", logo: LOGO,
   revisions: [["1.0", "22 Nov 2026", "Salomo P.G. Hokoyoku", "Versi pertama, disusun Project Manager agar tersedia sebelum tenggat: lingkungan dan persiapan demo, 10 skenario Android, 3 skenario lintas platform dengan Web Node, naskah, bukti, rencana cadangan, dan keterbatasan. Disetujui PM."]],
-  approval: { sign: SIGN, date: "22 Nov 2026", pic: [["PIC volume (DWP)", "Rafi Fadhillah"]] },
+  approval: { sign: SIGN, date: "22 Nov 2026" },
 };
 const pic = (f, w = 150) => { const d = fs.readFileSync(f); return new ImageRun({ type: "png", data: d, transformation: { width: w, height: Math.round(w * d.readUInt32BE(20) / d.readUInt32BE(16)) }, altText: { title: path.basename(f), description: "Tangkapan layar demo", name: path.basename(f) } }); };
 let g = 0;

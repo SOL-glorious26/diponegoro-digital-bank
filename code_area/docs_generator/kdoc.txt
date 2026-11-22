@@ -31,7 +31,7 @@ authentication\presentation\screen/EkyScreen.kt | 79 |  |
 authentication\presentation\screen/HomeScreen.kt | 86 |  | 
 authentication\presentation\screen/LoginScreen.kt | 146 |  | 
 authentication\presentation\screen/OtpScreen.kt | 41 |  | 
-authentication\presentation\screen/PinScreens.kt | 138 |  | 
+authentication\presentation\screen/PinScreens.kt | 182 |  | 
 authentication\presentation\screen/RecoveryScreen.kt | 100 |  | 
 authentication\presentation\screen/RegisterScreen.kt | 41 |  | 
 authentication\presentation\state/AuthEvent.kt | 5 | AuthEvent | 
@@ -60,7 +60,7 @@ core\security/TransactionGuard.kt | 41 | TransactionGuard | Pemeriksaan yang waj
 core\storage/KeyValueStore.kt | 26 | KeyValueStore,SharedPrefsStore,InMemoryStore | Penyimpanan preferensi kecil (mis. pilihan sembunyikan saldo, FR-06).
 core\ui/Buttons.kt | 74 |  | Tombol utama: isi warna tinta (navy di mode terang, gading di mode gelap).
 core\ui/Charts.kt | 271 | ChartPoint | 
-core\ui/Components.kt | 290 |  | 
+core\ui/Components.kt | 287 |  | 
 core\ui/ReceiptView.kt | 46 |  | 
 core\util/AppResult.kt | 17 | AppResult | Hasil operasi bersama untuk modul Account, Transfer, Payment, Top-up, History, dan Profile.
 core\util/HashUtil.kt | 10 | HashUtil | 
@@ -98,8 +98,8 @@ transfer\domain/TransferModels.kt | 46 | Bank,Recipient,FavoriteRecipient,Transf
 transfer\presentation/TransferScreen.kt | 212 |  | 
 transfer\presentation/TransferViewModel.kt | 164 | TransferStep,TransferUiState,TransferViewModel | UC-01 Transfer Dana.
 ui\theme/Brand.kt | 36 |  | Tanda logo Diponegoro (D + kepala kuda) dari logo asli, diwarnai sesuai mode: navy di mode terang, emas di mode gelap. Rasio asli 630 × 720.
-ui\theme/Color.kt | 39 |  | 
-ui\theme/Theme.kt | 145 | ChartColors | Warna grafik yang dipilih per mode (bukan hasil inversi otomatis).
+ui\theme/Color.kt | 42 |  | 
+ui\theme/Theme.kt | 149 | ChartColors | Warna grafik yang dipilih per mode (bukan hasil inversi otomatis).
 ui\theme/Type.kt | 46 |  | 
 virtualcard\data\repository/MockVirtualCardRepository.kt | 113 | MockVirtualCardRepository | Implementasi in-memory (simulator penerbit kartu). Data hilang saat proses aplikasi dimatikan. Nomor kartu dibuat acak dengan check digit Luhn agar formatnya realistis, tetapi bukan kartu nyata.
 virtualcard\data\repository/RemoteVirtualCardRepository.kt | 97 | RemoteVirtualCardRepository | Virtual Card lewat backend (FR-21, FR-22). Server hanya mengirim nomor tersamar; nomor lengkap & CVV (terenkripsi AES-GCM di server) dibuka lewat revealDetails setelah PIN valid.
@@ -107,6 +107,6 @@ virtualcard\di/VirtualCardModule.kt | 63 | VirtualCardModule | Manual DI, mengik
 virtualcard\domain\model/VirtualCardModels.kt | 45 | CardStatus,CardScope,VirtualCard,VirtualCardLimits | Sesuai class diagram Virtual Card: «enumeration» CardStatus.
 virtualcard\domain\repository/VirtualCardRepository.kt | 41 | VirtualCardRepository,AuthGateway | Otorisasi transaksi kartu (simulasi jaringan kartu). Ditolak bila kartu beku, nominal melebihi limit, atau transaksi luar negeri dengan kartu berlingkup domestik. / suspend fun authorizeTransaction( userId: String, cardI
 virtualcard\domain\usecase/VirtualCardUseCases.kt | 103 | GetVirtualCardsUseCase,CreateVirtualCardUseCase,ViewCardDetailsUseCase,FreezeCardUseCase | UC: Create Virtual Card «include» Select Card Usage Scope (FR-21).
-virtualcard\presentation\screen/VirtualCardScreen.kt | 352 |  | 
+virtualcard\presentation\screen/VirtualCardScreen.kt | 353 |  | 
 virtualcard\presentation\state/VirtualCardUiState.kt | 22 | CardDialog,VirtualCardUiState | Dialog yang sedang terbuka, mengikuti cabang pada Activity Diagram Virtual Card.
-virtualcard\presentation\viewmodel/VirtualCardViewModel.kt | 213 | VirtualCardViewModel | 
+virtualcard\presentation\viewmodel/VirtualCardViewModel.kt | 217 | VirtualCardViewModel | 

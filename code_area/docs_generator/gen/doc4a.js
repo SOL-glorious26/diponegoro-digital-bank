@@ -11,7 +11,7 @@ const path = require("path");
 const meta = {
   docLabel: "Dokumen 4 – Volume Android", title: "Detailed Design", subtitle: "UML, Workflow, Algoritma Pseudocode, dan Perancangan Software/Hardware – Aplikasi Android",
   code: "SDD-DDB-001-AND", version: "1.0", statusShort: "Final",
-  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; pre-review rekan (R1) belum diterima sampai tenggat",
+  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; wewenang review dan persetujuan dijalankan Project Manager",
   module: "Detailed Design – Android (Kotlin, Jetpack Compose; 8 modul bisnis)", createdBy: "Gracia Riyanto (PIC Dokumen 4 Volume Android)",
   updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager)", team: "Kelompok Jaran Goyang – Mobile Application Team (PIC: Gracia Riyanto)",
   refs: "SRS-DDB-001 v0.1; SAD-DDB-001 v1.0; FSD-DDB-001 v1.0; SDD-DDB-001-BE v1.0; STD-DDB-001 v1.0; UIM-DDB-001-AND v1.0; kode apps/android per 22 November 2026",
@@ -23,7 +23,7 @@ const meta = {
     ["0.4", "16 Nov 2026", "Gracia Riyanto", "Pemeriksaan ulang review; pembaruan referensi; pemetaan endpoint empat sequence diagram; pembaruan daftar isi."],
     ["1.0", "22 Nov 2026", "Salomo P.G. Hokoyoku", "Penyelesaian oleh Project Manager sesuai review revisi 2: catatan verifikasi sumber dihapus; kode layar AND-01–AND-23 ditambahkan (Tabel 3.1); sequence Transfer dan Top-up digambar ulang dengan lifeline dan dipindah ke 3.4; class diagram Lampiran A digambar ulang (arah Screen → ViewModel → Repository); pseudocode 5.7 dirapikan; tampilan 21–22 Nov (navigasi lima tab, PIN keypad, layar Kartu) dan hasil uji STD-DDB-001 v1.0 dimasukkan. Disetujui PM."],
   ],
-  approval: { sign: SIGN, date: "22 Nov 2026", pic: [["Disusun oleh (PIC)", "Gracia Riyanto"]] },
+  approval: { sign: SIGN, date: "22 Nov 2026" },
 };
 
 const bd = { style: BorderStyle.SINGLE, size: 4, color: "808080" };

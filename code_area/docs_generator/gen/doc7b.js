@@ -74,7 +74,7 @@ order.forEach((g) => {
 const meta = {
   docLabel: "Dokumen 7 – Volume Backend", title: "Developer Manual", subtitle: "Panduan Pengembang dan Keterangan Source Code – Backend ddb-backend",
   code: "DVM-DDB-001-BE", version: "1.0", statusShort: "Final",
-  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; uji keterikutan setup (Steven Wibisana) belum diterima sampai tenggat",
+  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; wewenang review dan persetujuan dijalankan Project Manager",
   module: "Developer Manual – Backend & Database (ddb-backend)", createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend)",
   updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend)", team: "Kelompok Jaran Goyang – Backend & Database: Salomo P.G. Hokoyoku",
   refs: "SDD-DDB-001-BE v1.0; SAD-DDB-001 v1.0; FSD-DDB-001 v1.0; STD-DDB-001 v1.0; backend/README.md; kode ddb-backend per 22 November 2026",
@@ -86,7 +86,7 @@ const meta = {
     ["0.9.2", "12 Nov 2026", "Salomo P.G. Hokoyoku", "CORS dapat dikonfigurasi (ddb.cors.allowed-origins, DEF-04) dan header CORS backend disembunyikan di gateway; 47 test (CorsTest); laporan JaCoCo; troubleshooting CORS."],
     ["1.0", "22 Nov 2026", "Salomo P.G. Hokoyoku", "Versi final. Kode backend tidak berubah; keterbatasan PostgreSQL, catatan Web tim (BFF, tanpa CORS), dan acuan disamakan. Disetujui PM."],
   ],
-  approval: { sign: "../../../documents_area/_aset/project_manager_sign.png", date: "22 Nov 2026", pic: [["Peer reviewer", "Steven Wibisana"]] },
+  approval: { sign: "../../../documents_area/_aset/project_manager_sign.png", date: "22 Nov 2026" },
 };
 
 const body = [

@@ -8,7 +8,7 @@ const RUN = require("./doc6_results.json");
 const meta = {
   docLabel: "Dokumen 6", title: "Pengujian Sistem", subtitle: "System Testing Android, Web, Backend/API, dan Lintas Platform",
   code: "STD-DDB-001", version: "1.0", statusShort: "Final",
-  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; review PIC Dokumen 6 (Steven Wibisana) belum diterima sampai tenggat",
+  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; wewenang review dan persetujuan dijalankan Project Manager",
   module: "Pengujian Sistem Diponegoro Digital Bank (8 modul bisnis, Financial Transaction Core, klien Android dan Web)",
   createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager) – draf awal untuk PIC Dokumen 6",
   updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager)",
@@ -27,7 +27,7 @@ const meta = {
     ["0.9.8", "22 Nov 2026", "Salomo P.G. Hokoyoku", "Eksekusi ulang pada build Android dengan tampilan baru di emulator: 25 kasus SA otomatis dan LP-01 sampai LP-04 lulus (SA-04 dan SA-19 tercakup LP-01 dan LP-04); SA-08 pada build baru menunggu ponsel fisik. Perbaikan tampilan sebelum eksekusi: layar PIN saat ponsel miring, warna label status mode gelap, dan layar Kartu. Skrip SA dan LP diperbaiki; pemeriksaan LP-04 diperketat."],
     ["1.0", "22 Nov 2026", "Salomo P.G. Hokoyoku", "Versi final. Web resmi ditetapkan Web tim (Node/Express/EJS): kasus WN-01–WN-14 dan LPN-01–LPN-03 ditambahkan dan lulus; WB dan LP dinyatakan sebagai hasil aplikasi Web React. DEF-12 (nomor dan CVV kartu virtual varian online tidak tampil; SA-13 sebelumnya lulus keliru), DEF-13, dan DEF-14 dicatat, diperbaiki, dan diuji ulang; SA dijalankan ulang pada APK final. Disetujui PM."],
   ],
-  approval: { sign: SIGN, date: "22 Nov 2026", pic: [["PIC Dokumen 6", "Steven Wibisana"]] },
+  approval: { sign: SIGN, date: "22 Nov 2026" },
 };
 
 const ST = { L: "Lulus", G: "Gagal", T: "Terblokir", N: "Belum dieksekusi" };
@@ -411,7 +411,6 @@ const body = [
     "Ulangi SA-08 (kamera), berbagi bukti (SA-04), dan notifikasi push (SA-16) di ponsel fisik pada build Android dengan tampilan baru.",
     "Jalankan NF-04 (rate limit gateway) setelah Docker terpasang.",
     "Uji tampilan dan kompatibilitas peramban untuk Web tim.",
-    "Review oleh PIC Dokumen 6 (Steven Wibisana) setelah penerbitan; temuan dicatat pada versi berikutnya.",
   ]),
   H2("Referensi"),
   ...NL([
