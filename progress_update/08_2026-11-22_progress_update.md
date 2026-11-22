@@ -30,3 +30,10 @@ Fitur yang tidak dimuat di Web (kantong, kartu virtual, notifikasi, grafik saldo
 `PENJELASAN_TEKNOLOGI_WEB.docx` dan `TUTORIAL_MENJALANKAN_APLIKASI_WEB.docx` ditulis ulang untuk Web tim (`gen/patch_penjelasan_tutorial_web.py`).
 `PENJELASAN_TEKNOLOGI_ANDROID.docx` dan `TUTORIAL_MENJALANKAN_ANDROID_EMULATOR.docx` disamakan dengan kode 22 Nov (`gen/patch_penjelasan_tutorial_android.py`); operasi API yang dipakai Android = 69 dari 73.
 MDTA v0.3: teknologi dan realisasi Web disamakan dengan aplikasi tim Web; backend Web (Node) Surya dan Rafi, Backend Spring Boot dan Database Salomo.
+
+## 3. Pemeriksaan akhir dari clone bersih repo tim
+
+- Build dan test: Android 63/64 (demo) dan 57/58 (online), backend 47/47; Web WN 24/25 dijalankan ulang (WN-21 butuh backend kedua, terakhir lulus pada putaran sebelumnya).
+- Uji sistem pada APK hasil clone: 22 dari 23 kasus lulus dalam satu putaran; SA-07 tidak dapat dijalankan skrip karena saldo demo terlalu besar, lalu lulus setelah saldo diturunkan. SA-08 dan LPN-01 sampai LPN-03 lulus. SA-18 dan SA-20 tidak diulang pada putaran ini. Tidak ada crash.
+- Lint Android: 2 error NewApi (`windowLightNavigationBar` di tema, minSdk 24); diabaikan sistem pada Android 7.0 sampai 8.0, tidak memengaruhi fungsi.
+- Dokumen: D08W diberi blok kontrol template dosen; nomor daftar isi D04W, D08W, DWP dibetulkan; sisa teks lama di D01, D02, D03, D08W dirapikan (`gen/patch_audit_akhir.py`).

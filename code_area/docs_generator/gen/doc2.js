@@ -180,7 +180,7 @@ const body = [
   // BAB VII Android
   H1("BAB VII  ARSITEKTUR APLIKASI ANDROID"),
   H2("7.1 Pola dan Lapisan"),
-  P("Aplikasi Android (paket com.diponegoro.digitalbank, 110 berkas Kotlin pada source set main) memakai **MVVM dengan Repository Pattern**. Setiap modul fitur memiliki subpaket presentation, domain, dan data. Lapisan presentation berisi layar Jetpack Compose dan ViewModel yang mengekspos state (StateFlow). Lapisan domain berisi model, aturan bisnis, dan use case. Lapisan data berisi repository per modul."),
+  P("Aplikasi Android (paket com.diponegoro.digitalbank, 112 berkas Kotlin pada source set main) memakai **MVVM dengan Repository Pattern**. Setiap modul fitur memiliki subpaket presentation, domain, dan data. Lapisan presentation berisi layar Jetpack Compose dan ViewModel yang mengekspos state (StateFlow). Lapisan domain berisi model, aturan bisnis, dan use case. Lapisan data berisi repository per modul."),
   img(fig("d2_android.png"), 560, { alt: "Arsitektur Android" }),
   CAP("Gambar 7.1 Lapisan aplikasi Android"),
   table(["Komponen", "Keterangan"], [
@@ -330,7 +330,7 @@ const body = [
   ...NL([
     "Kelompok Jaran Goyang. (2026). Software Requirements Specification PT Diponegoro Digital Bank (SRS-DDB-001) v0.1.",
     "Kelompok Jaran Goyang. (2026). Project Brief & Scope Document v1.0, §9 Arsitektur Tingkat Tinggi.",
-    "Kelompok Jaran Goyang. (2026). Module Decomposition & Task Allocation (MDTA-DDB-001) v0.1.",
+    "Kelompok Jaran Goyang. (2026). Module Decomposition & Task Allocation (MDTA-DDB-001) v0.3.",
     "ISO/IEC/IEEE 42010:2022. Software, systems and enterprise – Architecture description.",
     "OWASP. Application Security Verification Standard (ASVS) dan Mobile Application Security Verification Standard (MASVS).",
   ]),

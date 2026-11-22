@@ -332,7 +332,7 @@ const body = [
     "Kelompok Jaran Goyang. (2026). Architectural Design (SAD-DDB-001) v1.0.",
     "Kelompok Jaran Goyang. (2026). Project Document (PRJ-DDB-001) v1.0.",
     "Kelompok Jaran Goyang. (2026). System Testing (STD-DDB-001) v1.0.",
-    "Kelompok Jaran Goyang. (2026). User Interface Map (Web) v0.3 dan v0.7; User Interface Map Android (UIM-DDB-001-AND) v1.0.",
+    "Kelompok Jaran Goyang. (2026). User Interface Map Web (UIM-DDB-001-WEB) v1.0; User Interface Map Android (UIM-DDB-001-AND) v1.0.",
     "Backend Diponegoro Digital Bank: backend/docs/openapi.json dan README.md (11 November 2026); aplikasi Web apps/web (13 November 2026).",
     "EMVCo. EMV QR Code Specification for Payment Systems – Merchant-Presented Mode.",
   ]),
