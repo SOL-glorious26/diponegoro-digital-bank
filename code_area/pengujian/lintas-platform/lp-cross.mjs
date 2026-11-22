@@ -152,12 +152,14 @@ try {
   await sleep(1000);
   await A.tapIfPresent(/^(Ya|Logout|Keluar|Lanjutkan)$/);
   await A.waitText(/^Masuk$/, 20000);
-  // aksi berikutnya di Web
-  await web.go("/riwayat");
+  // Aksi berikutnya di Web. Bila polling notifikasi (30 detik) sudah lebih dulu mengakhiri sesi, pesan sudah
+  // tampil dan akan hilang bila halaman dimuat ulang, jadi jangan navigasi lagi.
+  if (await web.evalJs("location.pathname !== '/login'")) await web.go("/riwayat");
   await web.waitFor("location.pathname === '/login'", 15000);
+  await web.waitFor("/berakhir/i.test(document.body.innerText)", 5000).catch(() => {});
   const webMsg = await web.text();
   await web.shot("LP04-2-web-sesi-berakhir.png");
-  step("LP-04", "logout semua perangkat dari Android → Web kembali ke login", true,
+  step("LP-04", "logout semua perangkat dari Android → Web kembali ke login", sessTxt.includes("Chrome (Web)") && /berakhir/i.test(webMsg),
     `sesi Web terlihat di Android: ${sessTxt.includes("Chrome (Web)")}; pesan Web: ${/berakhir/i.test(webMsg) ? "Sesi Anda telah berakhir" : "-"}`);
 } catch (e) {
   step("ERROR", e.message.slice(0, 300), false);

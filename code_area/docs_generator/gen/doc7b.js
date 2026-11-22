@@ -73,18 +73,20 @@ order.forEach((g) => {
 
 const meta = {
   docLabel: "Dokumen 7 – Volume Backend", title: "Developer Manual", subtitle: "Panduan Pengembang dan Keterangan Source Code – Backend ddb-backend",
-  code: "DVM-DDB-001-BE", version: "0.9.2", statusShort: "Draf Lengkap untuk Review",
-  status: "Draf lengkap – menunggu uji keterikutan setup (Steven Wibisana) dan persetujuan Project Manager",
+  code: "DVM-DDB-001-BE", version: "1.0", statusShort: "Final",
+  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; uji keterikutan setup (Steven Wibisana) belum diterima sampai tenggat",
   module: "Developer Manual – Backend & Database (ddb-backend)", createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend)",
   updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend)", team: "Kelompok Jaran Goyang – Backend & Database: Salomo P.G. Hokoyoku",
-  refs: "SDD-DDB-001-BE v0.9; SAD-DDB-001 v0.9; backend/README.md; kode ddb-backend per 12 November 2026",
-  date: "12 November 2026", logo: LOGO,
+  refs: "SDD-DDB-001-BE v1.0; SAD-DDB-001 v1.0; FSD-DDB-001 v1.0; STD-DDB-001 v1.0; backend/README.md; kode ddb-backend per 22 November 2026",
+  date: "22 November 2026", logo: LOGO,
   revisions: [
     ["0.1", "11 Nov 2026", "Salomo P.G. Hokoyoku", "Outline Developer Manual Backend."],
     ["0.9", "11 Nov 2026", "Salomo P.G. Hokoyoku", `Draf lengkap: setup, cara menjalankan, struktur dan keterangan ${total} berkas source code, pola pengembangan, API, basis data, pengujian, deployment, troubleshooting.`],
     ["0.9.1", "11 Nov 2026", "Salomo P.G. Hokoyoku", "Pembaruan setelah integrasi Android–backend (Fase 5) 11 Nov sore: endpoint verifikasi PIN (73 operasi), 45 test, cara menghubungkan aplikasi Android varian online."],
     ["0.9.2", "12 Nov 2026", "Salomo P.G. Hokoyoku", "CORS dapat dikonfigurasi (ddb.cors.allowed-origins, DEF-04) dan header CORS backend disembunyikan di gateway; 47 test (CorsTest); laporan JaCoCo; troubleshooting CORS."],
+    ["1.0", "22 Nov 2026", "Salomo P.G. Hokoyoku", "Versi final. Kode backend tidak berubah; keterbatasan PostgreSQL, catatan Web tim (BFF, tanpa CORS), dan acuan disamakan. Disetujui PM."],
   ],
+  approval: { sign: "../../../documents_area/_aset/project_manager_sign.png", date: "22 Nov 2026", pic: [["Peer reviewer", "Steven Wibisana"]] },
 };
 
 const body = [
@@ -386,18 +388,19 @@ class ContohFlowTest extends ApiTestBase {
     ["401 terus-menerus", "Sesi berakhir (tidak aktif > 5 menit) atau sudah logout", "Panggil /auth/refresh atau login ulang"],
     ["Teks rusak (mis. â†’) di openapi.json/API.md", "Berkas dibangkitkan dengan encoding salah", "Bangkitkan ulang dari /v3/api-docs dan simpan sebagai UTF-8"],
     ["Ponsel tidak dapat mengakses backend", "Firewall Windows atau beda jaringan", "Gunakan Wi-Fi yang sama, izinkan port 8080, atau gunakan ngrok"],
-    ["Peramban: CORS error / 403 Invalid CORS request", "Origin aplikasi Web tidak terdaftar", "Tambahkan origin ke DDB_CORS_ALLOWED_ORIGINS, atau jalankan Web lewat proxy Vite"],
+    ["Peramban: CORS error / 403 Invalid CORS request", "Origin aplikasi Web tidak terdaftar", "Tambahkan origin ke DDB_CORS_ALLOWED_ORIGINS, atau panggil backend dari server (seperti Web tim) atau lewat proxy"],
   ], [2700, 2770, 3600], { size: 17 }),
   CAP("Tabel 10.1 Troubleshooting"),
   H2("Keterbatasan yang Diketahui"),
-  B("Docker Compose dan gateway belum diuji; profil dev belum dijalankan pada PostgreSQL."),
+  B("Docker Compose dan gateway belum diuji. Profil dev berjalan pada PostgreSQL 18 lokal sejak 13 November 2026; test otomatis memakai H2."),
+  B("Web tim (Node) memanggil backend dari server sehingga tidak memerlukan CORS. Patch saldo awal milik tim Web (DDB_OPENING_BALANCE) bersifat opsional dan belum diterapkan pada backend bersama."),
   B("Cakupan test: 92,2% baris, 64,8% cabang (JaCoCo, 12 November 2026)."),
   B("QRIS, biller, dan penerbit kartu masih disimulasikan di dalam service (belum berupa interface adapter)."),
   B("Foto profil berupa URL; push notification memakai polling."),
   H2("Referensi"),
   ...NL([
-    "Kelompok Jaran Goyang. (2026). Detailed Design – Backend & Database (SDD-DDB-001-BE) v0.9.",
-    "Kelompok Jaran Goyang. (2026). Architectural Design (SAD-DDB-001) v0.9.",
+    "Kelompok Jaran Goyang. (2026). Detailed Design – Backend & Database (SDD-DDB-001-BE) v1.0.",
+    "Kelompok Jaran Goyang. (2026). Architectural Design (SAD-DDB-001) v1.0.",
     "backend/README.md, run-local.ps1, docker-compose.yml, .env.example (11 November 2026).",
     "Spring Boot Reference Documentation, versi 4.1.",
   ]),

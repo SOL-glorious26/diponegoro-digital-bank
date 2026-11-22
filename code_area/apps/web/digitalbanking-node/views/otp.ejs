@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= title %> - diponegoro corp bank</title>
+<link rel="icon" href="/assets/img/logo-mark.jpg">
+<link rel="stylesheet" href="/assets/css/style.css">
+<script src="/assets/js/pwtoggle.js" defer></script>
+</head>
+<body>
+<div class="auth-wrap"><div class="auth-card">
+  <div class="auth-logo"><img src="/assets/img/logo.jpg" alt="Diponegoro Corp"></div>
+  <h1><%= title %></h1>
+  <p class="sub"><%= sub %></p>
+  <% if (flash) { %><div class="alert <%= flash.type %>"><%= flash.msg %></div><% } %>
+  <% if (error) { %><div class="alert error"><%= error %></div><% } %>
+  <% if (demoOtp) { %><div class="alert info">Mode demo (tanpa SMS gateway) — kode OTP kamu: <b><%= demoOtp %></b></div><% } %>
+  <form method="post" action="<%= action %>">
+    <%- include('partials/csrf') %>
+    <div class="field"><input class="otp-box" type="text" name="kode" maxlength="6" pattern="\d{6}" inputmode="numeric" required autofocus></div>
+    <button class="btn" type="submit"><%= submitLabel %></button>
+  </form>
+  <form method="post" action="<%= action %>" style="margin-top:8px"><%- include('partials/csrf') %><button class="btn ghost" type="submit" name="resend" value="1">Kirim ulang kode</button></form>
+  <p class="hint"><a href="<%= backHref %>" style="color:var(--primary)">Kembali</a></p>
+</div></div>
+</body>
+</html>

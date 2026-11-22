@@ -1,0 +1,13 @@
+# Putaran 1 dari 2, skrip final (22 Nov 2026)
+PASS  LP-01  transfer Android (demo) → saldo & riwayat andi di Web  — nominal Rp15.841, ref DDB261122D613EE90, saldo Web Rp2.660.693 (harapan Rp2.660.693)
+PASS  LP-02  QRIS dinamis Web (andi) dibayar Android (demo)  — nominal Rp8.616 tampil di Android; saldo andi Web Rp2.669.309 (harapan Rp2.669.309)
+PASS  LP-03  top-up e-wallet di Web (demo) tampil di riwayat Android  — ref DDB261122C55C73A6, total Rp26.085
+PASS  LP-04  logout semua perangkat dari Android → Web kembali ke login  — sesi Web terlihat di Android: true; pesan Web: Sesi Anda telah berakhir
+PASS  —  tanpa error JavaScript di Web
+
+# Putaran 2 dari 2 (tangkapan layar dari putaran ini)
+PASS  LP-01  transfer Android (demo) → saldo & riwayat andi di Web  — nominal Rp12.866, ref DDB261122E2989C9A, saldo Web Rp2.682.175 (harapan Rp2.682.175)
+PASS  LP-02  QRIS dinamis Web (andi) dibayar Android (demo)  — nominal Rp6.691 tampil di Android; saldo andi Web Rp2.688.866 (harapan Rp2.688.866)
+PASS  LP-03  top-up e-wallet di Web (demo) tampil di riwayat Android  — ref DDB261122591CA2CA, total Rp28.101
+PASS  LP-04  logout semua perangkat dari Android → Web kembali ke login  — sesi Web terlihat di Android: true; pesan Web: Sesi Anda telah berakhir
+PASS  —  tanpa error JavaScript di Web

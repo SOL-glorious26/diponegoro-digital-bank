@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<% if (ekyc && ekyc.status === 'PROCESSING') { %><meta http-equiv="refresh" content="3"><% } %>
+<title>Verifikasi e-KYC - diponegoro corp bank</title>
+<link rel="icon" href="/assets/img/logo-mark.jpg">
+<link rel="stylesheet" href="/assets/css/style.css">
+<script src="/assets/js/pwtoggle.js" defer></script>
+</head>
+<body>
+<div class="auth-wrap"><div class="auth-card">
+  <div class="auth-logo"><img src="/assets/img/logo.jpg" alt="Diponegoro Corp"></div>
+  <h1>Verifikasi e-KYC</h1>
+  <% if (flash) { %><div class="alert <%= flash.type %>"><%= flash.msg %></div><% } %>
+  <% if (error) { %><div class="alert error"><%= error %></div><% } %>
+  <% if (ekyc && ekyc.status === 'PROCESSING') { %>
+    <p class="sub">Data e-KYC (<%= ekyc.nikMasked %>) sedang diperiksa… halaman diperbarui otomatis.</p>
+  <% } else { %>
+    <p class="sub">Lengkapi data identitas agar transaksi dapat diaktifkan. Simulasi: NIK berakhiran 0000 akan ditolak.</p>
+    <% if (ekyc && ekyc.status === 'REJECTED') { %><div class="alert error">e-KYC ditolak<%= ekyc.reason ? ': ' + ekyc.reason : '' %>. Periksa data lalu kirim ulang.</div><% } %>
+    <form method="post" action="/ekyc">
+      <%- include('partials/csrf') %>
+      <div class="field"><label>NIK (16 digit)</label><input type="text" name="nik" inputmode="numeric" maxlength="16" required value="<%= f.nik || '' %>"></div>
+      <div class="field"><label>Nama sesuai KTP (opsional)</label><input type="text" name="fullName" value="<%= f.fullName || '' %>"></div>
+      <div class="field"><label>Nama berkas foto swafoto (simulasi)</label><input type="text" name="selfie" value="<%= f.selfie || 'selfie.jpg' %>"></div>
+      <button class="btn" type="submit">Kirim Data e-KYC</button>
+    </form>
+  <% } %>
+  <div class="link-row"><a href="/logout">Keluar</a></div>
+</div></div>
+</body>
+</html>

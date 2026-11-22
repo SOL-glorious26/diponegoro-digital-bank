@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= title %> - diponegoro corp bank</title>
+<link rel="icon" href="/assets/img/logo-mark.jpg">
+<link rel="stylesheet" href="/assets/css/style.css">
+<script src="/assets/js/pwtoggle.js" defer></script>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="brand"><div class="brand-mark"><img src="/assets/img/logo-mark.jpg" alt="Logo"></div><div class="brand-name">diponegoro corp bank</div></div>
+    <nav>
+      <a class="<%= page === 'dashboard' ? 'active' : '' %>" href="/dashboard">🏠 Dashboard</a>
+      <a class="<%= page === 'transfer' ? 'active' : '' %>" href="/transfer">💸 Transfer</a>
+      <a class="<%= page === 'pembayaran' ? 'active' : '' %>" href="/pembayaran">🧾 Pembayaran</a>
+      <a class="<%= page === 'riwayat' ? 'active' : '' %>" href="/riwayat">🕘 Riwayat</a>
+      <a class="<%= page === 'profil' ? 'active' : '' %>" href="/profil">👤 Profil</a>
+      <a href="/logout">🚪 Keluar</a>
+    </nav>
+  </aside>
+  <main class="main">
+    <div class="topbar"><h2><%= title %></h2><span class="user-chip"><i><%= user.nama.trim().charAt(0).toUpperCase() %></i><%= user.nama %></span></div>
+    <% if (flash) { %><div class="alert <%= flash.type %>"><%= flash.msg %></div><% } %>

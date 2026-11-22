@@ -21,18 +21,20 @@ function code(src) {
 
 const meta = {
   docLabel: "Dokumen 4 – Volume Backend & Database", title: "Detailed Design", subtitle: "UML, Workflow, Algoritma Pseudocode, dan Perancangan Software/Hardware – Backend & Database",
-  code: "SDD-DDB-001-BE", version: "0.9.2", statusShort: "Draf Lengkap untuk Review",
-  status: "Draf lengkap – menunggu peer review teknis (Steven Wibisana) dan persetujuan Project Manager",
+  code: "SDD-DDB-001-BE", version: "1.0", statusShort: "Final",
+  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; peer review (Steven Wibisana) belum diterima sampai tenggat",
   module: "Detailed Design – Backend & Database (ddb-backend)", createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend)",
   updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend)", team: "Kelompok Jaran Goyang – Backend & Database: Salomo P.G. Hokoyoku",
-  refs: "SAD-DDB-001 v0.9.4; FSD-DDB-001 v0.9.2; STD-DDB-001 v0.9.5; SRS-DDB-001 v0.1; kode ddb-backend dan V1__init.sql per 13 November 2026",
-  date: "13 November 2026", logo: LOGO,
+  refs: "SAD-DDB-001 v1.0; FSD-DDB-001 v1.0; STD-DDB-001 v1.0; SRS-DDB-001 v0.1; kode ddb-backend dan V1__init.sql per 22 November 2026",
+  date: "22 November 2026", logo: LOGO,
   revisions: [
     ["0.1", "11 Nov 2026", "Salomo P.G. Hokoyoku", "Outline Detailed Design Backend & Database."],
     ["0.9", "11 Nov 2026", "Salomo P.G. Hokoyoku", "Draf lengkap: class diagram, ERD dan kamus data, sequence dan state diagram, activity diagram, 10 pseudocode algoritma inti, perancangan software/hardware."],
     ["0.9.1", "11 Nov 2026", "Salomo P.G. Hokoyoku", "Pembaruan setelah integrasi Android–backend (Fase 5) 11 Nov sore: endpoint POST /auth/pin/verify (18 operasi auth), 45 test, dokumentasi API dibangkitkan ulang."],
     ["0.9.2", "13 Nov 2026", "Salomo P.G. Hokoyoku", "Konfigurasi CORS backend (DEF-04, ddb.cors.allowed-origins) dan pembagian peran CORS dengan gateway; CorsTest (47 test); cakupan JaCoCo 92,3% baris (NFR-12 terpenuhi); hasil uji performa dari STD-DDB-001; tabel keterbatasan diperbarui."],
+    ["1.0", "22 Nov 2026", "Salomo P.G. Hokoyoku", "Versi final. Isi teknis tidak berubah; cakupan JaCoCo disamakan dengan STD-DDB-001 (92,2% baris); keterbatasan PostgreSQL diperbarui; backend bersama dipakai Android dan Web tim tanpa perubahan kode. Disetujui PM."],
   ],
+  approval: { sign: "../../../documents_area/_aset/project_manager_sign.png", date: "22 Nov 2026", pic: [["Peer reviewer", "Steven Wibisana"]] },
 };
 
 const body = [
@@ -358,22 +360,22 @@ FUNGSI KunciIdempotensi(userId, header) -> string
     [{ t: "Total", bold: true }, { t: "47", bold: true }, "Seluruhnya lulus pada 13 November 2026 (laporan surefire, ./mvnw verify)"],
   ], [3000, 1300, 4770], { center: [1], size: 17 }),
   CAP("Tabel 6.4 Test otomatis backend"),
-  P("Cakupan kode diukur dengan JaCoCo saat ./mvnw verify: 1.787 dari 1.937 baris (92,3%) dan 532 dari 821 cabang (64,8%). Target NFR-12 (cakupan logika inti ≥ 70%) terpenuhi untuk cakupan baris. Cakupan cabang lebih rendah karena sebagian jalur error (validasi input dan kegagalan simulator) belum diuji satu per satu."),
+  P("Cakupan kode diukur dengan JaCoCo saat ./mvnw verify: 1.787 dari 1.937 baris (92,26%; ditulis 92,2% pada STD-DDB-001) dan 532 dari 821 cabang (64,8%). Target NFR-12 (cakupan logika inti ≥ 70%) terpenuhi untuk cakupan baris. Cakupan cabang lebih rendah karena sebagian jalur error (validasi input dan kegagalan simulator) belum diuji satu per satu."),
   H2("6.6 Keterbatasan dan Rencana Perbaikan"),
   table(["No", "Keterbatasan", "Rencana"], [
     ["1", "QRIS, biller, dan penerbit kartu belum dipisah sebagai interface adapter", "Ekstrak interface seperti InterbankGateway"],
     ["2", "Pemanggilan simulator antarbank berada di dalam transaksi DB yang sama dengan posting", "Untuk integrasi nyata: posting PROCESSING, commit, lalu kirim di luar transaksi"],
-    ["3", "Belum diuji pada PostgreSQL (hanya H2)", "Jalankan profil dev pada PostgreSQL lokal sebelum build baseline"],
-    ["4", "Cakupan cabang (branch) baru 64,8% walaupun cakupan baris 92,3%", "Tambah test jalur error: validasi input, simulator gagal/timeout, sesi kedaluwarsa"],
+    ["3", "Test otomatis dan uji sistem memakai H2; profil dev berjalan di PostgreSQL 18 lokal sejak 13 November 2026", "Jalankan test integrasi pada PostgreSQL (misalnya Testcontainers)"],
+    ["4", "Cakupan cabang (branch) baru 64,8% walaupun cakupan baris 92,2%", "Tambah test jalur error: validasi input, simulator gagal/timeout, sesi kedaluwarsa"],
     ["5", "Foto profil hanya berupa URL; push memakai polling", "Unggah berkas; integrasi FCM bila diperlukan"],
     ["6", "openapi.json dan API.md disalin dari server berjalan (sudah diperbaiki 11 Nov)", "Bangkitkan ulang dari /v3/api-docs setiap endpoint berubah"],
   ], [500, 4570, 4000], { center: [0], size: 17 }),
   CAP("Tabel 6.5 Keterbatasan rancangan backend"),
   H2("Referensi"),
   ...NL([
-    "Kelompok Jaran Goyang. (2026). Architectural Design (SAD-DDB-001) v0.9.4.",
-    "Kelompok Jaran Goyang. (2026). Functional Design (FSD-DDB-001) v0.9.2.",
-    "Kelompok Jaran Goyang. (2026). System Testing (STD-DDB-001) v0.9.5.",
+    "Kelompok Jaran Goyang. (2026). Architectural Design (SAD-DDB-001) v1.0.",
+    "Kelompok Jaran Goyang. (2026). Functional Design (FSD-DDB-001) v1.0.",
+    "Kelompok Jaran Goyang. (2026). System Testing (STD-DDB-001) v1.0.",
     "Kelompok Jaran Goyang. (2026). Software Requirements Specification (SRS-DDB-001) v0.1.",
     "Kode sumber ddb-backend dan db/migration/V1__init.sql (11 November 2026).",
     "Object Management Group. (2017). Unified Modeling Language (UML) Version 2.5.1.",

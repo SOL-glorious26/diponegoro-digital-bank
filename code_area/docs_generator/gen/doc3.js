@@ -42,19 +42,21 @@ if (eps.length !== 73) throw new Error("expected 73 operations, got " + eps.leng
 
 const meta = {
   docLabel: "Dokumen 3", title: "Functional Design", subtitle: "Deskripsi Modul, Batas Sistem, Antarmuka Eksternal, Spesifikasi Fungsi, dan Workflow",
-  code: "FSD-DDB-001", version: "0.9.3", statusShort: "Draf Lengkap untuk Review",
-  status: "Draf lengkap – menunggu peer review (Steven Wibisana) dan persetujuan Project Manager",
+  code: "FSD-DDB-001", version: "1.0", statusShort: "Final",
+  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; peer review (Steven Wibisana) belum diterima sampai tenggat",
   module: "Functional Design – 8 modul bisnis (FR-01 s.d. FR-29)", createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend)",
   updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend)", team: "Kelompok Jaran Goyang – reviewer keterujian: Steven Wibisana",
-  refs: "SRS-DDB-001 v0.1 (Bagian 3); SAD-DDB-001 v0.9.5; STD-DDB-001 v0.9.6; User Interface Map (Web) v0.3; backend/docs/openapi.json (73 operasi); kode backend, Android, dan Web per 16 November 2026",
-  date: "16 November 2026", logo: LOGO,
+  refs: "SRS-DDB-001 v0.1 (Bagian 3); SAD-DDB-001 v1.0; STD-DDB-001 v1.0; UIM-DDB-001-AND v1.0; User Interface Map (Web) v0.7; backend/docs/openapi.json (73 operasi); kode backend, Android, dan Web per 22 November 2026",
+  date: "22 November 2026", logo: LOGO,
   revisions: [
     ["0.1", "11 Nov 2026", "Salomo P.G. Hokoyoku", "Outline Functional Design per modul."],
     ["0.9", "11 Nov 2026", "Salomo P.G. Hokoyoku", "Draf lengkap: deskripsi 8 modul, batas sistem, antarmuka eksternal (72 operasi API), spesifikasi FR-01–FR-29, aturan bisnis, workflow."],
     ["0.9.1", "11 Nov 2026", "Salomo P.G. Hokoyoku", "Pembaruan setelah integrasi Android–backend (Fase 5) 11 Nov sore: endpoint verifikasi PIN (73 operasi), status implementasi Android online, openapi.json bersih."],
     ["0.9.2", "13 Nov 2026", "Salomo P.G. Hokoyoku", "Aplikasi Web terimplementasi: kolom halaman Web pada Tabel 4.1 diisi dari kode apps/web, status FR per platform (Tabel 7.1) diperbarui berdasarkan hasil uji sistem STD-DDB-001 v0.9.5, isu terbuka tentang verifikasi Web ditutup."],
     ["0.9.3", "16 Nov 2026", "Salomo P.G. Hokoyoku", "Status disamakan dengan STD-DDB-001 v0.9.6: pemindaian QRIS dengan kamera (FR-15) lulus di ponsel fisik, Android 28/28; Tabel 7.1, catatan status, dan isu terbuka diperbarui; uraian singkat ditambahkan pada setiap workflow Bab VI; kalimat komunikasi HTTP/HTTPS pada 4.4 diperjelas."],
+    ["1.0", "22 Nov 2026", "Salomo P.G. Hokoyoku", "Versi final. Navigasi Android lima tab; kolom halaman Web pada Tabel 4.1 dinyatakan sebagai Web React dan Tabel 4.1a (halaman Web tim) ditambahkan; status FR per platform memisahkan Web tim dan Web React; hasil uji disamakan dengan STD-DDB-001 v1.0. Disetujui PM."],
   ],
+  approval: { sign: "../../../documents_area/_aset/project_manager_sign.png", date: "22 Nov 2026", pic: [["Peer reviewer", "Steven Wibisana"]] },
 };
 
 // ---------- FR specification rows: [FR, nama, input, proses & aturan, output / kesalahan]
@@ -119,7 +121,7 @@ const body = [
   B("Nilai yang belum ditetapkan SRS tetapi sudah dipakai di kode diberi label **usulan**."),
   B("Butir yang belum tersedia di SRS v0.1 maupun di kode diberi label **Perlu Ditentukan**."),
   B("Kode kesalahan (mis. INSUFFICIENT_BALANCE) adalah nilai field code pada respons error backend, sedangkan pesan untuk pengguna dibawa field message."),
-  B("Spesifikasi diturunkan dari SRS dan diverifikasi terhadap implementasi backend, Android, dan Web serta hasil uji sistem STD-DDB-001 v0.9.6 per 16 November 2026."),
+  B("Spesifikasi diturunkan dari SRS dan diverifikasi terhadap implementasi backend, Android, dan Web serta hasil uji sistem STD-DDB-001 v1.0 per 22 November 2026."),
 
   // BAB II Description Module
   H1("BAB II  DESCRIPTION MODULE"),
@@ -188,8 +190,8 @@ const body = [
   // BAB IV External interface
   H1("BAB IV  EKSTERNAL INTERFACE"),
   H2("4.1 Antarmuka Pengguna"),
-  P("Antarmuka Android dibangun dengan Jetpack Compose dengan navigasi bottom bar Beranda / Riwayat / QRIS / Profil. Kode layar dan peta navigasi lengkap ditetapkan pada User Interface Map (Dokumen 5). Antarmuka Web dibangun dengan React + Vite + react-router sesuai SAD-DDB-001 Bab VIII; halaman yang memerlukan login dilindungi ProtectedRoute (termasuk cek e-KYC) dan memakai menu samping yang sama untuk semua halaman. Kode tampilan Web mengikuti User Interface Map (Web) v0.3."),
-  table(["Modul", "Layar Android (berkas)", "Halaman Web (rute: berkas)"], [
+  P("Antarmuka Android dibangun dengan Jetpack Compose dengan navigasi bottom bar Beranda / Riwayat / QRIS / Kantong / Profil. Kode layar dan peta navigasi lengkap ditetapkan pada User Interface Map (Dokumen 5). Web resmi adalah aplikasi Web tim (Node/Express/EJS, Tabel 4.1a). Kolom Web pada Tabel 4.1 adalah halaman prototipe Web React (SAD-DDB-001 8.3); halaman yang memerlukan login dilindungi ProtectedRoute (termasuk cek e-KYC) dan memakai menu samping yang sama untuk semua halaman. Kode tampilan Web mengikuti User Interface Map (Web) v0.3."),
+  table(["Modul", "Layar Android (berkas)", "Halaman Web React (rute: berkas)"], [
     ["Authentication", "Registrasi, OTP, e-KYC, Login, PIN, Pemulihan (authentication/presentation/screen)", "/login, /daftar, /lupa, /ekyc, /pin/buat: AuthPages"],
     ["Account", "Beranda + saldo (home), kantong dan grafik saldo (AccountScreens)", "/ (Beranda, saldo, grafik): Dashboard; /kantong: Pockets"],
     ["Transfer", "Alur transfer, konfirmasi, bukti (TransferScreen)", "/transfer: Transfer + PinDialog"],
@@ -200,6 +202,17 @@ const body = [
     ["Profile & Notification", "Profil, keamanan, pengaturan dan kotak notifikasi (ProfileScreens)", "/profil: Profile; /notifikasi: Notifications"],
   ], [2000, 4170, 2900], { boldFirst: true, size: 18 }),
   CAP("Tabel 4.1 Antarmuka pengguna per modul"),
+  table(["Modul", "Halaman Web tim (rute)", "Cakupan"], [
+    ["Authentication", "/login, /register, /register/otp, /ekyc, /pin, /lupa-sandi, /logout", "FR-01 – FR-05"],
+    ["Account", "/dashboard", "FR-06; grafik saldo dan kantong belum tersedia"],
+    ["Transfer", "/transfer", "FR-10 – FR-12; penerima favorit belum tersedia; bukti lewat detail riwayat"],
+    ["Payment (QRIS)", "/pembayaran?tab=qris", "FR-15 berupa contoh/payload tanpa kamera; QRIS pribadi/dinamis belum tersedia"],
+    ["Top-up", "/pembayaran?tab=pulsa, pln, tagihan, ewallet, topup", "FR-18 (tanpa paket data) – FR-20"],
+    ["Virtual Card", "–", "Belum tersedia"],
+    ["Transaction History & Dashboard", "/riwayat, /riwayat/export", "FR-23, FR-24, FR-26; ringkasan bulanan belum tersedia"],
+    ["Profile & Notification", "/profil, /profil/otp", "FR-27 dan ubah kata sandi; notifikasi belum tersedia"],
+  ], [2100, 3570, 3400], { boldFirst: true, size: 17 }),
+  CAP("Tabel 4.1a Halaman Web tim (Node/Express/EJS) menurut User Interface Map (Web) v0.7 dan kode"),
   H2("4.2 Antarmuka Perangkat Lunak: API Klien–Backend"),
   P("Seluruh klien berkomunikasi dengan backend melalui REST/JSON di bawah prefiks /api/v1 (di belakang API Gateway). Konvensi umum:"),
   B("Header Authorization: Bearer <accessToken> untuk semua endpoint selain registrasi, login, refresh, dan pemulihan."),
@@ -296,8 +309,8 @@ const body = [
   // BAB VII Status
   H1("BAB VII  STATUS IMPLEMENTASI DAN ISU TERBUKA"),
   H2("7.1 Matriks Status Implementasi per FR"),
-  P("Status berikut disusun berdasarkan kode dan hasil uji sistem STD-DDB-001 v0.9.6 per 16 November 2026. Aplikasi Android memiliki varian demo (data simulasi) dan varian online yang memanggil backend. Aplikasi Web selalu memanggil backend. Uji sistem dijalankan di emulator Android, ponsel fisik Realme RMX3867 (Android 16), dan peramban Chrome, Edge, serta Firefox."),
-  table(["FR", "Backend", "Android", "Web"], [
+  P("Status berikut disusun berdasarkan kode dan hasil uji sistem STD-DDB-001 v1.0 per 22 November 2026. Aplikasi Android memiliki varian demo (data simulasi) dan varian online yang memanggil backend. Aplikasi Web selalu memanggil backend. Uji sistem dijalankan di emulator Android, ponsel fisik Realme RMX3867 (Android 16), dan peramban Chrome, Edge, serta Firefox (Web React). Web tim diuji pada alur inti melalui HTTP."),
+  table(["FR", "Backend", "Android", "Web React"], [
     ["FR-01, FR-02, FR-04, FR-05", "Ada", "Ada (demo dan online)", "Ada"],
     ["FR-03", "Ada (password + biometrik)", "Ada; biometrik disimulasikan", "Ada (tanpa biometrik)"],
     ["FR-06 – FR-14", "Ada", "Ada (demo dan online)", "Ada"],
@@ -307,7 +320,9 @@ const body = [
     ["FR-27 – FR-29", "Ada (foto berupa URL)", "Ada (demo dan online)", "Ada (foto berupa URL)"],
   ], [2400, 2200, 2400, 2070], { boldFirst: true, size: 18 }),
   CAP("Tabel 7.1 Status implementasi FR per platform"),
-  NOTE("'Ada' berarti fungsi terimplementasi dan lulus uji sistem pada STD-DDB-001 v0.9.6: Android SA 28/28 (SA-08 pindai QRIS dengan kamera di ponsel fisik), Web WB 15/15, lintas platform LP 4/4, backend 47/47 test otomatis. Seluruh 11 defect yang ditemukan sudah ditutup."),
+  NOTE("'Ada' berarti fungsi terimplementasi dan lulus uji pada STD-DDB-001 v1.0: Android SA 28/28 (27 pada build 22 November 2026; SA-08 di ponsel fisik 14 November 2026), Web React WB 15/15 dan LP 4/4, backend 47/47 test otomatis. Seluruh 14 defect yang ditemukan sudah ditutup."),
+  table(["FR", "Web tim (Web resmi)"], [["FR-01 – FR-06, FR-10 – FR-12, FR-19, FR-20, FR-23, FR-24, FR-26, FR-27", "Ada; alur inti lulus WN-01 – WN-14 dan LPN-01 – LPN-03 (detail transaksi, ubah profil, dan pemulihan akun tidak diuji terpisah)"], ["FR-14, FR-15, FR-18, FR-28", "Sebagian: bukti tanpa unduhan; QRIS tanpa kamera; tanpa paket data; hanya ubah kata sandi"], ["FR-07 – FR-09, FR-13, FR-16, FR-17, FR-21, FR-22, FR-25, FR-29", "Belum tersedia"]], [4000, 5070], { boldFirst: true, size: 18 }),
+  CAP("Tabel 7.1a Status FR pada Web tim"),
   H2("7.2 Isu Terbuka"),
   ...NL([
     "SRS v0.1 belum memuat bagian Antarmuka Eksternal, Kebutuhan Data, dan Matriks Keterlacakan (dijadwalkan v0.2). Bab IV dokumen ini disusun dari implementasi dan perlu diselaraskan saat SRS v0.2 terbit.",
@@ -315,14 +330,15 @@ const body = [
     "Nilai usulan pada Tabel 5.10 perlu dikonfirmasi tim dan dosen.",
     "Login biometrik Android masih disimulasikan; integrasi BiometricPrompt diperlukan untuk memenuhi FR-03 secara penuh di perangkat nyata.",
     "Foto profil hanya mendukung URL; unggah berkas belum tersedia.",
+    "Web tim belum mencakup seluruh FR (Tabel 7.1a), termasuk paket data pada FR-18 (Must).",
   ]),
   H2("Referensi"),
   ...NL([
     "Kelompok Jaran Goyang. (2026). Software Requirements Specification PT Diponegoro Digital Bank (SRS-DDB-001) v0.1.",
-    "Kelompok Jaran Goyang. (2026). Architectural Design (SAD-DDB-001) v0.9.5.",
-    "Kelompok Jaran Goyang. (2026). Project Document (PRJ-DDB-001) v0.9.4.",
-    "Kelompok Jaran Goyang. (2026). System Testing (STD-DDB-001) v0.9.6.",
-    "Kelompok Jaran Goyang. (2026). User Interface Map (Web) v0.3.",
+    "Kelompok Jaran Goyang. (2026). Architectural Design (SAD-DDB-001) v1.0.",
+    "Kelompok Jaran Goyang. (2026). Project Document (PRJ-DDB-001) v1.0.",
+    "Kelompok Jaran Goyang. (2026). System Testing (STD-DDB-001) v1.0.",
+    "Kelompok Jaran Goyang. (2026). User Interface Map (Web) v0.3 dan v0.7; User Interface Map Android (UIM-DDB-001-AND) v1.0.",
     "Backend Diponegoro Digital Bank: backend/docs/openapi.json dan README.md (11 November 2026); aplikasi Web apps/web (13 November 2026).",
     "EMVCo. EMV QR Code Specification for Payment Systems – Merchant-Presented Mode.",
   ]),

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buat PIN - diponegoro corp bank</title>
+<link rel="icon" href="/assets/img/logo-mark.jpg">
+<link rel="stylesheet" href="/assets/css/style.css">
+<script src="/assets/js/pwtoggle.js" defer></script>
+</head>
+<body>
+<div class="auth-wrap"><div class="auth-card">
+  <div class="auth-logo"><img src="/assets/img/logo.jpg" alt="Diponegoro Corp"></div>
+  <h1>Buat PIN Transaksi</h1>
+  <p class="sub">PIN 6 digit dipakai untuk mengonfirmasi setiap transaksi.</p>
+  <% if (flash) { %><div class="alert <%= flash.type %>"><%= flash.msg %></div><% } %>
+  <% if (error) { %><div class="alert error"><%= error %></div><% } %>
+  <form method="post" action="/pin">
+    <%- include('partials/csrf') %>
+    <div class="field"><label>PIN (6 digit)</label><input class="otp-box" type="password" name="pin" inputmode="numeric" maxlength="6" required autofocus></div>
+    <div class="field"><label>Ulangi PIN</label><input class="otp-box" type="password" name="pin2" inputmode="numeric" maxlength="6" required></div>
+    <button class="btn" type="submit">Simpan PIN</button>
+  </form>
+  <div class="link-row"><a href="/logout">Keluar</a></div>
+</div></div>
+</body>
+</html>

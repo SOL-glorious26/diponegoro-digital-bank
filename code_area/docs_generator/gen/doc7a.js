@@ -136,19 +136,21 @@ order.forEach((g) => {
 
 const meta = {
   docLabel: "Dokumen 7 – Volume Android", title: "Developer Manual", subtitle: "Panduan Pengembang dan Keterangan Source Code – Aplikasi Android Diponegoro Digital Bank",
-  code: "DVM-DDB-001-AND", version: "0.9.3", statusShort: "Draf Lengkap untuk Review",
-  status: "Draf lengkap – menunggu penulisan/penelaahan bagian QRIS dan Profile (Gracia Riyanto), uji keterikutan setup oleh anggota tim, dan persetujuan Project Manager",
+  code: "DVM-DDB-001-AND", version: "1.0", statusShort: "Final",
+  status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; telaah bagian QRIS dan Profile serta uji keterikutan setup oleh anggota tim belum diterima sampai tenggat",
   module: "Developer Manual – Aplikasi Android (apps/android, 8 business module)", createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend & Integrasi Android)",
   updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager)", team: "Kelompok Jaran Goyang – Mobile: Salomo (Auth, Virtual Card), Cecilia Adelaide Penlaana (Transfer, History), Gracia Riyanto (QRIS, Profile), Grace (Account, Top-up)",
-  refs: "SAD-DDB-001 v0.9.1; FSD-DDB-001 v0.9.1; DVM-DDB-001-BE v0.9.1; apps/android/README.md; kode aplikasi per 11 November 2026",
-  date: "21 November 2026", logo: LOGO,
+  refs: "SAD-DDB-001 v1.0; FSD-DDB-001 v1.0; SDD-DDB-001-AND v1.0; UIM-DDB-001-AND v1.0; DVM-DDB-001-BE v1.0; STD-DDB-001 v1.0; apps/android/README.md; kode aplikasi per 22 November 2026",
+  date: "22 November 2026", logo: LOGO,
   revisions: [
     ["0.1", "11 Nov 2026", "Salomo P.G. Hokoyoku", "Outline Developer Manual Android."],
     ["0.9", "11 Nov 2026", "Salomo P.G. Hokoyoku", `Draf lengkap: setup, varian demo/online, arsitektur, keterangan ${total} berkas source code, pola pengembangan, pengujian, troubleshooting.`],
     ["0.9.1", "12 Nov 2026", "Salomo P.G. Hokoyoku", "Proyek dipindah ke apps/android; perbaikan hasil uji sistem STD-DDB-001: waktu sesi dengan tanggal (DEF-05), back stack OTP (DEF-07), login sebelum e-KYC diarahkan ke e-KYC (DEF-08), status blokir PIN setelah pemulihan (DEF-10), pesan Riwayat saat server tidak terjangkau (DEF-11)."],
     ["0.9.2", "12 Nov 2026", "Salomo P.G. Hokoyoku", "Bagian 3.5 APK rilis bertanda tangan (keystore, build-rilis.ps1, verifikasi apksigner); troubleshooting pemasangan APK rilis; keterbatasan diperbarui (layar Sesi saat server tidak terjangkau, DEF-11)."],
     ["0.9.3", "21 Nov 2026", "Salomo P.G. Hokoyoku", "Tampilan Android baru: tema (ui/theme: Color, Theme, Type, Brand), font Plus Jakarta Sans, ikon dari logo asli, layar Login, PIN dengan keypad, Beranda, bottom navigation lima tab, komponen bersama (Components.kt, Buttons.kt); inventaris berkas diperbarui (112 berkas); jumlah test Android 64 (demo) dan 58 (online)."],
+    ["1.0", "22 Nov 2026", "Salomo P.G. Hokoyoku", "Versi final. Layar PIN responsif (DEF-13), warna status per mode (DdbTheme.colors.success/warning, DEF-14), layar Kartu memakai ScreenScaffold, detail kartu virtual varian online (DEF-12), skrip tangkap-layar.mjs; hasil uji dan acuan disamakan dengan STD-DDB-001 v1.0. Disetujui PM."],
   ],
+  approval: { sign: "../../../documents_area/_aset/project_manager_sign.png", date: "22 Nov 2026", pic: [["Pendukung (QRIS, Profile)", "Gracia Riyanto"]] },
 };
 
 const body = [
@@ -458,13 +460,14 @@ class TransferRepositoryTest {
   B("Biometrik masih disimulasikan; BiometricPrompt belum diimplementasikan."),
   B("Foto profil berupa URL; belum ada unggah gambar."),
   B("Notifikasi push memakai polling 15 detik (simulasi FCM)."),
-  B("Uji sistem SA-01–SA-28 sudah dijalankan di emulator (STD-DDB-001); uji di ponsel fisik, termasuk pindai QRIS dengan kamera, belum dilakukan."),
+  B("Uji sistem SA-01–SA-28 sudah dijalankan di emulator (STD-DDB-001); pindai QRIS dengan kamera, notifikasi, dan berbagi bukti lulus di ponsel fisik pada 14 November 2026 (build sebelum pembaruan tampilan)."),
+  B("Test otomatis varian demo memakai repository tiruan sehingga tidak mendeteksi DEF-12; pemeriksaannya ada pada skrip SA-13."),
   B("Instrumented test (androidTest) masih berupa contoh bawaan; cakupan test belum diukur."),
   H2("Referensi"),
   ...NL([
-    "Kelompok Jaran Goyang. (2026). Architectural Design (SAD-DDB-001) v0.9.1.",
-    "Kelompok Jaran Goyang. (2026). Developer Manual – Backend (DVM-DDB-001-BE) v0.9.1.",
-    "Kelompok Jaran Goyang. (2026). Panduan Uji Aplikasi di Ponsel (TUT-DDB-001-AND) v1.0.",
+    "Kelompok Jaran Goyang. (2026). Architectural Design (SAD-DDB-001) v1.0.",
+    "Kelompok Jaran Goyang. (2026). Developer Manual – Backend (DVM-DDB-001-BE) v1.0.",
+    "Kelompok Jaran Goyang. (2026). Panduan Uji Aplikasi di Ponsel (TUT-DDB-001-AND) v1.1.",
     "apps/android/README.md, app/build.gradle.kts (11 November 2026).",
     "Android Developers. Guide to app architecture; Network security configuration; Local network permission (Android 17).",
   ]),

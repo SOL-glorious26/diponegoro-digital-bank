@@ -106,4 +106,6 @@ const meta = {
   date: "14 November 2026", logo: LOGO,
   revisions: [["1.0", "14 Nov 2026", "Salomo P.G. Hokoyoku", "Versi pertama. Langkah diverifikasi: tes API 38/38, tes UI 20/20, WB-11 dan WB-13–15 lulus."]],
 };
+// Argumen ke-4 (opsional): berkas JSON berisi metadata sampul untuk dokumen lain (menimpa nilai di atas).
+if (process.argv[5]) Object.assign(meta, JSON.parse(fs.readFileSync(process.argv[5], "utf8")), { logo: LOGO });
 S.build(meta, body, OUT);

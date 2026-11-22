@@ -9,14 +9,14 @@
     "failedNames": []
   },
   "androidDemo": {
-    "date": "21 November 2026 (regresi setelah pembaruan tampilan)",
+    "date": "22 November 2026 (setelah perbaikan tampilan)",
     "total": 64,
     "passed": 63,
     "failed": 0,
     "skipped": 1
   },
   "androidOnline": {
-    "date": "21 November 2026",
+    "date": "22 November 2026",
     "total": 58,
     "passed": 57,
     "failed": 0,

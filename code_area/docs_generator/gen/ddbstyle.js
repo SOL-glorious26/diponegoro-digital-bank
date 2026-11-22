@@ -70,6 +70,25 @@ function imgJpeg(path, width, height, alt) {
   return new ImageRun({ type: "jpg", data: fs.readFileSync(path), transformation: { width, height }, altText: { title: alt, description: alt, name: alt } });
 }
 
+// Persetujuan versi final. m.approval = { sign: <png tanda tangan PM>, date, pic?: [[peran, nama], ...] }.
+// Hanya tanda tangan PM yang dipasang; kolom orang lain sengaja dikosongkan.
+function approval(a) {
+  const w = [3000, 3100, 1670, 1300];
+  const row = (peran, nama, sign, date) => new TableRow({ cantSplit: true, children: [
+    cell(peran, w[0]), cell(nama, w[1]),
+    cell("", w[2], { children: [new Paragraph({ keepNext: true, alignment: AlignmentType.CENTER, spacing: { before: sign ? 0 : 240, after: sign ? 0 : 240 },
+      children: sign ? [new ImageRun({ type: "png", data: fs.readFileSync(sign), transformation: { width: 74, height: 75 }, altText: { title: "Tanda tangan", description: "Tanda tangan Project Manager", name: "ttd" } })] : [] })] }),
+    cell(date || "", w[3], { align: AlignmentType.CENTER })] });
+  return [
+    new Paragraph({ pageBreakBefore: !!a.newPage, spacing: { before: 120, after: 120 }, keepNext: true, children: [new TextRun({ text: "Persetujuan", font: FONT, size: SZ.h2, bold: true, color: BLACK })] }),
+    new Table({ width: { size: PW, type: WidthType.DXA }, columnWidths: w, rows: [
+      new TableRow({ tableHeader: true, children: ["Peran", "Nama", "Tanda tangan", "Tanggal"].map((h, i) => cell(h, w[i], { fill: HEAD_FILL, bold: true, align: AlignmentType.CENTER })) }),
+      row("Disetujui oleh (Project Manager)", "Salomo Putra Glorious Hokoyoku", a.sign, a.date),
+      ...(a.pic ?? []).map(([p, n]) => row(p, n, null, ""))] }),
+    CAP("Tabel 0.3 Persetujuan (kolom kosong: belum ditandatangani)"),
+  ];
+}
+
 function header(code, title) {
   return new Header({ children: [new Paragraph({ border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: BLACK, space: 4 } },
     children: [new TextRun({ text: `${code}  |  ${title}  |  PT Diponegoro Digital Bank`, font: FONT, size: SZ.small, color: BLACK })] })] });
@@ -102,6 +121,7 @@ function frontMatter(m) {
     new Paragraph({ spacing: { before: 120, after: 120 }, keepNext: true, children: [new TextRun({ text: "Revision Control", font: FONT, size: SZ.h2, bold: true, color: BLACK })] }),
     table(["Versi", "Tanggal", "Penulis", "Keterangan"], m.revisions, [900, 1500, 2100, PW - 4500]),
     CAP("Tabel 0.2 Riwayat revisi dokumen"),
+    ...(m.approval ? approval(m.approval) : []),
     ...(m.extraControl ?? []),
     new Paragraph({ pageBreakBefore: true, spacing: { after: 160 }, children: [new TextRun({ text: "Daftar Isi", font: FONT, size: SZ.h1, bold: true, color: BLACK })] }),
     new TableOfContents("Daftar Isi", { hyperlink: true, headingStyleRange: "1-3" }),
@@ -138,4 +158,4 @@ function build(m, body, out) {
   return Packer.toBuffer(doc).then((b) => { fs.writeFileSync(out, b); console.log("written", out, b.length); });
 }
 
-module.exports = { D, FONT, PW, SZ, runs, P, H1, H2, H3, B, NL, CAP, NOTE, cell, table, kv, img, build, KEY_FILL, HEAD_FILL };
+module.exports = { approval, D, FONT, PW, SZ, runs, P, H1, H2, H3, B, NL, CAP, NOTE, cell, table, kv, img, build, KEY_FILL, HEAD_FILL };

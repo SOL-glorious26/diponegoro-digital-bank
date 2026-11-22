@@ -1,0 +1,60 @@
+<%- include('partials/header') %>
+<% if (error) { %><div class="alert error"><%= error %></div><% } %>
+
+<% if (pending) { const q = pending.quote; %>
+  <div class="grid cols-2">
+    <div class="card">
+      <h3>Konfirmasi Transfer</h3>
+      <div class="summary-row"><span>Rekening Asal</span><b><%= account.no_rekening %></b></div>
+      <div class="summary-row"><span>Rekening Tujuan</span><b><%= pending.accountNumber %></b></div>
+      <div class="summary-row"><span>Nama Penerima</span><span><%= q.recipient.name %></span></div>
+      <div class="summary-row"><span>Bank Tujuan</span><span><%= q.recipient.bankName %></span></div>
+      <div class="summary-row"><span>Nominal</span><b><%= fmtRupiah(q.amount) %></b></div>
+      <div class="summary-row"><span>Biaya</span><span><%= fmtRupiah(q.fee) %></span></div>
+      <div class="summary-row"><span>Total</span><b><%= fmtRupiah(q.total) %></b></div>
+      <div class="summary-row"><span>Saldo setelah transfer</span><span><%= fmtRupiah(q.balanceAfter) %></span></div>
+      <% if (pending.note) { %><div class="summary-row"><span>Catatan</span><span><%= pending.note %></span></div><% } %>
+    </div>
+    <div class="card">
+      <h3>Masukkan PIN</h3>
+      <p style="font-size:13px;color:var(--muted);margin-top:4px;">Konfirmasi transfer dengan PIN transaksi 6 digit.</p>
+      <form method="post" action="/transfer?tab=<%= tab %>">
+        <%- include('partials/csrf') %>
+        <input type="hidden" name="stage" value="verify">
+        <div class="field"><input class="otp-box" type="password" name="pin" maxlength="6" inputmode="numeric" required autofocus autocomplete="off"></div>
+        <button class="btn" type="submit">Konfirmasi &amp; Kirim</button>
+      </form>
+      <form method="post" action="/transfer?tab=<%= tab %>" style="margin-top:8px"><%- include('partials/csrf') %><input type="hidden" name="stage" value="cancel"><button class="btn ghost" type="submit">Batalkan</button></form>
+    </div>
+  </div>
+<% } else { %>
+  <div class="tabs">
+    <a class="tab <%= tab === 'antar' ? 'active' : '' %>" href="/transfer?tab=antar">Sesama Bank (DDB)</a>
+    <a class="tab <%= tab === 'bank' ? 'active' : '' %>" href="/transfer?tab=bank">Ke Bank Lain</a>
+  </div>
+  <div class="grid cols-2">
+    <div class="card">
+      <form method="post" action="/transfer?tab=<%= tab %>">
+        <%- include('partials/csrf') %>
+        <input type="hidden" name="stage" value="confirm">
+        <input type="hidden" name="metode" value="<%= tab === 'bank' ? 'bank_lain' : 'antar_rekening' %>">
+        <% if (tab === 'bank') { %>
+          <div class="field"><label>Bank Tujuan</label>
+            <select name="bank_tujuan" required><option value="">-- Pilih bank --</option>
+              <% banks.forEach(function (b) { %><option value="<%= b.code %>" <%= form.bank_tujuan === b.code ? 'selected' : '' %>><%= b.name %> (biaya <%= fmtRupiah(b.fee) %>)</option><% }) %>
+            </select></div>
+        <% } %>
+        <div class="field"><label>Rekening Tujuan</label><input type="text" name="rekening_tujuan" inputmode="numeric" placeholder="Masukkan nomor rekening" required value="<%= form.rekening_tujuan || '' %>"></div>
+        <div class="field"><label>Nominal Transfer (min. Rp 5.000)</label><input type="text" name="nominal" inputmode="numeric" placeholder="mis. 150000" required value="<%= form.nominal || '' %>"></div>
+        <div class="field"><label>Catatan (opsional)</label><input type="text" name="catatan" maxlength="255" value="<%= form.catatan || '' %>"></div>
+        <button class="btn" type="submit">Lanjut ke Konfirmasi</button>
+      </form>
+    </div>
+    <div class="card">
+      <h3>Saldo Tersedia</h3>
+      <div style="font-size:22px;font-weight:700;margin:6px 0 12px;"><%= account.hidden ? 'Rp ••••••' : fmtRupiah(account.saldo) %></div>
+      <p style="font-size:13px;color:var(--muted)">Nama penerima ditampilkan sebelum konfirmasi. Transfer dikonfirmasi dengan PIN 6 digit. Maksimal Rp 25.000.000 per transaksi.</p>
+    </div>
+  </div>
+<% } %>
+<%- include('partials/footer') %>

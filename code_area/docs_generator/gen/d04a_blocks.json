@@ -1,0 +1,1311 @@
+[
+[
+"Title",
+"Detailed Design – Aplikasi Android"
+],
+[
+"Subtitle",
+"SDD-DDB-001-AND | Dokumen 4 – Volume Android | Versi 0.4 (Perbaikan Review)"
+],
+[
+"Author",
+"PT Diponegoro Digital Bank – Kelompok Jaran Goyang"
+],
+[
+"Date",
+"16 November 2026"
+],
+[
+"Heading 1",
+"Catatan Revisi v0.3"
+],
+[
+"First Paragraph",
+"Versi 0.4 menindaklanjuti pemeriksaan ulang terhadap review Salomo tanggal 16 November 2026. Perbaikan mencakup pembaruan kontrol versi sumber yang benar-benar tersedia di ZIP, penegasan jumlah berkas dan ukuran kode dari D01 yang tersedia, pemetaan eksplisit endpoint empat sequence diagram terhadap kontrak DdbApi.kt dan D04B, pembaruan referensi Panduan Uji Ponsel, serta pengisian Daftar Isi. Data yang hanya disebut dalam review tetapi tidak tersedia sebagai dokumen sumber tetap ditandai sebagai belum dapat diverifikasi."
+],
+[
+"Body Text",
+"Inventaris kelas dan alur modul disusun dari kode sumber apps/android. Untuk modul yang bukan tanggung jawab penulis, diagram merupakan ringkasan tingkat desain berdasarkan kelas dan fungsi yang tersedia, dan perlu dikonfirmasi oleh PIC modul."
+],
+[
+"Body Text",
+"Pemetaan kode layar AND-xx belum dimasukkan. UIM-DDB-001-AND v0.1 (Cecilia, 16 Nov) disebut dalam review, tetapi file D05A tersebut tidak terdapat di ZIP yang tersedia. Kode layar spesifik tidak direka; pemetaan rinci harus diselaraskan saat dokumen D05A tersedia."
+],
+[
+"Body Text",
+"Catatan verifikasi lintas sumber:"
+],
+[
+"Compact|num",
+"ZIP repositori yang dilampirkan memuat D01 v0.9.3, D02 v0.9.4, D03 v0.9.2, D04B v0.9.2, D06 v0.9.5, dan Panduan Uji Aplikasi di Ponsel v1.1. Review Salomo merujuk versi lebih baru untuk beberapa dokumen, yaitu D01 v0.9.4, D02 v0.9.5, D03 v0.9.3, dan D06 v0.9.6; versi-versi tersebut tidak terdapat di ZIP yang dapat diperiksa. D05A v0.1 disebut dalam review, tetapi berkasnya juga tidak terdapat di ZIP. Karena itu, dokumen ini mencantumkan versi yang benar-benar tersedia dan memisahkan informasi terbaru yang hanya bersumber dari review."
+],
+[
+"Compact|num",
+"Tidak ada klaim bahwa D05A v0.1 atau versi D01/D02/D03/D06 yang lebih baru telah dibaca dari ZIP; kode layar AND-xx dan kesesuaian workflow terhadap D03 v0.9.3 serta D05A v0.1 masih memerlukan pemeriksaan menggunakan salinan dokumen tersebut."
+],
+[
+"Compact|num",
+"Diagram disusun dari struktur kelas dan pemanggilan API pada kode Android. Pemetaan endpoint empat sequence diagram dijelaskan kembali pada Lampiran A.5 agar path lengkap, metode HTTP, dan header Idempotency-Key dapat diperiksa terhadap DdbApi.kt dan D04B v0.9.2."
+],
+[
+"Heading 1",
+"Kontrol Dokumen"
+],
+[
+"table",
+[
+[
+"Item",
+"Isi"
+],
+[
+"Nama module",
+"Detailed Design – Android (Kotlin, Jetpack Compose)"
+],
+[
+"Status",
+"Draf 0.4 – perbaikan berdasarkan review Salomo 16 Nov 2026; menunggu verifikasi sumber baseline terbaru dan review PIC"
+],
+[
+"Created by",
+"Gracia Riyanto (PIC)"
+],
+[
+"Last updated by",
+"Gracia Riyanto"
+],
+[
+"Responsible team",
+"Kelompok Jaran Goyang – Mobile Application Team (PIC: Gracia Riyanto)"
+],
+[
+"Kode dokumen / versi",
+"SDD-DDB-001-AND / 0.3"
+],
+[
+"Dokumen acuan",
+"SRS-DDB-001 v0.1; SAD-DDB-001 v0.9.4 (ZIP; review menyebut v0.9.5); FSD-DDB-001 v0.9.2 (ZIP; review menyebut v0.9.3); SDD-DDB-001-BE v0.9.2; D01 v0.9.3 (ZIP; review menyebut v0.9.4); D06 v0.9.5 (ZIP; review menyebut v0.9.6); UIM-DDB-001-AND v0.1 (disebut review, tidak ada di ZIP); kode apps/android."
+]
+]
+],
+[
+"Body Text",
+"Tabel 0.1 Informasi dokumen"
+],
+[
+"Heading 1",
+"Revision Control"
+],
+[
+"table",
+[
+[
+"Versi",
+"Tanggal",
+"Penulis",
+"Keterangan"
+],
+[
+"0.1",
+"14 Nov 2026",
+"Gracia Riyanto",
+"Kerangka dan draf awal dari dokumen proyek. Belum diverifikasi terhadap kode."
+],
+[
+"0.2",
+"14 Nov 2026",
+"Gracia Riyanto",
+"Diverifikasi terhadap kode sumber; ditambahkan class, sequence, activity, dan state diagram; pseudocode disesuaikan dengan kode."
+],
+[
+"0.3",
+"16 Nov 2026",
+"Gracia Riyanto",
+"Menindaklanjuti review Salomo: pelengkapan diagram modul, sequence Transfer/Top-up, workflow tambahan, dan pembaruan data uji/perangkat dengan catatan perbedaan versi sumber."
+],
+[
+"0.4",
+"16 Nov 2026",
+"Gracia Riyanto",
+"Pemeriksaan ulang review; pembaruan referensi dan versi sumber yang tersedia; pemetaan endpoint empat sequence diagram; pembaruan Daftar Isi."
+]
+]
+],
+[
+"Body Text",
+"Tabel 0.2 Riwayat revisi dokumen"
+],
+[
+"Heading 1",
+"Daftar Isi"
+],
+[
+"Normal",
+"BAB I  PENDAHULUAN .......................................................... 3\nBAB II  STRUKTUR PERANGKAT LUNAK ANDROID .......................... 4\nBAB III  UML DIAGRAM ............................................................ 6\nBAB IV  WORKFLOW DIAGRAM ................................................ 13\nBAB V  ALGORITMA PSEUDOCODE ......................................... 16\nBAB VI  PERANCANGAN SOFTWARE/HARDWARE ..................... 18\nREFERENSI ............................................................................. 20\nLAMPIRAN A  DIAGRAM TAMBAHAN MODUL ANDROID ............... 22\nA.5  PEMETAAN ENDPOINT SEQUENCE DIAGRAM ...................... 34\nA.9  ACTIVITY DIAGRAM NOTIFIKASI ...................................... 35"
+],
+[
+"Heading 1",
+"BAB I PENDAHULUAN"
+],
+[
+"Heading 2",
+"1.1 Tujuan"
+],
+[
+"First Paragraph",
+"Dokumen ini merinci rancangan aplikasi Android Diponegoro Digital Bank sampai tingkat paket, kelas, alur, dan algoritma. Rancangan arsitektur tingkat tinggi ditetapkan pada Architectural Design (D02). Dokumen ini menurunkannya menjadi struktur paket, diagram UML, workflow, pseudocode, serta kebutuhan perangkat lunak dan keras berdasarkan implementasi yang ada."
+],
+[
+"Heading 2",
+"1.2 Ruang Lingkup"
+],
+[
+"First Paragraph",
+"Aplikasi Android menggabungkan delapan modul bisnis menjadi satu aplikasi sesuai SRS-DDB-001 v0.1, yaitu FR-01 sampai FR-29 kecuali FR-26 (ekspor riwayat) yang oleh SRS ditetapkan untuk platform Web. Teknologi yang digunakan adalah Kotlin, Jetpack Compose, pola MVVM, dan Repository Pattern. Aplikasi tersedia dalam dua varian (product flavor): demo, yang memakai data simulasi di dalam aplikasi tanpa server, dan online, yang terhubung ke backend bersama melalui REST. Ketentuan proyek yang berlaku bagi Android:"
+],
+[
+"Compact|num",
+"Login tidak memakai OTP; OTP hanya untuk registrasi, ubah profil, dan pemulihan akun."
+],
+[
+"Compact|num",
+"Setiap transaksi keuangan dikonfirmasi PIN 6 digit dan membawa kunci idempotensi."
+],
+[
+"Compact|num",
+"Virtual Account tidak dibuat."
+],
+[
+"Compact|num",
+"Pemindaian QRIS (FR-15) hanya ada di Android karena membutuhkan kamera."
+],
+[
+"First Paragraph",
+"Dokumen ini mencakup seluruh aplikasi Android. Pembahasan paling rinci diberikan pada dua modul yang menjadi tanggung jawab penulis, yaitu Payment (QRIS) (FR-15 sampai FR-17) dan Profile & Notification (FR-27 sampai FR-29), serta pada komponen core yang dipakai bersama. Modul lain dijelaskan pada tingkat ringkas dan dikonsultasikan dengan PIC modulnya."
+],
+[
+"Heading 2",
+"1.3 Notasi"
+],
+[
+"First Paragraph",
+"Diagram memakai notasi UML 2: class diagram, sequence diagram, activity diagram, dan state diagram. Pseudocode ditulis dalam bahasa Indonesia dengan kata kunci IF, THEN, ELSE, RETURN, FUNCTION, dan LOOP. Pada class diagram, garis putus-putus dengan panah terbuka menyatakan dependensi, garis dengan segitiga kosong menyatakan implementasi antarmuka, dan garis penuh dengan panah menyatakan kepemilikan atau asosiasi."
+],
+[
+"Heading 1",
+"BAB II STRUKTUR PERANGKAT LUNAK ANDROID"
+],
+[
+"Heading 2",
+"2.1 Struktur Paket"
+],
+[
+"First Paragraph",
+"Kode sumber berada di code_area/apps/android/app/src/main/java/com/diponegoro/digitalbank. Tabel 2.1 memuat inventaris paket beserta kelas utamanya, yang dikutip dari kode. Modul fitur mengikuti pola lapisan presentation, data, dan domain. Modul Authentication dan Virtual Card memiliki struktur lapisan lengkap beserta use case, sedangkan modul lain meringkas lapisan data dalam satu paket data (antarmuka repository, implementasi Local* untuk varian demo, dan implementasi Remote* untuk varian online)."
+],
+[
+"Normal",
+"Berdasarkan D01 Project Document v0.9.3 yang tersedia di ZIP, aplikasi Android terdiri atas 110 berkas Kotlin dengan ukuran 9,227 KSLOC (baris kode sumber yang dihitung menurut metode SLOC pada D01). Review menyebut D01 v0.9.4, tetapi versi tersebut tidak tersedia pada ZIP yang diperiksa; angka di atas mengikuti D01 v0.9.3 yang benar-benar tersedia."
+],
+[
+"table",
+[
+[
+"Paket",
+"FR",
+"Kelas dan berkas utama",
+"PIC"
+],
+[
+"authentication/",
+"FR-01–05",
+"AuthViewModel, RecoveryViewModel, AuthRepository, MockAuthRepository, RemoteAuthRepository, AuthModule, use case (LoginUseCase, LoginWithBiometricUseCase, RegisterUserUseCase, VerifyOtpUseCase, SubmitEkycUseCase, CreateTransactionPinUseCase, ValidateTransactionPinUseCase, LogoutUseCase, dst.), layar (LoginScreen, OtpScreen, EkycScreen, CreatePinScreen, EnterPinScreen, RecoveryScreen), AuthRoutes, AuthNavGraph.kt",
+"Salomo"
+],
+[
+"account/",
+"FR-06–09",
+"AccountRepository, LocalAccountRepository, RemoteAccountRepository, BalanceChartViewModel, PocketsViewModel, BalanceChartScreen, PocketsScreen, Pocket, LockRule, PocketRules",
+"Grace"
+],
+[
+"transfer/",
+"FR-10–14",
+"TransferRepository, LocalTransferRepository, RemoteTransferRepository, InterbankSimulator, TransferViewModel, TransferScreen, TransferRules, Bank, Recipient, TransferQuote",
+"Cecilia"
+],
+[
+"payment/",
+"FR-15–17",
+"PaymentRepository, LocalPaymentRepository, RemotePaymentRepository, QrisCodec, QrisPayload, ScannedQris, QrisRules, QrisPayViewModel, QrisReceiveViewModel, QrImages, PaymentScreens.kt",
+"Gracia"
+],
+[
+"topup/",
+"FR-18–20",
+"TopUpRepository, LocalTopUpRepository, RemoteTopUpRepository, TopUpViewModel, TopUpScreen, TopUpCatalog, TopUpOrder",
+"Grace"
+],
+[
+"virtualcard/",
+"FR-21–22",
+"VirtualCardRepository, MockVirtualCardRepository, RemoteVirtualCardRepository, VirtualCardModule, VirtualCardViewModel, use case (CreateVirtualCardUseCase, ViewCardDetailsUseCase, FreezeCardUseCase, ActivateCardUseCase, SetTransactionLimitUseCase, SimulateCardTransactionUseCase)",
+"Salomo"
+],
+[
+"history/, home/",
+"FR-23–25",
+"HistoryRepository, LocalHistoryRepository, RemoteHistoryRepository, HistoryViewModel, TransactionDetailViewModel, AnalyticsViewModel, HomeViewModel, HistoryScreen, TransactionDetailScreen, AnalyticsScreen, HomeScreen",
+"Cecilia"
+],
+[
+"profile/",
+"FR-27–29",
+"ProfileRepository, LocalProfileRepository, RemoteProfileRepository, ProfileViewModel, SecurityViewModel, NotificationSettingsViewModel, NotificationsViewModel, ProfileDraft, PendingProfileChange, ProfileScreens.kt",
+"Gracia"
+],
+[
+"core/di",
+"–",
+"CoreModule, FeatureModule",
+"Bersama"
+],
+[
+"core/ledger",
+"BR-03–05",
+"Ledger, LedgerModels.kt (LedgerAccount, LedgerTransaction, PostingRequest, TxCategory, TxStatus), DemoData",
+"Bersama"
+],
+[
+"core/security",
+"FR-04, FR-05",
+"TransactionGuard, InactivityMonitor",
+"Bersama"
+],
+[
+"core/network",
+"–",
+"ApiClient, DdbApi, ApiModels.kt, Mappers.kt, TokenStore, SecureTokenStore, InMemoryTokenStore",
+"Bersama"
+],
+[
+"core/notification",
+"FR-29",
+"NotificationCenter, NotificationSource, LocalNotificationSource, RemoteNotificationSource, AndroidPushSender, PushSender",
+"Bersama"
+],
+[
+"core/receipt, core/ui, core/util, core/storage, core/navigation",
+"FR-14",
+"Receipt, ReceiptSharer, Charts.kt, Components.kt, AppResult, Money.kt, HashUtil, KeyValueStore, AppRoutes",
+"Bersama"
+],
+[
+"ui/theme",
+"–",
+"Color.kt, Theme.kt, Type.kt",
+"Bersama"
+],
+[
+"DigitalBankApplication.kt, MainActivity.kt",
+"–",
+"Titik masuk aplikasi; MainActivity.onUserInteraction() memperbarui InactivityMonitor",
+"Bersama"
+],
+[
+"src/online/",
+"–",
+"AndroidManifest.xml (izin ACCESS_LOCAL_NETWORK) dan res/xml/network_security_config.xml",
+"Bersama"
+]
+]
+],
+[
+"Body Text",
+"Tabel 2.1 Inventaris paket aplikasi Android (sumber: kode sumber, 14 Nov 2026). Kolom PIC mengikuti Panduan Proyek."
+],
+[
+"Heading 2",
+"2.2 Konvensi Rancangan"
+],
+[
+"First Paragraph",
+"Konvensi berikut dibaca dari kode:"
+],
+[
+"Compact|num",
+"MVVM dengan Repository. Layar @Composable mengamati StateFlow dari ViewModel. ViewModel memanggil antarmuka repository, yang dibuat melalui FeatureModule."
+],
+[
+"Compact|num",
+"Dua implementasi per repository. FeatureModule memilih Local*Repository (ledger dan guard in-memory) atau Remote*Repository (REST ke backend) berdasarkan CoreModule.online, yang bernilai BuildConfig.ONLINE."
+],
+[
+"Compact|num",
+"Injeksi dependensi manual. CoreModule dan FeatureModule adalah objek singleton dengan inisialisasi lazy. Tidak ada framework DI. ViewModel dibuat dengan viewModelFactory dan initializer."
+],
+[
+"Compact|num",
+"Hasil operasi dibungkus AppResult<T> (Success atau Failure dengan pesan siap tampil). Modul Authentication memakai AuthResult<T>."
+],
+[
+"Compact|num",
+"Transaksi keuangan dikonfirmasi PIN melalui TransactionGuard.authorize() (e-KYC lalu PIN) dan diposting ke Ledger secara atomik dengan kunci idempotensi (varian demo), atau dikirim ke backend dengan header Idempotency-Key (varian online)."
+],
+[
+"Compact|num",
+"Uang direpresentasikan sebagai Long dalam rupiah."
+],
+[
+"Compact|num",
+"Token disimpan di SecureTokenStore (SharedPreferences dengan enkripsi AES-GCM, kunci di AndroidKeyStore) pada perangkat, atau InMemoryTokenStore pada pengujian."
+],
+[
+"Compact|num",
+"Nilai yang belum ditetapkan SRS (batas transfer, biaya antarbank, batas QRIS, limit kartu, saldo awal, timeout sesi) diisi sebagai usulan di kode dan ditandai sebagai usulan di dokumen ini."
+],
+[
+"Heading 1",
+"BAB III UML DIAGRAM"
+],
+[
+"Heading 2",
+"3.1 Arsitektur Berlapis"
+],
+[
+"First Paragraph",
+"Gambar 3.1 menunjukkan alur dari layar sampai sumber data. Varian demo dan online berbeda hanya pada implementasi repository dan sumber data. Layar dan ViewModel sama untuk kedua varian."
+],
+[
+"img",
+"rId31.png"
+],
+[
+"Image Caption",
+"Gambar 3.1 Arsitektur berlapis aplikasi Android"
+],
+[
+"Heading 2",
+"3.2 Class Diagram"
+],
+[
+"Heading 3",
+"3.2.1 Modul Payment (QRIS)"
+],
+[
+"img",
+"rId35.png"
+],
+[
+"Image Caption",
+"Gambar 3.2 Class diagram modul Payment (QRIS)"
+],
+[
+"Body Text",
+"Penjelasan komponen:"
+],
+[
+"Compact|num",
+"QrisPayViewModel mengelola alur bayar: onScanned() memanggil repo.scan(), setAmount() diabaikan untuk QRIS dinamis, requestPin() memvalidasi sebelum dialog PIN, dan pay() memanggil repo.pay() dengan kunci idempotensi yang dibuat satu kali per kode yang dipindai."
+],
+[
+"Compact|num",
+"QrisReceiveViewModel mengelola QRIS pribadi: QRIS statis dimuat saat inisialisasi, generateDynamic() membuat QRIS dengan nominal, dan simulateIncoming() mensimulasikan dana masuk dari bank lain."
+],
+[
+"Compact|num",
+"PaymentRepository mendefinisikan lima operasi: personalQr, simulateIncoming, scan, pay, dan demoQrs."
+],
+[
+"Compact|num",
+"LocalPaymentRepository memakai Ledger dan TransactionGuard. RemotePaymentRepository memakai ApiClient (endpoint /api/v1/qris) dan tetap mendekode kode secara lokal dengan QrisCodec untuk tampilan, sedangkan validasi, saldo, PIN, dan posting dilakukan server."
+],
+[
+"Compact|num",
+"QrisCodec mengimplementasikan format EMVCo Merchant-Presented QR (TLV dengan CRC16-CCITT). QrisRules menetapkan nominal minimum Rp1.000 dan maksimum Rp10.000.000 (nilai usulan)."
+],
+[
+"Heading 3",
+"3.2.2 Modul Profile dan Notifikasi"
+],
+[
+"img",
+"rId39.png"
+],
+[
+"Image Caption",
+"Gambar 3.3 Class diagram modul Profile"
+],
+[
+"img",
+"rId42.png"
+],
+[
+"Image Caption",
+"Gambar 3.4 Class diagram notifikasi"
+],
+[
+"Body Text",
+"Penjelasan komponen:"
+],
+[
+"Compact|num",
+"ProfileViewModel menangani perubahan profil dua tahap: submit() meminta OTP, confirm() memverifikasinya. SecurityViewModel menangani ubah password, ubah PIN, dan pengaturan biometrik."
+],
+[
+"Compact|num",
+"NotificationCenter (varian demo) mendengarkan ledger.events dan membuat notifikasi menurut NotificationSettings: tipe (INCOMING, OUTGOING, SECURITY, INFO) dan kanal (PUSH, IN_APP, EMAIL). Email hanya disimpan di outbox. AndroidPushSender menampilkan notifikasi lokal Android."
+],
+[
+"Compact|num",
+"RemoteNotificationSource (varian online) mengambil antrean push dari server setiap 15 detik (startPolling) dan meneruskannya ke AndroidPushSender."
+],
+[
+"Heading 3",
+"3.2.3 Komponen Core"
+],
+[
+"img",
+"rId46.png"
+],
+[
+"Image Caption",
+"Gambar 3.5 Class diagram komponen core"
+],
+[
+"Body Text",
+"CoreModule adalah titik pusat: ia memegang Ledger, TransactionGuard, NotificationCenter, ApiClient, dan TokenStore, serta sinyal revision yang memicu pembaruan data di ViewModel. ApiClient menambahkan header Authorization: Bearer pada tiap permintaan, dan saat respons 401 menukar refresh token satu kali sebelum mengulang permintaan. Bila gagal, sesi dihapus dan sessionExpired dipancarkan agar UI kembali ke layar login."
+],
+[
+"Heading 3",
+"3.2.4 Modul Lain"
+],
+[
+"First Paragraph",
+"Class diagram ringkas modul Authentication, Account, Transfer, Top-up, Virtual Card, serta History dan Home dilengkapi pada Lampiran A. Diagram tersebut menunjukkan kelas utama yang ditemukan di kode; rincian atribut dan operasi internal modul tetap mengikuti implementasi masing-masing PIC."
+],
+[
+"Heading 2",
+"3.3 Peta Navigasi Layar"
+],
+[
+"First Paragraph",
+"Navigasi didefinisikan di AuthNavGraph.kt dengan rute pada AuthRoutes dan AppRoutes. Bottom bar memuat empat tab: Beranda (home), Riwayat (history), QRIS (qris/pay), dan Profil (profile)."
+],
+[
+"table",
+[
+[
+"Kelompok",
+"Rute"
+],
+[
+"Autentikasi",
+"auth/login, auth/register, auth/otp, auth/ekyc, auth/create_pin, auth/enter_pin, auth/recovery"
+],
+[
+"Dashboard dan akun",
+"home, account/chart, account/pockets, virtualcard/home"
+],
+[
+"Transaksi",
+"transfer, qris/pay, qris/receive, topup"
+],
+[
+"Riwayat",
+"history, history/detail/{txId}, history/analytics"
+],
+[
+"Profil dan notifikasi",
+"profile, profile/security, profile/notification-settings, notifications, profile/sessions"
+]
+]
+],
+[
+"Body Text",
+"Tabel 3.1 Rute navigasi (sumber: AppRoutes.kt, AuthRoutes.kt). D05A v0.1 disebut dalam review tetapi tidak tersedia di ZIP; kode layar AND-xx tidak dicantumkan karena belum dapat diverifikasi dari dokumen tersebut."
+],
+[
+"Heading 2",
+"3.4 Sequence Diagram"
+],
+[
+"Heading 3",
+"3.4.1 Pembayaran QRIS"
+],
+[
+"img",
+"rId53.png"
+],
+[
+"Image Caption",
+"Gambar 3.6 Sequence pembayaran QRIS (varian online)"
+],
+[
+"Body Text",
+"Pada varian online, alur memakai POST /api/v1/qris/scan untuk memvalidasi hasil pindai dan POST /api/v1/qris/pay untuk pembayaran. Permintaan pembayaran membawa header Idempotency-Key; PIN dikirim dalam PayRequest dan diverifikasi backend melalui TransactionGuard. Pada varian demo, LocalPaymentRepository menggantikan RemotePaymentRepository; pemindaian dan posting memakai QrisCodec, TransactionGuard, dan Ledger lokal."
+],
+[
+"Heading 3",
+"3.4.2 Ubah Profil dengan OTP"
+],
+[
+"img",
+"rId57.png"
+],
+[
+"Image Caption",
+"Gambar 3.7 Sequence ubah profil dengan OTP (varian online)"
+],
+[
+"Heading 3",
+"3.4.3 Login dan PIN"
+],
+[
+"img",
+"rId61.png"
+],
+[
+"Image Caption",
+"Gambar 3.8 Sequence login dan verifikasi PIN"
+],
+[
+"Body Text",
+"Pada varian online, login menggunakan POST /api/v1/auth/login dan menghasilkan token sesi. Verifikasi PIN pada alur layar menggunakan POST /api/v1/auth/pin/verify. Login tidak memakai OTP; OTP hanya berlaku pada registrasi, perubahan profil, dan pemulihan akun. Pada varian demo, AuthRepository menggunakan implementasi lokal."
+],
+[
+"Heading 3",
+"3.4.4 Notifikasi Transaksi"
+],
+[
+"img",
+"rId65.png"
+],
+[
+"Image Caption",
+"Gambar 3.9 Sequence notifikasi transaksi (varian online)"
+],
+[
+"Heading 3",
+"3.4.5 Transfer dan Top-up"
+],
+[
+"First Paragraph",
+"Sequence diagram Transfer (UC-01) dan Top-up dilengkapi pada Lampiran A.7 dan A.8. Pemetaan path lengkap dan metode HTTP dicantumkan pada Lampiran A.5. Alur online harus mengikuti DdbApi.kt dan D04B v0.9.2; alur demo memakai LocalTransferRepository/LocalTopUpRepository dan Ledger."
+],
+[
+"Heading 2",
+"3.5 State Diagram"
+],
+[
+"img",
+"rId71.png"
+],
+[
+"Image Caption",
+"Gambar 3.10 State diagram sesi pengguna"
+],
+[
+"img",
+"rId74.png"
+],
+[
+"Image Caption",
+"Gambar 3.11 State diagram status transaksi"
+],
+[
+"Body Text",
+"Status transaksi pada TxStatus ada tiga: SUCCESS, PROCESSING, dan FAILED. Transaksi QRIS pada varian demo langsung berstatus SUCCESS atau gagal tanpa posting."
+],
+[
+"Heading 1",
+"BAB IV WORKFLOW DIAGRAM"
+],
+[
+"Heading 2",
+"4.1 Pembayaran QRIS"
+],
+[
+"img",
+"rId79.png"
+],
+[
+"Image Caption",
+"Gambar 4.1 Activity diagram pembayaran QRIS"
+],
+[
+"Heading 2",
+"4.2 Menerima Dana dengan QRIS"
+],
+[
+"img",
+"rId83.png"
+],
+[
+"Image Caption",
+"Gambar 4.2 Activity diagram menerima dana QRIS"
+],
+[
+"Heading 2",
+"4.3 Ubah Profil"
+],
+[
+"img",
+"rId87.png"
+],
+[
+"Image Caption",
+"Gambar 4.3 Activity diagram ubah profil dengan OTP"
+],
+[
+"Heading 2",
+"4.4 Workflow Lain"
+],
+[
+"table",
+[
+[
+"Alur",
+"Ringkasan dari kode"
+],
+[
+"Ubah password / PIN",
+"SecurityViewModel.changePassword() dan changePin(); validasi kekuatan password, format PIN 6 digit, dan kecocokan konfirmasi dilakukan di RemoteProfileRepository sebelum diteruskan ke AuthRepository."
+],
+[
+"Pengaturan notifikasi",
+"NotificationSettingsViewModel.toggleType() dan toggleChannel(); penyimpanan ditolak bila tidak ada kanal yang dipilih (“Pilih minimal satu kanal notifikasi”)."
+],
+[
+"Kotak notifikasi",
+"NotificationsViewModel mengumpulkan revision lalu memuat list() dan emails(); markRead() dan markAllRead()."
+],
+[
+"Workflow modul lain",
+"Diagram Account, Transfer, Top-up, Virtual Card, History & Dashboard, dan Authentication dilengkapi pada Lampiran A sebagai ringkasan alur utama. Rincian harus dicocokkan dengan D03 dan D05A final."
+]
+]
+],
+[
+"Body Text",
+"Tabel 4.1 Workflow selain diagram"
+],
+[
+"Heading 1",
+"BAB V ALGORITMA PSEUDOCODE"
+],
+[
+"First Paragraph",
+"Pseudocode berikut ditulis dari kode sumber. Nama fungsi dan kelas rujukan dicantumkan agar mudah diverifikasi."
+],
+[
+"Heading 2",
+"5.1 Dekode QRIS dan CRC16 (QrisCodec.decode, crc16)"
+],
+[
+"Source Code",
+"FUNCTION decode(raw):\n    text <- trim(raw)\n    IF panjang(text) <= 8 ATAU 4 karakter sebelum CRC <> \"6304\" THEN\n        RETURN gagal \"Bukan kode QRIS yang valid\"\n    IF crc16(text tanpa 4 karakter terakhir) <> 4 karakter terakhir THEN\n        RETURN gagal \"Kode QRIS rusak (CRC tidak cocok)\"\n    tags <- parse(text tanpa 8 karakter terakhir)     // pasangan ID(2) + panjang(2) + nilai\n    IF tags[\"00\"] <> \"01\" THEN RETURN gagal \"Versi QRIS tidak didukung\"\n    IF tags[\"53\"] <> \"360\" THEN RETURN gagal \"Mata uang QRIS harus Rupiah\"\n    IF tags[\"58\"] <> \"ID\" THEN RETURN gagal \"QRIS harus berasal dari Indonesia\"\n    accountTag <- tag pertama pada rentang 26..51 yang ada; jika tidak ada RETURN gagal\n    dynamic <- (tags[\"01\"] = \"12\")\n    amount <- tags[\"54\"] (bagian sebelum titik) sebagai bilangan bulat\n    IF dynamic DAN (amount kosong ATAU amount <= 0) THEN RETURN gagal \"QRIS dinamis tidak memiliki nominal\"\n    RETURN QrisPayload(issuerGuid, accountId, merchantId, merchantName, city, mcc,\n                       amount hanya bila dinamis)\n\nFUNCTION crc16(data):                               // CRC16-CCITT\n    crc <- 0xFFFF\n    UNTUK setiap byte b dari data (UTF-8):\n        crc <- crc XOR (b << 8)\n        ULANGI 8 kali:\n            IF bit 15 dari crc = 1 THEN crc <- (crc << 1) XOR 0x1021 ELSE crc <- crc << 1\n            crc <- crc AND 0xFFFF\n    RETURN crc dalam 4 digit heksadesimal huruf besar"
+],
+[
+"Heading 2",
+"5.2 Pindai QRIS (LocalPaymentRepository.scan)"
+],
+[
+"Source Code",
+"FUNCTION scan(userId, raw):\n    payload <- QrisCodec.decode(raw);  IF gagal THEN RETURN gagal(pesan)\n    IF payload.issuerGuid = DDB_GUID THEN                    // QRIS pribadi nasabah bank yang sama\n        target <- ledger.findByNumber(payload.accountId)\n        IF target tidak ada THEN RETURN gagal \"Penerima QRIS tidak ditemukan\"\n        IF target.ownerUserId = userId THEN RETURN gagal \"Tidak dapat membayar ke QRIS milik sendiri\"\n        RETURN ScannedQris(payload, target.id, target.ownerUserId, raw)\n    RETURN ScannedQris(payload, internalAccountId = null, internalOwnerId = null, raw)"
+],
+[
+"First Paragraph",
+"Varian online memanggil POST /api/v1/qris/scan dan memakai QrisCodec.decode lokal hanya untuk tampilan."
+],
+[
+"Heading 2",
+"5.3 Validasi sebelum PIN (QrisPayViewModel.requestPin)"
+],
+[
+"Source Code",
+"FUNCTION requestPin():\n    amount <- IF scanned.payload.amount <> null THEN scanned.payload.amount   // QRIS dinamis\n              ELSE parseRupiah(state.amount)\n    IF amount kosong ATAU amount <= 0 THEN error \"Masukkan nominal pembayaran\"; RETURN\n    IF amount di luar [1.000 .. 10.000.000] THEN error \"Nominal QRIS ... – ...\"; RETURN\n    IF amount > state.balance THEN error \"Saldo tidak mencukupi\"; RETURN\n    state.showPin <- true            // PIN hanya diminta untuk transaksi yang lolos validasi"
+],
+[
+"Heading 2",
+"5.4 Eksekusi pembayaran (LocalPaymentRepository.pay)"
+],
+[
+"Source Code",
+"FUNCTION pay(userId, scanned, rawAmount, pin, idempotencyKey):\n    IF ledger.findByIdempotencyKey(idempotencyKey) ada THEN RETURN transaksi tersebut   // BR-04\n    amount <- scanned.payload.amount ATAU parseRupiah(rawAmount)    // QRIS dinamis: input pembayar diabaikan\n    IF amount kosong THEN RETURN gagal \"Nominal wajib diisi\"\n    IF amount di luar [1.000 .. 10.000.000] THEN RETURN gagal\n    main <- ledger.mainAccount(userId)\n    IF ledger.balance(main.id) < amount THEN RETURN gagal \"Saldo tidak mencukupi\"\n    authorized <- guard.authorize(userId, pin)                      // e-KYC lalu PIN\n    IF authorized gagal THEN RETURN authorized\n    creditAccount <- scanned.internalAccountId ATAU ExternalAccounts.MERCHANT\n    RETURN ledger.post(kategori QRIS, lines = [main.id -> -amount, creditAccount -> amount],\n                       idempotencyKey)                              // atomik dengan Mutex"
+],
+[
+"First Paragraph",
+"Varian online (RemotePaymentRepository.pay) mengirim POST /api/v1/qris/pay dengan header Idempotency-Key, dan batas nominal, saldo, PIN, serta posting dijalankan server."
+],
+[
+"Heading 2",
+"5.5 Verifikasi PIN transaksi (TransactionGuard, ValidateTransactionPinUseCase)"
+],
+[
+"Source Code",
+"FUNCTION authorize(userId, pin):\n    user <- auth.getUser(userId);  IF tidak ada THEN RETURN gagal \"Pengguna tidak ditemukan\"\n    IF user.accountStatus <> FINANCIAL_ENABLED THEN RETURN gagal (e-KYC belum selesai)    // FR-02\n    IF panjang(pin) <> 6 ATAU ada karakter non-angka THEN RETURN gagal \"PIN harus 6 digit angka\"\n    RETURN auth.validatePin(userId, pin)    // salah 3 kali: PIN diblokir sementara (BR-02);\n                                            // logika blokir ada di AuthRepository / server"
+],
+[
+"Heading 2",
+"5.6 Timeout sesi tidak aktif (FR-05)"
+],
+[
+"Source Code",
+"MainActivity.onUserInteraction():  InactivityMonitor.touch()        // tiap sentuhan/ketikan\n\nFUNCTION startInactivityWatch():                                    // AuthViewModel, setelah PIN valid\n    InactivityMonitor.touch()\n    LOOP:\n        tunda 10 detik\n        IF (sekarang - lastInteraction) >= 5 menit THEN expireSession(); STOP\n    // expireSession: logout sesi, kembali ke login dengan pesan \"Sesi berakhir otomatis ...\""
+],
+[
+"First Paragraph",
+"Batas lima menit (InactivityMonitor.TIMEOUT_MS) adalah nilai usulan."
+],
+[
+"Heading 2",
+"5.7 Transfer antarbank dan status Diproses (LocalTransferRepository.execute)"
+],
+[
+"Source Code",
+"FUNCTION execute(userId, quote, pin, idempotencyKey):\n    IF idempotencyKey sudah ada THEN RETURN transaksi tersebut           // tanpa debit ganda\n    guard.authorize(userId, pin)\n    IF bank tujuan internal THEN RETURN ledger.post(debit pengirim, kredit penerima)   // atomik (FR-10)\n    behavior <- InterbankSimulator.lookup(bank, nomor rekening)          // ACCEPT / TIMEOUT / REJECT\n    posted <- ledger.post(total = nominal + biaya,\n                          status = IF behavior = ACCEPT THEN SUCCESS ELSE PROCESSING)\n    IF behavior = REJECT THEN RETURN ledger.failWithRefund(posted.id, \"Ditolak oleh jaringan antarbank\")  // BR-05\n    RETURN posted                                                        // ACCEPT: berhasil; TIMEOUT: Diproses\n\nFUNCTION checkStatus(userId, txId):\n    IF transaksi tidak ditemukan THEN RETURN gagal\n    IF status <> PROCESSING THEN RETURN transaksi\n    RETURN ledger.complete(txId)                                         // Diproses menjadi Berhasil"
+],
+[
+"First Paragraph",
+"Konstanta pada TransferRules: minimum Rp5.000 (BR-01), maksimum Rp25.000.000 per transaksi dan biaya antarbank Rp2.500 (nilai usulan, BR-07 belum ditetapkan SRS)."
+],
+[
+"Heading 2",
+"5.8 Perubahan profil dengan OTP (RemoteProfileRepository)"
+],
+[
+"Source Code",
+"FUNCTION requestProfileChange(userId, draft):\n    clean <- draft dengan nilai di-trim\n    msg <- validateDraft(clean)       // username >= 4 karakter; email atau telepon wajib salah satu;\n    IF msg tidak kosong THEN RETURN gagal(msg)    // format email valid; telepon 9-15 digit\n    lastDraft <- clean\n    RETURN POST /me/profile-change  ->  PendingProfileChange(clean, sentTo, demoOtp)\n\nFUNCTION confirmProfileChange(userId, pending, code):\n    IF code bukan 6 digit angka THEN RETURN gagal \"OTP harus 6 digit angka\"\n    RETURN POST /me/profile-change/confirm(code)  ->  User terbaru     // OTP diverifikasi server"
+],
+[
+"Heading 1",
+"BAB VI PERANCANGAN SOFTWARE/HARDWARE"
+],
+[
+"Heading 2",
+"6.1 Perangkat Lunak"
+],
+[
+"First Paragraph",
+"Sumber: app/build.gradle.kts dan gradle/libs.versions.toml."
+],
+[
+"table",
+[
+[
+"Komponen",
+"Versi",
+"Fungsi"
+],
+[
+"Android Gradle Plugin",
+"9.4.1",
+"Build aplikasi"
+],
+[
+"Kotlin (plugin Compose dan serialization)",
+"2.2.10",
+"Bahasa dan kompiler"
+],
+[
+"compileSdk / targetSdk / minSdk",
+"37 / 37 / 24 (Android 7.0)",
+"Target dan dukungan versi Android"
+],
+[
+"Java source/target compatibility",
+"11",
+"Kompatibilitas bahasa"
+],
+[
+"Compose BOM",
+"2026.02.01",
+"Versi terpadu Jetpack Compose (Material 3, UI)"
+],
+[
+"androidx.core-ktx / lifecycle-runtime-ktx / activity-compose",
+"1.19.1 / 2.11.0 / 1.13.0",
+"Pustaka dasar AndroidX"
+],
+[
+"navigation-compose",
+"2.9.5",
+"Navigasi antar layar"
+],
+[
+"material-icons-extended",
+"1.7.8",
+"Ikon"
+],
+[
+"ZXing core / zxing-android-embedded",
+"3.5.3 / 4.3.0",
+"Pembuatan QR dan pemindai kamera"
+],
+[
+"Retrofit dan converter kotlinx-serialization",
+"3.0.0",
+"Klien REST"
+],
+[
+"OkHttp",
+"4.12.0",
+"HTTP, interceptor, authenticator"
+],
+[
+"kotlinx-serialization-json",
+"1.9.0",
+"Serialisasi JSON"
+],
+[
+"JUnit / Robolectric / MockWebServer",
+"4.13.2 / 4.17 / (versi OkHttp)",
+"Pengujian unit dan UI di JVM"
+],
+[
+"Android Studio dengan JDK bawaan, SDK 37",
+"–",
+"Lingkungan pengembangan"
+]
+]
+],
+[
+"Body Text",
+"Tabel 6.1 Perangkat lunak aplikasi Android"
+],
+[
+"Heading 2",
+"6.2 Varian Aplikasi dan Konfigurasi"
+],
+[
+"table",
+[
+[
+"Varian",
+"Konfigurasi",
+"Perilaku"
+],
+[
+"demo",
+"applicationIdSuffix .demo, versionNameSuffix -demo, ONLINE=false, BASE_URL=\"\"",
+"Data simulasi in-memory tanpa server; cadangan demo"
+],
+[
+"online",
+"ONLINE=true, BASE_URL bawaan http://10.0.2.2:8080/, dapat diganti dengan -Pddb.baseUrl=...",
+"Memakai backend bersama lewat REST; HTTP polos hanya diizinkan pada varian ini lewat network_security_config.xml"
+]
+]
+],
+[
+"Body Text",
+"Tabel 6.2 Varian aplikasi"
+],
+[
+"Body Text",
+"APK rilis ditandatangani dengan keystore yang dibaca dari keystore.properties (tidak di-commit). Bila berkas tidak ada, build rilis tetap berjalan tetapi APK tidak ditandatangani. Optimasi (R8) pada build rilis dimatikan (optimization.enable = false)."
+],
+[
+"Heading 2",
+"6.3 Izin dan Keamanan Aplikasi"
+],
+[
+"table",
+[
+[
+"Izin / pengaturan",
+"Sumber",
+"Keterangan"
+],
+[
+"CAMERA",
+"AndroidManifest.xml",
+"Diminta saat tombol pindai ditekan; uses-feature camera bersifat tidak wajib, sehingga perangkat tanpa kamera masih dapat memilih gambar QR dari galeri"
+],
+[
+"POST_NOTIFICATIONS",
+"AndroidManifest.xml",
+"Notifikasi transaksi (FR-29), Android 13 ke atas"
+],
+[
+"INTERNET",
+"AndroidManifest.xml",
+"Akses backend pada varian online"
+],
+[
+"ACCESS_LOCAL_NETWORK",
+"src/online/AndroidManifest.xml",
+"Varian online saja; diperlukan Android 17 untuk mengakses backend di jaringan lokal"
+],
+[
+"allowBackup=false",
+"AndroidManifest.xml",
+"Data perbankan tidak ikut dicadangkan (OWASP MASVS)"
+],
+[
+"FileProvider",
+"AndroidManifest.xml, res/xml/file_paths.xml",
+"Berbagi bukti transaksi sebagai gambar atau PDF (FR-14)"
+],
+[
+"Penyimpanan token",
+"SecureTokenStore",
+"SharedPreferences ddb_secure, nilai dienkripsi AES-GCM dengan kunci di AndroidKeyStore"
+]
+]
+],
+[
+"Body Text",
+"Tabel 6.3 Izin dan pengaturan keamanan"
+],
+[
+"Heading 2",
+"6.4 Perangkat Keras"
+],
+[
+"table",
+[
+[
+"Kebutuhan",
+"Spesifikasi"
+],
+[
+"Perangkat pengguna",
+"Ponsel Android 7.0 (API 24) atau lebih baru; kamera diperlukan hanya untuk pindai QRIS"
+],
+[
+"Perangkat uji",
+"Emulator Pixel 8 (Android 17, API 37) dan ponsel Realme RMX3867 (Android 16), berdasarkan review 16 Nov 2026."
+],
+[
+"Perangkat pengembang",
+"Laptop dengan Android Studio dan SDK 37; akselerasi emulator (WHPX pada Windows). RAM minimum: Perlu Ditentukan (pemilik: Gracia/PIC lingkungan pengembangan)."
+],
+[
+"Server (varian online)",
+"Backend Spring Boot, dijalankan lokal di laptop atau jaringan yang sama"
+]
+]
+],
+[
+"Body Text",
+"Tabel 6.4 Kebutuhan perangkat keras"
+],
+[
+"Heading 2",
+"6.5 Rancangan Pengujian"
+],
+[
+"First Paragraph",
+"Berkas pengujian pada kode: test/ (unit test per modul: payment/PaymentRepositoryTest, transfer/TransferRepositoryTest, topup/TopUpRepositoryTest, account/AccountRepositoryTest, history/HistoryAndProfileTest, virtualcard/VirtualCardUseCasesTest, core/LedgerTest, core/network/ApiClientTest, online/LiveBackendTest), testDemo/ui/AppTourTest (tur UI 24 layar dengan Robolectric), dan androidTest/ExampleInstrumentedTest."
+],
+[
+"Body Text",
+"Menurut review Salomo 16 November 2026 yang merujuk D06 v0.9.6: pengujian otomatis Android varian demo 62 lulus, 0 gagal, 1 dilewati; varian online 58/58 lulus. Pengujian sistem Android SA-01 s.d. SA-28 dinyatakan 28/28 lulus, termasuk pemindaian QRIS dengan kamera pada ponsel fisik. Angka ini bersumber dari review, bukan D06 yang berhasil diperiksa: ZIP hanya memuat D06 v0.9.5 dengan hasil sebelumnya (27/28 dan SA-08 belum dijalankan). Jangan mengubah angka ini menjadi klaim verifikasi langsung sebelum D06 v0.9.6 tersedia."
+],
+[
+"Heading 2",
+"6.6 Keterbatasan"
+],
+[
+"Compact|num",
+"Biometrik hanya simulasi. Kode tidak memakai BiometricPrompt maupun pustaka androidx.biometric. Layar login menampilkan dialog “Autentikasi Biometrik (Simulasi)” dengan tombol Autentikasi. Karena itu FR-03 bagian biometrik terpenuhi sebagai simulasi pada prototipe."
+],
+[
+"Compact|num",
+"Push notification berupa notifikasi lokal Android. Varian online mengambil antrean push dari server tiap 15 detik (polling); FCM belum dipakai. Email hanya disimulasikan (outbox)."
+],
+[
+"Compact|num",
+"Data varian demo bersifat in-memory dan hilang saat aplikasi ditutup."
+],
+[
+"Compact|num",
+"FR-26 (ekspor riwayat) tidak ada di Android karena ditetapkan untuk Web."
+],
+[
+"Compact|num",
+"Batas transfer, biaya antarbank, batas QRIS, limit Virtual Card, saldo awal, dan timeout sesi adalah nilai usulan yang belum dikonfirmasi tim atau dosen."
+],
+[
+"Compact|num",
+"Catatan UI minor (NOTES.md): layar Virtual Card belum memakai ScreenScaffold, dan tombol Analitik di Riwayat terlipat dua baris pada layar 320 dp."
+],
+[
+"Compact|num",
+"Pengujian pada ponsel fisik dinyatakan selesai menurut review 16 Nov 2026 (D06 v0.9.6): kamera QRIS, notifikasi, dan berbagi bukti transaksi lulus. Catatan ini menggantikan status tertunda pada versi sebelumnya, dengan syarat verifikasi akhir menggunakan D06 v0.9.6."
+],
+[
+"Heading 1",
+"Referensi"
+],
+[
+"Compact|num",
+"SRS-DDB-001 v0.1, Software Requirements Specification."
+],
+[
+"Compact|num",
+"Architectural Design (D02) dan Functional Design (D03)."
+],
+[
+"Compact|num",
+"SDD-DDB-001-BE v0.9.2, Detailed Design Backend & Database."
+],
+[
+"Compact|num",
+"SDD-DDB-001-WEB v0.5, Detailed Design Web (acuan format)."
+],
+[
+"Compact|num",
+"Kode sumber code_area/apps/android, termasuk README.md, NOTES.md, LANJUTKAN.md, build.gradle.kts, dan gradle/libs.versions.toml."
+],
+[
+"Compact|num",
+"•     DDB_TUT_Panduan_Uji_Aplikasi_di_Ponsel_v1.1 dan DDB_D01_Project_Document_v0.9.3 (versi yang tersedia di ZIP)."
+],
+[
+"Normal",
+"Catatan konsistensi dokumen: review 16 Nov 2026 menyebut D01 v0.9.4, D02 v0.9.5, D03 v0.9.3, D06 v0.9.6, dan D05A v0.1. ZIP yang diperiksa hanya memuat D01 v0.9.3, D02 v0.9.4, D03 v0.9.2, D06 v0.9.5, dan tidak memuat D05A. Panduan Uji Ponsel v1.1 tersedia di ZIP. Hasil uji terbaru 62 lulus + 1 dilewati, online 58/58, dan sistem 28/28 tetap ditandai sebagai informasi dari review sampai D06 v0.9.6 diterima dan diperiksa."
+],
+[
+"Normal",
+"LAMPIRAN A – DIAGRAM TAMBAHAN MODUL ANDROID"
+],
+[
+"Normal",
+"Diagram pada lampiran ini melengkapi gambar utama pada Bab III dan Bab IV. Class diagram merupakan ringkasan kelas utama dari kode aktual, bukan pengganti dokumentasi atribut/metode lengkap. Alur sequence menggunakan endpoint yang ditemukan pada DdbApi.kt. Workflow disajikan pada tingkat proses pengguna dan harus diselaraskan dengan D03 serta D05A final."
+],
+[
+"Normal",
+"A.1 Class diagram ringkas modul lainnya"
+],
+[
+"img",
+"image1.png"
+],
+[
+"Normal",
+"Gambar A.1 Authentication – kelas utama"
+],
+[
+"img",
+"image2.png"
+],
+[
+"Normal",
+"Gambar A.2 Account – kelas utama"
+],
+[
+"img",
+"image3.png"
+],
+[
+"Normal",
+"Gambar A.3 Transfer – kelas utama"
+],
+[
+"img",
+"image4.png"
+],
+[
+"Normal",
+"Gambar A.4 Top-up – kelas utama"
+],
+[
+"img",
+"image5.png"
+],
+[
+"Normal",
+"Gambar A.5 Virtual Card – kelas utama"
+],
+[
+"img",
+"image6.png"
+],
+[
+"Normal",
+"Gambar A.6 History & Home – kelas utama"
+],
+[
+"Normal",
+"A.2 Sequence diagram Transfer dan Top-up (varian online)"
+],
+[
+"img",
+"image7.png"
+],
+[
+"Normal",
+"Gambar A.7 Sequence diagram Transfer (endpoint sesuai DdbApi.kt)"
+],
+[
+"Normal",
+"Catatan: LocalTransferRepository menggantikan RemoteTransferRepository pada varian demo. Alur demo memakai Ledger dan InterbankSimulator; status TIMEOUT dipetakan menjadi PROCESSING, sedangkan penolakan menjalankan refund sesuai aturan transaksi. Pada varian online, otorisasi, validasi, biaya, idempotensi, dan posting dilakukan backend."
+],
+[
+"img",
+"image8.png"
+],
+[
+"Normal",
+"Gambar A.8 Sequence diagram Top-up (endpoint sesuai DdbApi.kt)"
+],
+[
+"Normal",
+"Catatan: endpoint inquiry yang dipakai bergantung jenis layanan, yaitu data-packages, pln/inquiry, atau bills/inquiry. LocalTopUpRepository menggantikan repository remote pada varian demo. Server menyusun ulang pesanan dari parameter quotation; kunci idempotensi dikirim saat eksekusi."
+],
+[
+"Normal",
+"A.3 Workflow tambahan per modul"
+],
+[
+"img",
+"image9.png"
+],
+[
+"Normal",
+"Gambar A.9 Activity diagram Authentication – registrasi, login, dan kesiapan transaksi"
+],
+[
+"img",
+"image10.png"
+],
+[
+"Normal",
+"Gambar A.10 Activity diagram Account – saldo dan kantong simpanan"
+],
+[
+"img",
+"image11.png"
+],
+[
+"Normal",
+"Gambar A.11 Activity diagram Transfer – UC-01"
+],
+[
+"img",
+"image12.png"
+],
+[
+"Normal",
+"Gambar A.12 Activity diagram Top-up – pembelian produk/tagihan"
+],
+[
+"img",
+"image13.png"
+],
+[
+"Normal",
+"Gambar A.13 Activity diagram Virtual Card – pengelolaan kartu"
+],
+[
+"img",
+"image14.png"
+],
+[
+"Normal",
+"Gambar A.14 Activity diagram History & Dashboard – riwayat dan analitik"
+],
+[
+"Normal",
+"A.4 Batasan pembacaan diagram"
+],
+[
+"Normal",
+"Diagram kelas dan workflow di atas adalah ringkasan tingkat modul berdasarkan nama kelas, fungsi, repository, dan endpoint yang ditemukan pada ZIP kode Android. Diagram tidak menyatakan bahwa seluruh proses berjalan pada layanan produksi: varian online masih berkomunikasi dengan backend proyek/simulator, sedangkan varian demo menggunakan data in-memory. Modul Authentication dan Virtual Card memiliki use case khusus; detail validasi dan status tetap mengacu pada kode masing-masing."
+],
+[
+"Normal",
+"Status validasi: diagram ringkas Authentication dan Virtual Card perlu diperiksa oleh PIC Salomo; Transfer dan History oleh PIC Cecilia; Account dan Top-up oleh PIC Grace. Pemeriksaan kode layar AND-xx belum dapat dilakukan karena D05A v0.1 tidak tersedia dalam ZIP. Status ini merupakan batas verifikasi dokumen, bukan asumsi bahwa persetujuan PIC telah diberikan."
+],
+[
+"Normal",
+"A.5 PEMETAAN ENDPOINT EMPAT SEQUENCE DIAGRAM"
+],
+[
+"Normal",
+"Tabel ini memperjelas path REST lengkap pada varian online. Path disalin dari kontrak DdbApi.kt di ZIP dan dicocokkan dengan operasi backend D04B v0.9.2. Base URL sudah ditangani ApiClient; karena itu setiap path ditulis lengkap mulai /api/v1/."
+],
+[
+"table",
+[
+[
+"Sequence",
+"Endpoint tahap awal",
+"Fungsi tahap awal",
+"Endpoint eksekusi",
+"Fungsi eksekusi"
+],
+[
+"Login + PIN",
+"POST /api/v1/auth/login",
+"Autentikasi identifier dan password; respons AuthTokens disimpan sebagai sesi.",
+"POST /api/v1/auth/pin/verify",
+"Memvalidasi PIN enam digit untuk membuka akses transaksi pada alur layar."
+],
+[
+"Transfer UC-01",
+"GET /api/v1/transfers/banks; POST /api/v1/transfers/inquiry; POST /api/v1/transfers/quote",
+"Memuat bank, memeriksa rekening tujuan, dan memperoleh ringkasan nominal/biaya.",
+"POST /api/v1/transfers (Idempotency-Key); POST /api/v1/transfers/{txId}/check-status",
+"Menjalankan transfer dengan PIN dan idempotensi; memeriksa transaksi yang masih PROCESSING."
+],
+[
+"Pembayaran QRIS",
+"POST /api/v1/qris/scan",
+"Memvalidasi hasil pindai dan mengembalikan informasi merchant/nominal sebelum konfirmasi PIN.",
+"POST /api/v1/qris/pay (Idempotency-Key)",
+"Mengirim payload QRIS, nominal, dan PIN untuk diproses backend."
+],
+[
+"Top-up / Tagihan",
+"GET /api/v1/topup/data-packages; GET /api/v1/topup/pln/inquiry; GET /api/v1/topup/bills/inquiry",
+"Inquiry sesuai jenis layanan: paket data, PLN, atau tagihan.",
+"POST /api/v1/topup/quote; POST /api/v1/topup/orders (Idempotency-Key)",
+"Membuat quotation terlebih dahulu, lalu mengeksekusi pesanan dengan PIN dan kunci idempotensi."
+]
+]
+],
+[
+"Normal",
+"Catatan implementasi:"
+],
+[
+"Normal",
+"•  PIN pada transaksi Transfer, QRIS, dan Top-up juga diverifikasi di backend melalui TransactionGuard saat endpoint eksekusi dipanggil. Endpoint /api/v1/auth/pin/verify pada alur Login + PIN adalah validasi PIN dari layar Authentication, bukan pengganti pemeriksaan otorisasi transaksi di backend."
+],
+[
+"Normal",
+"•  Header Idempotency-Key wajib dikirim pada endpoint eksekusi yang ditandai di tabel. Nama header mengikuti anotasi @Header pada DdbApi.kt."
+],
+[
+"Normal",
+"•  Inquiry Top-up bergantung pada jenis produk. Endpoint data-packages, pln/inquiry, atau bills/inquiry tidak dipanggil semuanya untuk satu pesanan."
+],
+[
+"Normal",
+"•  Pada varian demo, repository lokal menggantikan panggilan REST. Endpoint pada tabel ini hanya berlaku untuk varian online."
+],
+[
+"Normal",
+"A.9 ACTIVITY DIAGRAM PENGATURAN DAN KOTAK NOTIFIKASI"
+],
+[
+"Normal",
+"Alur ini diringkas dari NotificationSettingsViewModel, NotificationsViewModel, ProfileRepository, dan NotificationCenter pada kode Android. Pengguna dapat mengubah tipe/kanal notifikasi; penyimpanan ditolak jika tidak ada kanal aktif. Kotak notifikasi memuat daftar notifikasi dan email outbox, serta mendukung penandaan satu notifikasi atau seluruh notifikasi sebagai telah dibaca."
+],
+[
+"img",
+"image15.png"
+],
+[
+"Normal",
+"Gambar A.15 Activity diagram pengaturan dan kotak notifikasi"
+],
+[
+"Normal",
+"Sumber: kode apps/android, profile/presentation/ProfileViewModels.kt, profile/data/ProfileRepository.kt, dan core/notification."
+]
+]

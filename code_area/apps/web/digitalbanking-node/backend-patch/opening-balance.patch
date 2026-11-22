@@ -1,0 +1,24 @@
+--- a/code_area/backend/src/main/java/com/diponegoro/ddb/auth/AuthService.java	2026-11-21 17:52:54.624024325 +0700
++++ b/code_area/backend/src/main/java/com/diponegoro/ddb/auth/AuthService.java	2026-11-21 17:52:54.638367421 +0700
+@@ -38,8 +38,19 @@
+ /** Modul Authentication: FR-01 – FR-05. */
+ @Service
+ public class AuthService {
+-    /** Saldo awal simulasi untuk nasabah baru (nilai usulan). */
+-    public static final long NEW_USER_OPENING_BALANCE = 5_000_000L;
++    /** Saldo awal simulasi untuk nasabah baru (nilai usulan Rp5.000.000). Dapat diubah lewat variabel lingkungan DDB_OPENING_BALANCE (mis. 0). */
++    public static final long NEW_USER_OPENING_BALANCE = openingBalance();
++
++    private static long openingBalance() {
++        String v = System.getenv("DDB_OPENING_BALANCE");
++        if (v == null || v.isBlank()) return 5_000_000L;
++        try {
++            long n = Long.parseLong(v.trim());
++            return n < 0 ? 5_000_000L : n;
++        } catch (NumberFormatException e) {
++            return 5_000_000L;
++        }
++    }
+     /** Lama simulasi proses e-KYC sebelum diputuskan. */
+     public static final Duration EKYC_PROCESSING = Duration.ofSeconds(3);
+     static final String GENERIC_LOGIN_ERROR = "Username/email atau password salah";

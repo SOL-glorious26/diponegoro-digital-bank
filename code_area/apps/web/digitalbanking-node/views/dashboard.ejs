@@ -1,0 +1,41 @@
+<%- include('partials/header') %>
+<div class="grid cols-2">
+  <div class="card balance-card">
+    <h3>Saldo Rekening</h3>
+    <div class="balance"><%= account.hidden ? 'Rp ••••••' : fmtRupiah(account.saldo) %></div>
+    <div class="acc-no"><%= account.jenis_rekening %> · <%= account.no_rekening %></div>
+    <div class="shortcut-row">
+      <a href="/transfer">💸 Transfer</a>
+      <a href="/pembayaran?tab=tagihan">🧾 Bayar</a>
+      <a href="/pembayaran?tab=topup">➕ Top Up</a>
+      <a href="/pembayaran?tab=qris">📱 QRIS</a>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Informasi Rekening</h3>
+    <div class="summary-row"><span>Nama</span><b><%= user.nama %></b></div>
+    <div class="summary-row"><span>Jenis</span><span><%= account.jenis_rekening %></span></div>
+    <div class="summary-row"><span>No. Rekening</span><span><%= account.no_rekening %></span></div>
+  </div>
+</div>
+
+<div style="height:16px"></div>
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <h3 style="margin:0">Transaksi Terakhir</h3>
+    <a style="font-size:12.5px;color:var(--primary)" href="/riwayat">Lihat semua</a>
+  </div>
+  <div style="margin-top:10px">
+    <% if (!tx.length) { %><p style="color:var(--muted);font-size:13px;">Belum ada transaksi.</p><% } %>
+    <% tx.forEach(function (t) { %>
+    <div class="tx-row">
+      <div class="tx-left">
+        <div class="tx-ic"><%= txIcon(t) %></div>
+        <div><div class="tx-name"><%= txTitle(t) %></div><div class="tx-sub"><%= txKategori(t) %> · <%= fmtTanggal(t.createdAt) %><% if (t.status !== 'SUCCESS') { %> · <%= t.statusLabel || t.status %><% } %></div></div>
+      </div>
+      <div class="tx-amount <%= t.direction === 'IN' ? 'in' : 'out' %>"><%= txSign(t) %><%= fmtRupiah(txAmount(t)) %></div>
+    </div>
+    <% }) %>
+  </div>
+</div>
+<%- include('partials/footer') %>

@@ -1,0 +1,71 @@
+<%- include('partials/header') %>
+<% if (detail) { const d = detail.transaction; %>
+  <div class="card" style="max-width:560px;margin-bottom:16px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;"><h3 style="margin:0">Detail Transaksi</h3>
+      <a style="font-size:12.5px;color:var(--primary)" href="/riwayat<%= qs ? '?' + qs : '' %>">Tutup</a></div>
+    <div class="summary-row"><span>No. Referensi</span><b><%= d.reference || d.id %></b></div>
+    <div class="summary-row"><span>Deskripsi</span><b><%= txTitle(d) %></b></div>
+    <div class="summary-row"><span>Jenis</span><span><%= txKategori(d) %></span></div>
+    <div class="summary-row"><span>Waktu</span><span><%= fmtTanggal(d.createdAt) %></span></div>
+    <% if (d.fromName) { %><div class="summary-row"><span>Dari</span><span><%= d.fromName %><%= d.fromDetail ? ' · ' + d.fromDetail : '' %></span></div><% } %>
+    <% if (d.toName) { %><div class="summary-row"><span>Ke</span><span><%= d.toName %><%= d.toDetail ? ' · ' + d.toDetail : '' %></span></div><% } %>
+    <div class="summary-row"><span>Nominal</span><span><%= fmtRupiah(d.amount) %></span></div>
+    <div class="summary-row"><span>Biaya</span><span><%= fmtRupiah(d.fee) %></span></div>
+    <div class="summary-row"><span>Total</span><b class="tx-amount <%= d.direction === 'IN' ? 'in' : 'out' %>"><%= txSign(d) %><%= fmtRupiah(txAmount(d)) %></b></div>
+    <% if (d.note) { %><div class="summary-row"><span>Catatan</span><span><%= d.note %></span></div><% } %>
+    <% if (d.extra && typeof d.extra === 'object') { Object.entries(d.extra).forEach(function (e) { if (e[1] != null && typeof e[1] !== 'object') { %>
+      <div class="summary-row"><span><%= e[0] %></span><span><%= e[1] %></span></div>
+    <% } }) } %>
+    <div class="summary-row"><span>Status</span><span class="status <%= statusClass(d.status) %>"><%= d.statusLabel || d.status %></span></div>
+    <% if (d.statusReason) { %><div class="summary-row"><span>Keterangan</span><span><%= d.statusReason %></span></div><% } %>
+    <% if (d.status === 'PROCESSING' && d.category === 'TRANSFER') { %>
+      <form method="post" action="/riwayat/cek-status" style="margin-top:12px"><%- include('partials/csrf') %><input type="hidden" name="id" value="<%= d.id %>"><button class="btn small" style="width:auto" type="submit">Cek status</button></form>
+    <% } %>
+    <% if (detail.journal && detail.journal.length) { %>
+      <h3 style="margin:16px 0 6px;font-size:14px">Jurnal</h3>
+      <% detail.journal.forEach(function (j) { %><div class="summary-row"><span><%= j.account %><%= j.memo ? ' · ' + j.memo : '' %></span><span><%= fmtRupiah(j.amount) %></span></div><% }) %>
+    <% } %>
+    <button class="btn ghost" style="width:auto;margin-top:12px" type="button" onclick="window.print()">Cetak / PDF</button>
+  </div>
+<% } %>
+
+<div class="card">
+  <form method="get" action="/riwayat" style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px;">
+    <div class="field" style="margin:0"><label>Jenis</label>
+      <select class="filter" name="jenis">
+        <option value="">Semua</option>
+        <% Object.entries(categories).forEach(function (c) { %><option value="<%= c[0] %>" <%= filter === c[0] ? 'selected' : '' %>><%= c[1] %></option><% }) %>
+      </select></div>
+    <div class="field" style="margin:0"><label>Cari</label><input type="text" name="q" value="<%= search %>" placeholder="kata kunci"></div>
+    <div class="field" style="margin:0"><label>Dari tanggal</label><input type="date" name="dari" value="<%= dari %>"></div>
+    <div class="field" style="margin:0"><label>Sampai tanggal</label><input type="date" name="sampai" value="<%= sampai %>"></div>
+    <button class="btn small" style="width:auto" type="submit">Terapkan</button>
+    <a class="btn ghost" style="width:auto" href="/riwayat">Reset</a>
+  </form>
+  <div style="margin-bottom:12px;font-size:13px">Ekspor sesuai filter:
+    <a style="color:var(--primary)" href="/riwayat/export?format=csv<%= qs ? '&' + qs : '' %>">CSV</a> ·
+    <a style="color:var(--primary)" href="/riwayat/export?format=pdf<%= qs ? '&' + qs : '' %>">PDF</a></div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tanggal</th><th>Deskripsi</th><th>Nominal</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+      <% if (!rows.length) { %><tr><td colspan="5" style="color:var(--muted)">Tidak ada transaksi.</td></tr><% } %>
+      <% rows.forEach(function (t) { %>
+        <tr>
+          <td><%= fmtTanggal(t.createdAt) %></td>
+          <td><%= txTitle(t) %><br><span style="color:var(--muted);font-size:12px"><%= txKategori(t) %></span></td>
+          <td class="tx-amount <%= t.direction === 'IN' ? 'in' : 'out' %>"><%= txSign(t) %><%= fmtRupiah(txAmount(t)) %></td>
+          <td><span class="status <%= statusClass(t.status) %>"><%= t.statusLabel || t.status %></span></td>
+          <td><a style="color:var(--primary);font-size:12.5px" href="/riwayat?<%= (qs ? qs + '&' : '') + 'page=' + pageNo + '&detail=' + encodeURIComponent(t.id) %>">Detail</a></td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <div style="display:flex;gap:12px;margin-top:12px;font-size:13px">
+    <% if (pageNo > 0) { %><a style="color:var(--primary)" href="/riwayat?<%= (qs ? qs + '&' : '') + 'page=' + (pageNo - 1) %>">« Sebelumnya</a><% } %>
+    <% if (hasMore) { %><a style="color:var(--primary)" href="/riwayat?<%= (qs ? qs + '&' : '') + 'page=' + (pageNo + 1) %>">Berikutnya »</a><% } %>
+  </div>
+</div>
+<%- include('partials/footer') %>

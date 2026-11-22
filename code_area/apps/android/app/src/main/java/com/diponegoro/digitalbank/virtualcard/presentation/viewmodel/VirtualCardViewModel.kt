@@ -109,8 +109,12 @@ class VirtualCardViewModel(
             setLoading()
             when (val r = viewCardDetails(userId, dialog.cardId, pin)) {
                 is CardResult.Failure -> fail(r.message) // Reject access to card details
-                is CardResult.Success -> _uiState.update {
-                    it.copy(isLoading = false, dialog = null, revealedCardId = r.data.cardId)
+                is CardResult.Success -> {
+                    // Daftar kartu dari server hanya memuat nomor tersamar; pakai nomor dan CVV hasil verifikasi PIN.
+                    replaceCard(r.data)
+                    _uiState.update {
+                        it.copy(isLoading = false, dialog = null, revealedCardId = r.data.cardId)
+                    }
                 }
             }
         }

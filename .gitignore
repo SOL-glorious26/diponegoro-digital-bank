@@ -41,3 +41,6 @@ desktop.ini
 
 # File kunci sementara Microsoft Office (muncul saat dokumen sedang dibuka)
 ~$*
+
+# Arsip kiriman tim Web: berisi .env, node_modules, dan database
+code_area/apps/web/*.rar

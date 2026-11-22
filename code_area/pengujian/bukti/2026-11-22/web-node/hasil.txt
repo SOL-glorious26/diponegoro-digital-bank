@@ -1,0 +1,14 @@
+PASS  WN-01  login salah ditolak, login benar masuk Dashboard  — saldo Web = backend
+PASS  WN-02  halaman terlindungi menolak tanpa login
+PASS  WN-03  transfer sesama bank dengan PIN; saldo kedua akun tepat  — budi −Rp15.000, citra +Rp15.000
+PASS  WN-04  nominal di bawah Rp5.000 dan PIN salah ditolak  — saldo tidak berubah
+PASS  WN-05  transfer antarbank ditolak (BRI 9999999999), dana kembali  — status Gagal; saldo tetap
+PASS  WN-06  transfer antarbank diproses lalu final lewat Cek status (Mandiri 8888888888)  — Diproses → Berhasil; debit tepat Rp12.500
+PASS  WN-07  pulsa dengan PIN  — debit Rp11.500
+PASS  WN-08  token PLN dengan PIN  — debit Rp22.500
+PASS  WN-09  e-wallet dengan PIN  — debit Rp21.000
+PASS  WN-10  tagihan: pembayaran kedua di periode sama ditolak
+PASS  WN-11  QRIS contoh dibayar dengan PIN
+PASS  WN-12  riwayat, ekspor CSV dan PDF  — PDF 2762 byte
+PASS  WN-13  registrasi → OTP → e-KYC → PIN → Dashboard  — saldo awal tampil Rp 5.000.000
+PASS  WN-14  logout semua perangkat lewat API mengakhiri sesi Web  — kembali ke login dengan pesan sesi berakhir

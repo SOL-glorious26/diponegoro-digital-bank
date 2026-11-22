@@ -35,14 +35,19 @@ Putaran pertama ada 9 kegagalan, semuanya dari skrip `sa-android.mjs`, lalu lulu
 SA-23 lulus di putaran pertama, gagal di putaran kedua karena sesi masih milik pengguna yang PIN-nya diblokir SA-02.
 Lulus setelah skrip login ulang sebagai demo.
 
-**Belum dijalankan:** SA-04, SA-08, SA-19 (tidak ada di skrip), LP-01–LP-04, dan uji di HP fisik.
+**Lanjutan (sore):** putaran SA penuh dengan skrip final **23/23** (SA-18 dan SA-20 dijalankan terpisah, lulus);
+**LP-01–LP-04 lulus** dua putaran berturut-turut. SA-04 tercakup LP-01 dan SA-19 tercakup LP-04, jadi **27 dari 28** kasus
+lulus pada build baru. Pemeriksaan LP-04 di `lp-cross.mjs` sebelumnya selalu bernilai lulus, sekarang mewajibkan pesan
+"Sesi Anda telah berakhir". Hasil dicatat di **D06 v0.9.8** (`patch_doc6_098.py`); bukti di `pengujian/bukti/2026-11-22/`.
+
+**Belum dijalankan pada build baru:** SA-08 (kamera), berbagi bukti (SA-04), dan uji lain di HP fisik.
 Label status mode gelap dicek lewat gambar komponen, belum pada transaksi gagal di HP.
 
 ## 3. Sisa pekerjaan
 
 | # | Pekerjaan | PIC |
 |---|---|---|
-| 1 | Jalankan LP-01–LP-04 dan uji HP fisik (Realme) pada build ini | Salomo |
-| 2 | Catat hasil SA 22 Nov di D06 (Tabel 5.3 dan 5.5) | Salomo / Steven |
+| 1 | Uji HP fisik (Realme) pada build ini: SA-08, berbagi bukti, notifikasi push | Salomo |
+| 2 | Samakan D01 dan DWP (masih mengacu D06 v0.9.7); review D06 v0.9.8 | Salomo / Steven |
 | 3 | Ambil ulang tangkapan layar D05A, D04A, D09A, presentasi (termasuk layar Kartu yang baru) | Cecilia, Gracia, Grace, Salomo |
 | 4 | Semua dokumen ke v1.0 + tanda tangan | Salomo |

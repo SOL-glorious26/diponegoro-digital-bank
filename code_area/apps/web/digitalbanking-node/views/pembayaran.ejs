@@ -1,0 +1,74 @@
+<%- include('partials/header') %>
+<% if (error) { %><div class="alert error"><%= error %></div><% } %>
+
+<div class="tabs">
+  <% Object.entries(tabs).forEach(function ([k, label]) { %>
+    <a class="tab <%= tab === k ? 'active' : '' %>" href="/pembayaran?tab=<%= k %>"><%= label %></a>
+  <% }) %>
+</div>
+
+<% if (pending) { %>
+<div class="grid cols-2">
+  <div class="card">
+    <h3>Konfirmasi Pembayaran</h3>
+    <% pending.rows.forEach(function (r) { %><div class="summary-row"><span><%= r[0] %></span><b><%= r[1] %></b></div><% }) %>
+  </div>
+  <div class="card">
+    <h3>Masukkan PIN</h3>
+    <form method="post" action="/pembayaran?tab=<%= tab %>">
+      <%- include('partials/csrf') %>
+      <input type="hidden" name="stage" value="pay">
+      <div class="field"><input class="otp-box" type="password" name="pin" maxlength="6" inputmode="numeric" required autofocus autocomplete="off"></div>
+      <button class="btn" type="submit">Bayar Sekarang</button>
+    </form>
+    <form method="post" action="/pembayaran?tab=<%= tab %>" style="margin-top:8px"><%- include('partials/csrf') %><input type="hidden" name="stage" value="cancel"><button class="btn ghost" type="submit">Batalkan</button></form>
+  </div>
+</div>
+<% } else { %>
+<div class="grid cols-2">
+  <div class="card">
+    <form method="post" action="/pembayaran?tab=<%= tab %>">
+      <%- include('partials/csrf') %>
+      <input type="hidden" name="stage" value="confirm">
+      <% if (tab === 'topup') { %>
+        <input type="hidden" name="key" value="<%= topupKey %>">
+        <div class="field"><label>Sumber Dana</label>
+          <select name="sumber"><% sumberList.forEach(function (s) { %><option <%= form.sumber === s ? 'selected' : '' %>><%= s %></option><% }) %></select></div>
+        <div class="field"><label>Nominal Top Up (Rp 1.000 – Rp 10.000.000)</label><input type="text" name="nominal" inputmode="numeric" placeholder="mis. 25000" required value="<%= form.nominal || '' %>"></div>
+      <% } else if (tab === 'pulsa') { %>
+        <div class="field"><label>Nomor HP</label><input type="text" name="phone" inputmode="tel" placeholder="0812…" required value="<%= form.phone || '' %>"></div>
+        <div class="field"><label>Nominal (biaya admin <%= fmtRupiah(catalog.pulsaFee) %>)</label>
+          <select name="nominal"><% catalog.pulsaNominals.forEach(function (n) { %><option value="<%= n %>"><%= fmtRupiah(n) %></option><% }) %></select></div>
+      <% } else if (tab === 'pln') { %>
+        <div class="field"><label>ID Pelanggan / Nomor Meter</label><input type="text" name="meterNumber" inputmode="numeric" placeholder="mis. 123456789012" required value="<%= form.meterNumber || '' %>"></div>
+        <div class="field"><label>Nominal token (biaya admin <%= fmtRupiah(catalog.plnFee) %>)</label>
+          <select name="nominal"><% catalog.plnNominals.forEach(function (n) { %><option value="<%= n %>"><%= fmtRupiah(n) %></option><% }) %></select></div>
+      <% } else if (tab === 'tagihan') { %>
+        <div class="field"><label>Jenis Tagihan</label>
+          <select name="biller" required><% (catalog.billers || []).forEach(function (b) { %><option value="<%= b.code %>"><%= b.label %></option><% }) %></select></div>
+        <div class="field"><label>Nomor Pelanggan</label><input type="text" name="customerNumber" inputmode="numeric" required value="<%= form.customerNumber || '' %>"></div>
+        <p style="font-size:12.5px;color:var(--muted)">Jumlah tagihan dihitung otomatis oleh sistem (biaya admin <%= fmtRupiah(catalog.billFee) %>).</p>
+      <% } else if (tab === 'ewallet') { %>
+        <div class="field"><label>E-wallet</label>
+          <select name="wallet" required><% (catalog.ewallets || []).forEach(function (w) { %><option value="<%= w.code %>"><%= w.label %></option><% }) %></select></div>
+        <div class="field"><label>Nomor HP e-wallet</label><input type="text" name="phone" inputmode="tel" required value="<%= form.phone || '' %>"></div>
+        <div class="field"><label>Nominal (<%= fmtRupiah(catalog.ewalletMin) %> – <%= fmtRupiah(catalog.ewalletMax) %>, biaya <%= fmtRupiah(catalog.ewalletFee) %>)</label><input type="text" name="nominal" inputmode="numeric" required value="<%= form.nominal || '' %>"></div>
+      <% } else { %>
+        <div class="center-text"><img class="qr-img" src="/assets/img/qris.png" alt="Gambar kode QRIS"></div>
+        <p style="font-size:12.5px;color:var(--muted);margin:0 0 12px;text-align:center">Simulasi pindai QRIS: pilih contoh kode, atau tempel isi kode QRIS.</p>
+        <div class="field"><label>Contoh QRIS</label>
+          <select name="payload"><option value="">-- pilih --</option><% demoQr.forEach(function (d) { %><option value="<%= d.payload %>"><%= d.label %></option><% }) %></select></div>
+        <div class="field"><label>Atau tempel isi kode QRIS</label><input type="text" name="payload_manual" value="<%= form.payload_manual || '' %>"></div>
+        <div class="field"><label>Nominal (hanya untuk QRIS tanpa nominal)</label><input type="text" name="nominal" inputmode="numeric" value="<%= form.nominal || '' %>"></div>
+      <% } %>
+      <button class="btn" type="submit"><%= tab === 'topup' ? 'Top Up Sekarang' : 'Lanjut ke Konfirmasi' %></button>
+    </form>
+  </div>
+  <div class="card">
+    <h3>Saldo Tersedia</h3>
+    <div style="font-size:22px;font-weight:700;margin:6px 0 12px;"><%= account.hidden ? 'Rp ••••••' : fmtRupiah(account.saldo) %></div>
+    <p style="font-size:13px;color:var(--muted)"><%= tab === 'topup' ? 'Top up menambah saldo rekening (simulasi).' : 'Setiap pembayaran dikonfirmasi dengan PIN 6 digit. Pindai QRIS hanya simulasi (kamera tidak dipakai di Web).' %></p>
+  </div>
+</div>
+<% } %>
+<%- include('partials/footer') %>

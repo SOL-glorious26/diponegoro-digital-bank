@@ -360,7 +360,9 @@ await run("SA-13", "virtual card: buat, detail dengan PIN, bekukan", async () =>
   await sleep(2000);
   const det = A.screenText();
   shot("SA13-2-detail");
-  expect(/CVV/i.test(det) && /\d{4} ?\d{4} ?\d{4} ?\d{4}/.test(det), "nomor lengkap/CVV tidak tampil setelah PIN");
+  // Nomor pengganti 0000… dan CVV kosong tidak boleh dianggap lulus (DEF-12).
+  const num = det.match(/\d{4} ?\d{4} ?\d{4} ?\d{4}/)?.[0];
+  expect(num && !num.startsWith("0000") && /CVV \| \d{3}\b/.test(det), "nomor lengkap/CVV asli tidak tampil setelah PIN: " + det.slice(0, 220));
   await F.home(nu.u, nu.pw, nu.pin); await A.tap(/^Kartu$/); await sleep(1200); // tombol Bekukan ada di halaman Kartu
   await A.tap(/^Bekukan$/);
   await sleep(1500);

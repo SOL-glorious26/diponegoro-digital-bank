@@ -1,0 +1,36 @@
+<%- include('partials/header') %>
+<% if (error) { %><div class="alert error"><%= error %></div><% } %>
+<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr));align-items:start;">
+  <div class="card">
+    <h3>Data Profil</h3>
+    <p style="font-size:12.5px;color:var(--muted);margin:4px 0 0">Perubahan dikonfirmasi dengan kode OTP.</p>
+    <form method="post" action="/profil" style="margin-top:12px">
+      <%- include('partials/csrf') %>
+      <input type="hidden" name="aksi" value="profil">
+      <div class="field"><label>Username</label><input type="text" name="username" required value="<%= me.username %>"></div>
+      <div class="field"><label>Email</label><input type="email" name="email" value="<%= me.email || '' %>"></div>
+      <div class="field"><label>No. HP</label><input type="text" name="no_hp" value="<%= me.phoneNumber || '' %>"></div>
+      <button class="btn" type="submit">Simpan Perubahan</button>
+    </form>
+  </div>
+  <div class="card">
+    <h3>Ubah Kata Sandi</h3>
+    <form method="post" action="/profil" style="margin-top:12px">
+      <%- include('partials/csrf') %>
+      <input type="hidden" name="aksi" value="sandi">
+      <div class="field"><label>Kata Sandi Lama</label><input type="password" name="sandi_lama" required></div>
+      <div class="field"><label>Kata Sandi Baru</label><input type="password" name="sandi_baru" required></div>
+      <div class="field"><label>Ulangi Kata Sandi Baru</label><input type="password" name="sandi_baru2" required></div>
+      <button class="btn secondary" type="submit">Ubah Kata Sandi</button>
+    </form>
+  </div>
+  <div class="card">
+    <h3>Informasi Rekening</h3>
+    <div class="summary-row"><span>No. Rekening</span><b><%= account.no_rekening %></b></div>
+    <div class="summary-row"><span>Jenis</span><span><%= account.jenis_rekening %></span></div>
+    <div class="summary-row"><span>Saldo</span><b><%= fmtRupiah(account.saldo) %></b></div>
+    <div class="summary-row"><span>Status e-KYC</span><span><%= me.ekycStatus %></span></div>
+    <div class="summary-row"><span>PIN transaksi</span><span><%= me.hasPin ? 'Sudah dibuat' : 'Belum dibuat' %></span></div>
+  </div>
+</div>
+<%- include('partials/footer') %>

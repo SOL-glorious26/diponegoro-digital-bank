@@ -1,0 +1,28 @@
+# Putaran penuh pada APK final (setelah perbaikan DEF-12), 22 Nov 2026
+PASS  SA-21  registrasi → OTP → e-KYC → PIN sampai transaksi aktif (+ tombol Kembali setelah OTP, DEF-07)  — pengguna samwrsiu8m; Kembali dari e-KYC tidak menuju OTP; saldo awal Rp5.000.000
+PASS  SA-22  e-KYC NIK berakhiran 0000 ditolak, transaksi tetap terkunci  — e-KYC ditolak. Transaksi finansial tetap dinonaktifkan.
+PASS  SA-01  login dan PIN (akun demo)  — saldo Rp24.570.500
+PASS  SA-03  sembunyikan saldo bertahan setelah aplikasi dibuka ulang  — tampilan setelah dibuka ulang: Rp ••••••
+PASS  SA-07  saldo tidak cukup ditolak sebelum PIN  — Saldo tidak mencukupi. Saldo Anda Rp24.570.500, dibutuhkan Rp24.670.500 (termasuk biaya). Kurangi nominal atau tarik dana dari kantong.
+PASS  SA-05  transfer antarbank ditolak (BRI 9999999999) → gagal, dana kembali  — saldo tetap Rp24.570.500
+PASS  SA-06  transfer antarbank timeout (Mandiri 8888888888) → diproses, lalu final via cek status  — Diproses → Berhasil setelah "Periksa ulang status"; total debit tepat Rp12.500
+PASS  SA-24  simpan penerima favorit, pakai, lalu hapus  — favorit tersimpan, dipakai untuk transfer, dan hilang setelah dihapus
+PASS  SA-09  bayar QRIS contoh (statis) dengan PIN  — Warung Bu Sri Rp12.000
+PASS  SA-25  QRIS dinamis: nominal dari kode tidak dapat diubah  — Rp28.000 terkunci, pembayaran berhasil
+PASS  SA-10  top-up pulsa  — Pulsa Telkomsel Rp10.000, total Rp11.500
+PASS  SA-11  token PLN: ID berakhiran 0000 tidak ditemukan  — ID pelanggan tidak ditemukan
+PASS  SA-26  bayar tagihan, pembayaran kedua di periode sama ditolak  — Tagihan Air PDAM periode November 2026 sudah lunas
+PASS  SA-12  kantong dikunci: dana dipindah, penarikan butuh PIN  — saldo utama −Rp20.000; penarikan saat terkunci meminta konfirmasi
+PASS  SA-13  virtual card: buat, detail dengan PIN, bekukan  — kartu Kartu virtual •••• •••• •••• 5963 berhasil dibuat (status: Aktif)
+PASS  SA-14  riwayat: filter Keluar, detail, analitik  — 2 transaksi keluar tampil; detail dan analitik terbuka
+PASS  SA-27  grafik saldo sesuai saldo dan riwayat  — titik terakhir Rp24.326.500 = saldo backend
+PASS  SA-28  matikan notifikasi transaksi keluar → tidak dikirim  — tidak ada notifikasi keluar baru; setelan dipulihkan (OUTGOING aktif lagi)
+PASS  SA-16  notifikasi push dana masuk ≤ 15 detik  — muncul ±12.8 detik setelah transfer dari andi
+PASS  SA-17  konsistensi dua perangkat: total saldo demo + andi tetap  — demo −Rp9.000, andi +Rp9.000, total tetap Rp26.476.500
+PASS  SA-15  ubah profil (email) dengan OTP  — email menjadi samwrsiu8m+baru@mail.test
+PASS  SA-02  PIN salah 3 kali → diblokir sementara (akun baru)  — PIN salah. Sisa percobaan: 2 → PIN salah. Sisa percobaan: 1 → PIN sedang diblokir sementara. Gunakan pemulihan PIN atau coba lagi nanti.
+PASS  SA-23  login biometrik (simulasi token perangkat) tanpa password  — masuk tanpa password lewat tombol biometrik (simulasi: token perangkat, belum memakai sensor/BiometricPrompt)
+
+# Dijalankan terpisah (hanya bila disebut eksplisit)
+PASS  SA-18  diam > 5 menit → diminta login ulang  — Sesi berakhir otomatis karena tidak ada aktivitas. Silakan login kembali.
+PASS  SA-20  server tidak terjangkau → pesan, aplikasi tidak tertutup  — pesan "Tidak dapat terhubung ke server"; aplikasi tetap berjalan (backend perlu dijalankan ulang)
