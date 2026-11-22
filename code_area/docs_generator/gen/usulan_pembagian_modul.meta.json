@@ -5,12 +5,12 @@
   "code": "UPM-DDB-001",
   "version": "1.1",
   "statusShort": "Usulan",
-  "status": "Usulan perbaikan / lessons learned; tidak mengubah MDTA-DDB-001 v0.2 dan DWP-DDB-001 v1.5",
+  "status": "Usulan perbaikan / lessons learned; tidak mengubah MDTA-DDB-001 v0.3 dan DWP-DDB-001 v1.5",
   "module": "Pembagian Modul dan Tugas",
   "createdBy": "Salomo Putra Glorious Hokoyoku (Project Manager)",
   "updatedBy": "Salomo Putra Glorious Hokoyoku (Project Manager)",
   "team": "Kelompok Jaran Goyang – seluruh anggota",
-  "refs": "SRS-DDB-001 v0.1; MDTA-DDB-001 v0.2; DWP-DDB-001 v1.5; code_area/submit_mobile/README.md",
+  "refs": "SRS-DDB-001 v0.1; MDTA-DDB-001 v0.3; DWP-DDB-001 v1.5; code_area/submit_mobile/README.md",
   "date": "22 November 2026",
   "revisions": [
     [

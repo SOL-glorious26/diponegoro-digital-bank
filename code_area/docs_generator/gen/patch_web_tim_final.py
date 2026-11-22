@@ -80,6 +80,7 @@ d.row(13, 'R11', {5: 'Aplikasi tim Web diterima 22 Nov dan lulus 25/25 kasus; fi
 d.sub('R11 termitigasi setelah aplikasi Web diimplementasikan dan terhubung ke backend pada 11 November 2026, sehingga', 'R11 termitigasi setelah aplikasi tim Web terhubung ke backend dan lulus uji pada 22 November 2026, sehingga')
 d.sub('skenario lintas platform LP-01 sampai LP-04 lulus', 'skenario lintas platform LPN-01 sampai LPN-03 lulus')
 d.sub('(DWP-DDB-001) v1.3', '(DWP-DDB-001) v1.5')
+d.sub('MDTA-DDB-001 v0.2', 'MDTA-DDB-001 v0.3')
 # COCOMO (sloc: baris non-kosong, non-komentar; metode sama: Android 14 Nov terhitung 9,235 dengan skrip ini vs 9,227 pada 12 Nov)
 d.sub('yang dihitung dari repositori pada 12 November 2026', 'yang dihitung dari repositori pada 22 November 2026')
 d.row(14, 'Backend (Java, main)', {2: '4,696'})

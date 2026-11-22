@@ -10,7 +10,7 @@ const meta = {
   status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; wewenang review dan persetujuan dijalankan Project Manager",
   module: "Arsitektur Sistem Diponegoro Digital Bank (seluruh modul)", createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend)",
   updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager, Backend)", team: "Kelompok Jaran Goyang – masukan: Gracia Riyanto (Android), Steven Wibisana (Web)",
-  refs: "SRS-DDB-001 v0.1 (2.1, 2.4, 2.5, Bagian 4); Project Brief v1.0 §9; MDTA-DDB-001 v0.2; STD-DDB-001 v1.0; README aplikasi Web tim (digitalbanking-node v2.0.0); repositori kode per 22 November 2026",
+  refs: "SRS-DDB-001 v0.1 (2.1, 2.4, 2.5, Bagian 4); Project Brief v1.0 §9; MDTA-DDB-001 v0.3; STD-DDB-001 v1.0; README aplikasi Web tim (digitalbanking-node v2.0.0); repositori kode per 22 November 2026",
   date: "22 November 2026", logo: LOGO,
   revisions: [
     ["0.1", "11 Nov 2026", "Salomo P.G. Hokoyoku", "Outline Architectural Design."],

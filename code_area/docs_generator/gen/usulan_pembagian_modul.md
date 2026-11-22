@@ -4,9 +4,9 @@
 
 Dokumen ini menjawab satu pertanyaan: **jika aplikasi Diponegoro Digital Bank (Android, Web, dan Backend) dibuat ulang dari awal, bagaimana sebaiknya modul dibagi kepada 8 anggota Kelompok Jaran Goyang?**
 
-Dokumen ini adalah usulan perbaikan dan bahan pelajaran (*lessons learned*). Dokumen ini tidak mengubah pembagian kerja resmi pada MDTA-DDB-001 v0.2 maupun DWP-DDB-001 v1.5.
+Dokumen ini adalah usulan perbaikan dan bahan pelajaran (*lessons learned*). Dokumen ini tidak mengubah pembagian kerja resmi pada MDTA-DDB-001 v0.3 maupun DWP-DDB-001 v1.5.
 
-Acuan: SRS-DDB-001 v0.1 (8 modul bisnis, FR-01 s.d. FR-29), MDTA-DDB-001 v0.2, `code_area/submit_mobile/README.md`.
+Acuan: SRS-DDB-001 v0.1 (8 modul bisnis, FR-01 s.d. FR-29), MDTA-DDB-001 v0.3, `code_area/submit_mobile/README.md`.
 
 ## 2. Apa yang Terjadi pada Pembagian Sebelumnya
 
