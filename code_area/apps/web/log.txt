@@ -1,0 +1,17 @@
+---BUKA TERMINAL 1 DULU(powershell)
+PS C:\WINDOWS\system32> cd D:\SE-web\digitalbanking-node\backend
+PS D:\SE-web\digitalbanking-node\backend> $env:DDB_OPENING_BALANCE = "0"
+PS D:\SE-web\digitalbanking-node\backend> .\run-local.ps1 -H2
+
+---JIKA BACKEND udah BERHASIl LALU buka TERMINAL 2 untuk WEB
+PS C:\WINDOWS\system32> cd D:\SE-web\digitalbanking-node
+PS D:\SE-web\digitalbanking-node> copy .env.example .env
+PS D:\SE-web\digitalbanking-node> npm install
+
+added 82 packages, and audited 83 packages in 30s
+
+34 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+PS D:\SE-web\digitalbanking-node> npm start
