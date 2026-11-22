@@ -51,7 +51,10 @@ function mdTable(rows) {
   // Lebar kolom sebanding panjang isi (dibatasi) agar tabel rapi.
   const len = head.map((_, i) => Math.min(60, Math.max(6, ...[head, ...body].map((r) => (r[i] || "").length))));
   const tot = len.reduce((a, b) => a + b, 0);
-  const w = len.map((l) => Math.floor(PW * l / tot)); w[n - 1] += PW - w.reduce((a, b) => a + b, 0);
+  // Lebar minimum = kata terpanjang, supaya nama tidak terpotong; sisanya dibagi menurut panjang isi.
+  const min = head.map((_, i) => Math.min(2200, 300 + 125 * Math.max(...[head, ...body].flatMap((r) => (r[i] || "").replace(/[*`]/g, "").split(/[\s/]+/)).map((x) => x.length))));
+  const sisa = Math.max(0, PW - min.reduce((a, b) => a + b, 0)), kurang = min.reduce((a, b) => a + b, 0) > PW;
+  const w = kurang ? len.map((l) => Math.floor(PW * l / tot)) : min.map((m, i) => m + Math.floor(sisa * len[i] / tot)); w[n - 1] += PW - w.reduce((a, b) => a + b, 0);
   const size = n >= 4 ? 17 : 18;
   const mk = (t, i, header) => new TableCell({ width: { size: w[i], type: WidthType.DXA }, borders: { top: bd, bottom: bd, left: bd, right: bd },
     shading: header ? { fill: "D9D9D9", type: ShadingType.CLEAR, color: "auto" } : undefined, margins: { top: 50, bottom: 50, left: 90, right: 90 },

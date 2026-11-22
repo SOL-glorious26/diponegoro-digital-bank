@@ -211,7 +211,7 @@ Kode **FR** (Functional Requirement) berasal dari SRS. Kolom PIC menunjukkan pem
 | Bagian | Status |
 |---|---|
 | ⚙️ Backend | Semua 8 modul (FR-01 – FR-29) selesai, 73 endpoint API, **47 test otomatis lulus**, cakupan test **92,3%** (target SRS ≥ 70%) |
-| 🗄️ Database | PostgreSQL berjalan: 18 tabel + data demo |
+| 🗄️ Database | PostgreSQL berjalan: 17 tabel + data demo |
 | 📱 Android | 8 modul tim digabung jadi satu aplikasi dan terhubung ke backend. Ada 2 versi: `demo` (offline) dan `online` (pakai server). |
 | 🌐 Web | Semua halaman selesai dan terhubung ke backend yang sama |
 | 🧪 Uji sistem | Android **28/28** lulus (termasuk uji di HP fisik) · Web **15/15** · Lintas platform Android↔Web **4/4** · **11 bug ditemukan dan semuanya sudah diperbaiki** |

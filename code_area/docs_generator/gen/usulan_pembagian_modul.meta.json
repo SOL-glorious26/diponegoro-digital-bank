@@ -1,0 +1,29 @@
+{
+  "docLabel": "Artefak Pendukung – Manajemen Proyek",
+  "title": "Usulan Pembagian Modul (Jika Dimulai dari Awal)",
+  "subtitle": "Pembagian 8 modul bisnis kepada 8 anggota: pasangan per modul, Tim Backend & Database, jadwal, aturan kerja, dan pelajaran dari pembagian sebelumnya",
+  "code": "UPM-DDB-001",
+  "version": "1.1",
+  "statusShort": "Usulan",
+  "status": "Usulan perbaikan / lessons learned; tidak mengubah MDTA-DDB-001 v0.2 dan DWP-DDB-001 v1.5",
+  "module": "Pembagian Modul dan Tugas",
+  "createdBy": "Salomo Putra Glorious Hokoyoku (Project Manager)",
+  "updatedBy": "Salomo Putra Glorious Hokoyoku (Project Manager)",
+  "team": "Kelompok Jaran Goyang – seluruh anggota",
+  "refs": "SRS-DDB-001 v0.1; MDTA-DDB-001 v0.2; DWP-DDB-001 v1.5; code_area/submit_mobile/README.md",
+  "date": "22 November 2026",
+  "revisions": [
+    [
+      "1.0",
+      "19 Nov 2026",
+      "Salomo P.G. Hokoyoku",
+      "Versi pertama."
+    ],
+    [
+      "1.1",
+      "22 Nov 2026",
+      "Salomo P.G. Hokoyoku",
+      "Backend dan Database dikerjakan Salomo (tim Android) bersama Rafi dan Surya (tim Web); pasangan, fondasi, jadwal, RACI, risiko, dan ringkasan disesuaikan; teknologi Web dan tenggat disamakan dengan keadaan terbaru."
+    ]
+  ]
+}
