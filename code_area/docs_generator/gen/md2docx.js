@@ -98,13 +98,13 @@ while (i < src.length) {
 const meta = {
   docLabel: "Artefak Pendukung – Web", title: "Panduan Menjalankan & Menguji Aplikasi Web",
   subtitle: "Tutorial langkah demi langkah untuk anggota tim: instalasi, menjalankan backend dan Web, tes manual, tes otomatis, troubleshooting",
-  code: "TUT-DDB-002-WEB", version: "1.0", statusShort: "Final untuk Tim",
-  status: "Final – diuji langsung di Windows 11 (14 November 2026); sumber: TUTORIAL_MENJALANKAN_WEB.md di repositori",
+  code: "TUT-DDB-002-WEB", version: "2.0", statusShort: "Final untuk Tim",
+  status: "Final – diuji langsung di Windows 11 (22 November 2026); sumber: TUTORIAL_MENJALANKAN_WEB.md di repositori",
   module: "Tutorial Menjalankan & Menguji Aplikasi Web", createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager)",
   updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager)", team: "Kelompok Jaran Goyang – seluruh anggota",
-  refs: "DVM-DDB-001-WEB v0.5; DVM-DDB-001-BE v0.9.2; STD-DDB-001 v0.9.5; code_area/pengujian/README.md",
-  date: "14 November 2026", logo: LOGO,
-  revisions: [["1.0", "14 Nov 2026", "Salomo P.G. Hokoyoku", "Versi pertama. Langkah diverifikasi: tes API 38/38, tes UI 20/20, WB-11 dan WB-13–15 lulus."]],
+  refs: "DVM-DDB-001-WEB v1.0; DVM-DDB-001-BE v1.0; STD-DDB-001 v1.0; code_area/pengujian/README.md",
+  date: "22 November 2026", logo: LOGO,
+  revisions: [["1.0", "14 Nov 2026", "Salomo P.G. Hokoyoku", "Versi pertama."], ["2.0", "22 Nov 2026", "Salomo P.G. Hokoyoku", "Ditulis ulang untuk Web resmi tim Web (Node/Express/EJS). Langkah diverifikasi: WN 25/25, LPN 3/3, Chrome/Edge/Firefox lulus."]],
 };
 // Argumen ke-4 (opsional): berkas JSON berisi metadata sampul untuk dokumen lain (menimpa nilai di atas).
 if (process.argv[5]) Object.assign(meta, JSON.parse(fs.readFileSync(process.argv[5], "utf8")), { logo: LOGO });

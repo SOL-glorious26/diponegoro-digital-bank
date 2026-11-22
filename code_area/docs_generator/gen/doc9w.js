@@ -9,7 +9,7 @@ const meta = {
   status: "Final v1.0 – diterbitkan Project Manager 22 November 2026; wewenang review dan persetujuan dijalankan Project Manager",
   module: "User Manual – Aplikasi Web (Node/Express/EJS)", createdBy: "Salomo Putra Glorious Hokoyoku (Project Manager)",
   updatedBy: "Salomo Putra Glorious Hokoyoku (Project Manager)", team: "Kelompok Jaran Goyang – Web Application Team (PIC volume menurut DWP: Permata Surya Cahyana)",
-  refs: "SRS-DDB-001 v0.1; FSD-DDB-001 v1.0; User Interface Map (Web) v0.7; STD-DDB-001 v1.0; DVM-DDB-001-WEB v1.0; build 22 November 2026",
+  refs: "SRS-DDB-001 v0.1; FSD-DDB-001 v1.0; UIM-DDB-001-WEB v1.0; STD-DDB-001 v1.0; DVM-DDB-001-WEB v1.0; build 22 November 2026",
   date: "22 November 2026", logo: LOGO,
   revisions: [["1.0", "22 Nov 2026", "Salomo P.G. Hokoyoku", "Versi pertama untuk Web resmi tim Web, dengan tangkapan layar dari aplikasi yang dijalankan terhadap backend asli pada 22 November 2026. Disetujui PM."]],
   approval: { sign: SIGN, date: "22 Nov 2026" },
@@ -65,6 +65,6 @@ const body = [
   table(["Masalah", "Solusi"], [["\"Tidak dapat terhubung ke backend\"", "Server belum berjalan; hubungi pengelola"], ["Login ditolak", "Periksa identitas dan kata sandi; pakai Lupa sandi"], ["\"Rekening tujuan tidak valid\"", "Periksa nomor rekening dan bank"], ["\"ID pelanggan tidak ditemukan\"", "Periksa ID pelanggan PLN atau nomor tagihan"], ["PIN salah atau diblokir", "Salah tiga kali memblokir 5 menit; tunggu atau pulihkan PIN"], ["\"Token keamanan tidak valid\"", "Muat ulang halaman lalu ulangi"], ["\"Sesi Anda telah berakhir\"", "Masuk kembali"]], [3500, 5570]),
   CAP("Tabel 8.1 Pemecahan masalah"),
   H2("Referensi"),
-  ...NL(["FSD-DDB-001 v1.0, Functional Design.", "User Interface Map (Web) v0.7.", "USM-DDB-001-AND v1.0, User Manual Android.", "DVM-DDB-001-WEB v1.0, Developer Manual Web."]),
+  ...NL(["FSD-DDB-001 v1.0, Functional Design.", "UIM-DDB-001-WEB v1.0.", "USM-DDB-001-AND v1.0, User Manual Android.", "DVM-DDB-001-WEB v1.0, Developer Manual Web."]),
 ];
 S.build(meta, body, OUT);

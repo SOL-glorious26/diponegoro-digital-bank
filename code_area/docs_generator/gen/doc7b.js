@@ -394,7 +394,7 @@ class ContohFlowTest extends ApiTestBase {
   H2("Keterbatasan yang Diketahui"),
   B("Docker Compose dan gateway belum diuji. Profil dev berjalan pada PostgreSQL 18 lokal sejak 13 November 2026; test otomatis memakai H2."),
   B("Web tim (Node) memanggil backend dari server sehingga tidak memerlukan CORS. Patch saldo awal milik tim Web (DDB_OPENING_BALANCE) bersifat opsional dan belum diterapkan pada backend bersama."),
-  B("Cakupan test: 92,2% baris, 64,8% cabang (JaCoCo, 12 November 2026)."),
+  B("Cakupan test: 92,2% baris, 64,8% cabang (JaCoCo, 22 November 2026)."),
   B("QRIS, biller, dan penerbit kartu masih disimulasikan di dalam service (belum berupa interface adapter)."),
   B("Foto profil berupa URL; push notification memakai polling."),
   H2("Referensi"),

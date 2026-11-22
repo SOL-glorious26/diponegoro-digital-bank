@@ -5,6 +5,10 @@
   "type": "module",
   "description": "Uji end-to-end Diponegoro Digital Bank (STD-DDB-001): Web, Android, lintas platform, peramban, performa",
   "scripts": {
+    "web:node": "node web/node-smoke.mjs hasil/web-node",
+    "web:node:ekstra": "node web/node-ekstra.mjs hasil/web-node-ekstra",
+    "web:node:peramban": "node web/node-peramban.mjs hasil/web-node-peramban",
+    "lintas:node": "node lintas-platform/lp-node.mjs hasil/lp-node",
     "web:api": "node web/api-smoke.mjs",
     "web:ui": "node web/ui-e2e.mjs hasil/web-ui",
     "web:extra": "node web/wb-extra.mjs hasil/wb WB-11",

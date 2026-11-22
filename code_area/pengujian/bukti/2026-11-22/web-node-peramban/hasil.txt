@@ -1,0 +1,24 @@
+PASS  chrome   login dan Dashboard  — Chrome/157.0.0.0
+PASS  chrome   transfer dengan PIN dan detail transaksi
+PASS  chrome   tombol lihat/sembunyikan PIN tampil
+PASS  chrome   riwayat dengan filter
+PASS  chrome   halaman pembayaran QRIS tampil
+PASS  chrome   tanpa scroll horizontal (desktop, 5 halaman)
+PASS  chrome   keluar
+PASS  chrome   tanpa error JavaScript
+PASS  edge     login dan Dashboard  — Edg/158.0.0.0
+PASS  edge     transfer dengan PIN dan detail transaksi
+PASS  edge     tombol lihat/sembunyikan PIN tampil
+PASS  edge     riwayat dengan filter
+PASS  edge     halaman pembayaran QRIS tampil
+PASS  edge     tanpa scroll horizontal (desktop, 5 halaman)
+PASS  edge     keluar
+PASS  edge     tanpa error JavaScript
+PASS  firefox  login dan Dashboard  — Firefox/156.0
+PASS  firefox  transfer dengan PIN dan detail transaksi
+PASS  firefox  tombol lihat/sembunyikan PIN tampil
+PASS  firefox  riwayat dengan filter
+PASS  firefox  halaman pembayaran QRIS tampil
+PASS  firefox  tanpa scroll horizontal (desktop, 5 halaman)
+PASS  firefox  keluar
+PASS  firefox  tanpa error JavaScript

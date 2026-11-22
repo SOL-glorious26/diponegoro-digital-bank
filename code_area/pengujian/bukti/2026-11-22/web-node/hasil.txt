@@ -9,6 +9,6 @@ PASS  WN-08  token PLN dengan PIN  — debit Rp22.500
 PASS  WN-09  e-wallet dengan PIN  — debit Rp21.000
 PASS  WN-10  tagihan: pembayaran kedua di periode sama ditolak
 PASS  WN-11  QRIS contoh dibayar dengan PIN
-PASS  WN-12  riwayat, ekspor CSV dan PDF  — PDF 2762 byte
+PASS  WN-12  riwayat, ekspor CSV dan PDF  — PDF 2222 byte
 PASS  WN-13  registrasi → OTP → e-KYC → PIN → Dashboard  — saldo awal tampil Rp 5.000.000
 PASS  WN-14  logout semua perangkat lewat API mengakhiri sesi Web  — kembali ke login dengan pesan sesi berakhir

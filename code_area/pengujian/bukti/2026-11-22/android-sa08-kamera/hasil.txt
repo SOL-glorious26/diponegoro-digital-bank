@@ -1,0 +1,1 @@
+PASS  SA-08  pindai QRIS pribadi andi dengan kamera virtual emulator, bayar Rp13.500 dengan PIN  — demo −Rp13.500, andi +Rp13.500

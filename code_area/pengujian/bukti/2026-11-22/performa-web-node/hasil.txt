@@ -1,0 +1,10 @@
+NF-02 API baca (backend lokal, 100 permintaan per endpoint, berurutan)
+  GET /accounts/me: n=100 median=3 ms p95=4 ms maks=6 ms
+  GET /history?size=20: n=100 median=3 ms p95=5 ms maks=13 ms
+  GET /history/monthly-summary: n=100 median=5 ms p95=8 ms maks=16 ms
+  gabungan: n=300 median=4 ms p95=7 ms maks=16 ms → LULUS (target p95 ≤ 500 ms)
+NF-03 transfer sesama bank budi → citra (10 kali, termasuk verifikasi PIN BCrypt dan posting ledger)
+  n=10 median=61 ms p95=67 ms maks=67 ms → LULUS (target ≤ 3 detik)
+NF-01 muat ulang Dashboard Web tim (Node) sampai saldo dan transaksi terakhir tampil (Chrome headless, cache dimatikan)
+  n=5 median=189 ms p95=197 ms maks=197 ms → LULUS (target ≤ 2 detik)
+Waktu ukur: 2026-11-22T13:43:14.622Z; mesin: laptop pengembang (backend profil h2).

@@ -1,6 +1,6 @@
 // Pengukuran performa dasar (STD-DDB-001 NF-01 s.d. NF-03) terhadap backend lokal.
 // NF-02: p95 API baca ≤ 500 ms; NF-03: transfer ≤ 3 detik; NF-01: waktu muat layar utama Web ≤ 2 detik.
-// Jalankan: node performa/perf.mjs [hasil/perf]   (backend + npm run dev aktif)
+// Jalankan: node performa/perf.mjs [hasil/perf]   (backend :8080 dan Web tim (Node) :3000 aktif)
 import path from "node:path";
 import { writeFileSync, mkdirSync } from "node:fs";
 import { launch } from "../lib/cdp.mjs";
@@ -51,19 +51,21 @@ out("NF-03 transfer sesama bank budi → citra (10 kali, termasuk verifikasi PIN
 out(`  ${stats(tx)} → ${Math.max(...tx) <= 3000 ? "LULUS" : "GAGAL"} (target ≤ 3 detik)`);
 
 // NF-01: waktu muat Beranda Web (Chrome headless, cache dingin per pengukuran)
-const web = await launch(OUT, { port: 9336 });
-await web.login("budi");
+const web = await launch(OUT, { port: 9336, base: process.env.DDB_WEB_NODE || "http://localhost:3000" });
+await web.go("/login"); await web.waitFor("!!document.querySelector('[name=identitas]')");
+await web.fill("[name=identitas]", "budi"); await web.fill("[name=password]", "Demo@1234"); await web.clickText("Login");
+await web.waitFor("location.pathname === '/dashboard'");
 const loads = [];
 for (let i = 0; i < 5; i++) {
   await web.send("Network.enable"); await web.send("Network.setCacheDisabled", { cacheDisabled: true });
-  const t = performance.now();
+  const t0 = Date.now(), t = performance.now();
   await web.reload();
-  await web.waitFor("!!document.querySelector('.balance-value') && document.querySelectorAll('.tx-row').length > 0", 15000);
+  await web.waitFor("performance.timeOrigin > " + t0 + " && document.readyState === 'complete' && !!document.querySelector('.balance') && document.querySelectorAll('.tx-row').length > 0", 15000);
   loads.push(performance.now() - t);
 }
-await web.shot("NF01-beranda.png");
+await web.shot("NF01-dashboard.png");
 await web.close();
-out("NF-01 muat ulang Beranda Web sampai saldo dan transaksi terakhir tampil (Chrome headless, cache dimatikan, Vite dev server)");
+out("NF-01 muat ulang Dashboard Web tim (Node) sampai saldo dan transaksi terakhir tampil (Chrome headless, cache dimatikan)");
 out(`  ${stats(loads)} → ${Math.max(...loads) <= 2000 ? "LULUS" : "GAGAL"} (target ≤ 2 detik)`);
 out(`Waktu ukur: ${new Date().toISOString()}; mesin: laptop pengembang (backend profil h2).`);
 writeFileSync(path.join(OUT, "hasil.txt"), lines.join("\n") + "\n");

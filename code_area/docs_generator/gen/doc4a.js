@@ -40,13 +40,13 @@ const media = (f, w) => { const p = path.join(FIG, f); return img(p, fit(p, w ??
 // Penggantian teks (indeks = posisi blok pada d04a_blocks.json)
 const R = {
   34: X[34][1],
-  35: "Aplikasi Android terdiri atas 112 berkas Kotlin pada kode utama (per 22 November 2026, setelah berkas Brand.kt dan Buttons.kt ditambahkan pada pembaruan tampilan). Ukuran kode untuk estimasi biaya pada PRJ-DDB-001 diukur pada 12 November 2026, yaitu 110 berkas dengan 9,227 KSLOC.",
+  35: "Aplikasi Android terdiri atas 112 berkas Kotlin pada kode utama (per 22 November 2026, setelah berkas Brand.kt dan Buttons.kt ditambahkan pada pembaruan tampilan). Ukuran kode untuk estimasi biaya pada PRJ-DDB-001 diukur pada tanggal yang sama, yaitu 9,935 KSLOC.",
   77: "Class diagram ringkas modul Authentication, Account, Transfer, Top-up, Virtual Card, serta History dan Home ada pada Lampiran A. Panah menunjukkan arah pemakaian: Screen memakai ViewModel, dan ViewModel memakai Repository yang memiliki dua implementasi.",
   79: "Navigasi didefinisikan di AuthNavGraph.kt dengan rute pada AuthRoutes dan AppRoutes. Bottom bar memuat lima tab: Beranda (home), Riwayat (history), QRIS (qris/pay, tombol bulat di tengah), Kantong (account/pockets), dan Profil (profile). Setelah login berhasil, AuthViewModel memeriksa status e-KYC dan PIN sebelum menentukan layar berikutnya. Kode layar mengikuti UIM-DDB-001-AND.",
   81: "Tabel 3.1 Kode layar dan rute navigasi (sumber: AuthRoutes.kt, AppRoutes.kt, UIM-DDB-001-AND v1.0)",
   93: X[93][1] + " PIN diisi melalui keypad enam digit di layar (EnterPinScreen, PinKeypad) dan dikirim otomatis pada digit keenam; saat ponsel miring, keypad ditampilkan di samping judul.",
   156: X[156][1].replace(/tur UI \d+ layar/, "tur UI"),
-  157: "Hasil pada STD-DDB-001 v1.0 (22 November 2026): varian demo 63 lulus dan 1 dilewati dari 64 test, varian online 57 lulus dan 1 dilewati dari 58 test. Uji sistem Android: 28 dari 28 kasus lulus; 27 kasus dijalankan ulang di emulator pada build terbaru dan SA-08 (pindai QRIS dengan kamera) lulus di ponsel fisik Realme RMX3867 pada 14 November 2026.",
+  157: "Hasil pada STD-DDB-001 v1.0 (22 November 2026): varian demo 63 lulus dan 1 dilewati dari 64 test, varian online 57 lulus dan 1 dilewati dari 58 test. Uji sistem Android: 28 dari 28 kasus lulus pada APK final di emulator, termasuk SA-08 (pindai QRIS) dengan kamera emulator; SA-08 juga lulus di ponsel fisik Realme RMX3867 pada 14 November 2026.",
   163: X[163][1],
   164: "Tombol Analitik di layar Riwayat dapat terlipat dua baris pada layar selebar 320 dp. PIN transaksi memakai dialog dengan kolom teks, sedangkan PIN setelah login memakai keypad.",
   165: "Uji pada ponsel fisik Realme RMX3867 (Android 16) lulus pada 14 November 2026 dengan build sebelum pembaruan tampilan: kamera QRIS, notifikasi, dan berbagi bukti. Pengulangan pada build terbaru dicatat sebagai tindak lanjut di STD-DDB-001.",

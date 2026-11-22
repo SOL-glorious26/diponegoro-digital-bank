@@ -12,7 +12,7 @@ Diperbarui: 22 November 2026. Setiap folder hanya berisi **versi terbaru**. Vers
 | `D04A_Detailed_Design_Android/` | **v1.0 final** (dari draf Gracia) | Gracia (diselesaikan PM) |
 | `D04B_Detailed_Design_Backend_DB/` | **v1.0 final** | Salomo |
 | `D05A_UI_Map_Android/` | **v1.0 final** (dari draf Cecilia) | Cecilia (diselesaikan PM) |
-| `D05W_UI_Map_Web/` | v0.3 (PDF lama); v0.7 Nabila ada di `other_teams/revisi 4/`, menunggu tangkapan layar | Nabila |
+| `D05W_UI_Map_Web/` | **v1.0 final** (dari draf v0.7 Nabila, diselesaikan PM) | Nabila |
 | `D06_System_Testing/` | **v1.0 final** (Android 28/28, Web Node WN 14/14, LPN 3/3, 14 defect ditutup) | Steven (disusun PM) |
 | `D07A_Developer_Manual_Android/` | **v1.0 final** | Salomo |
 | `D07B_Developer_Manual_Backend/` | **v1.0 final** | Salomo |
@@ -22,13 +22,13 @@ Diperbarui: 22 November 2026. Setiap folder hanya berisi **versi terbaru**. Vers
 | `D08W_System_Program_Demo_Web/` | **v1.0 final** (Rafi + koreksi PM; gladi belum) | Rafi |
 | `D09A_User_Manual_Android/` | **v1.0 final** (disusun PM) | Grace |
 | `D09W_User_Manual_Web/` | **v1.0 final** (disusun PM) | Permata |
-| `TUT_Panduan_Menjalankan_Web/` | v1.0, tutorial menjalankan & menguji Web (artefak pendukung) | Salomo |
+| `TUT_Panduan_Menjalankan_Web/` | v2.0, tutorial menjalankan & menguji Web tim (artefak pendukung) | Salomo |
 | `TUT_Panduan_Uji_Ponsel/` | v1.1 (artefak pendukung) | Salomo |
 | `CATATAN_Belajar_Software_Engineering/` | v1.0 (21 Nov), catatan belajar pribadi PM: konsep SE + bedah kode DDB (bukan deliverable) | Salomo |
 | `_aset/` | Tanda tangan PM (dipakai saat versi final) | – |
 | `_temp_versi_lama/` | Versi lama + `project_brief_digital_banking_dummy.docx`. Boleh dihapus setelah semua dokumen v1.0. | – |
 
-Belum final: D05W (Nabila; tangkapan layar ada di `code_area/docs_generator/fig_layar_web/`). Catatan review anggota: `other_teams/review/`.
+Seluruh volume sudah v1.0. Catatan review anggota: `other_teams/review/`.
 
 Aturan: versi baru disimpan di folder volumenya, lalu versi sebelumnya dipindah ke `_temp_versi_lama/`.
 Generator dokumen: `code_area/docs_generator/gen` (D04W: `doc4w.js` + `figs6.py`, D07W: `doc7w.js`;

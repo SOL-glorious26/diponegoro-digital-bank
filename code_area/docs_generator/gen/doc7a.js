@@ -460,7 +460,7 @@ class TransferRepositoryTest {
   B("Biometrik masih disimulasikan; BiometricPrompt belum diimplementasikan."),
   B("Foto profil berupa URL; belum ada unggah gambar."),
   B("Notifikasi push memakai polling 15 detik (simulasi FCM)."),
-  B("Uji sistem SA-01–SA-28 sudah dijalankan di emulator (STD-DDB-001); pindai QRIS dengan kamera, notifikasi, dan berbagi bukti lulus di ponsel fisik pada 14 November 2026 (build sebelum pembaruan tampilan)."),
+  B("Uji sistem SA-01–SA-28 sudah dijalankan di emulator (STD-DDB-001); 28 dari 28 lulus pada APK final, termasuk pindai QRIS dengan kamera emulator; di ponsel fisik, kamera, notifikasi, dan berbagi bukti lulus pada 14 November 2026 (build sebelum pembaruan tampilan)."),
   B("Test otomatis varian demo memakai repository tiruan sehingga tidak mendeteksi DEF-12; pemeriksaannya ada pada skrip SA-13."),
   B("Instrumented test (androidTest) masih berupa contoh bawaan; cakupan test belum diukur."),
   H2("Referensi"),

@@ -1,0 +1,11 @@
+PASS  WN-15  rekening tujuan tidak valid ditolak sebelum PIN  — Rekening tujuan tidak valid
+PASS  WN-16  token PLN ID berakhiran 0000 ditolak
+PASS  WN-17  Top Up menambah saldo tepat; nominal di bawah minimum ditolak  — sumber Kartu Debit
+PASS  WN-18  ubah email: OTP salah ditolak, OTP benar mengubah profil
+PASS  WN-19  ubah kata sandi: sandi lama salah ditolak; sandi baru dipakai login
+PASS  WN-20  pemulihan kata sandi dan PIN dengan OTP
+PASS  WN-21  access token 1 menit diperbarui otomatis; setelah dicabut kembali ke login  — aksi setelah 75 detik tetap berjalan; setelah dicabut tampil pesan sesi berakhir
+PASS  WN-22  filter riwayat (jenis, kata kunci, tanggal) dan detail dengan jurnal  — transfer 16 dari 20 baris pada halaman pertama
+PASS  WN-23  akun belum e-KYC dialihkan dari halaman transaksi
+PASS  WN-24  tiga kali PIN salah memblokir PIN
+PASS  WN-25  POST tanpa token CSRF ditolak  — HTTP 403

@@ -55,11 +55,11 @@ def gantt():
         ("Desain UML per modul + prototipe awal", "03-10", "07-10", "R"),
         ("Pengembangan modul Android per PIC", "03-10", "07-10", "R"),
         ("Integrasi aplikasi Android (8 modul)", "08-10", "10-11", "R"),
-        ("Pengembangan aplikasi Web", "03-10", "11-11", "R"),
+        ("Pengembangan aplikasi Web", "03-10", "22-11", "R"),
         ("Pengembangan Backend & Database", "10-11", "11-11", "R"),
         ("Integrasi Android – Backend", "11-11", "11-11", "R"),
         ("API Gateway dan deployment", "12-11", "18-11", "P"),
-        ("Pengujian sistem (emulator, peramban)", "11-11", "12-11", "R"),
+        ("Pengujian sistem (emulator, peramban)", "11-11", "22-11", "R"),
         ("Uji ponsel fisik (SA-08, NF-07)", "14-11", "14-11", "R"),
         ("Dokumentasi 9 kategori", "11-11", "23-11", "P"),
     ]
@@ -77,8 +77,8 @@ def gantt():
         ax.text(D(d) + dt.timedelta(days=1), len(rows) + (1.15 if j % 2 == 0 else 0.7), lab, fontsize=8,
                 ha="right" if j == len(ms) - 1 else ("left" if j == 0 else "center"), color="#C00000",
                 bbox=dict(fc="white", ec="none", pad=0.5))
-    ax.axvline(dt.date(2026, 11, 17), color=GREY, lw=1.4)
-    ax.text(dt.date(2026, 11, 16), 0.2, "status 16 Nov", fontsize=8, ha="right", color=GREY, bbox=dict(fc="white", ec="none", pad=0.4))
+    ax.axvline(dt.date(2026, 11, 23), color=GREY, lw=1.4)
+    ax.text(dt.date(2026, 11, 22), 0.2, "status 22 Nov", fontsize=8, ha="right", color=GREY, bbox=dict(fc="white", ec="none", pad=0.4))
     ax.set_xlim(dt.date(2026, 9, 15), dt.date(2026, 11, 24)); ax.set_ylim(0, len(rows) + 1.6)
     ax.xaxis.set_major_locator(mdates.WeekdayLocator(byweekday=mdates.TU))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%d/%m"))
