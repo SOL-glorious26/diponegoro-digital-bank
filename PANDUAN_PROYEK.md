@@ -1,7 +1,7 @@
 # 📘 Panduan Proyek Diponegoro Digital Bank
 
 **Untuk seluruh anggota Kelompok Jaran Goyang.** Baca dari atas ke bawah, kira-kira 15 menit.
-Diperbarui: **14 November 2026**, oleh Salomo (PM).
+Diperbarui: **23 November 2026**, oleh Salomo (PM).
 
 Daftar isi:
 1. [Proyek ini apa?](#1-proyek-ini-apa)
@@ -23,7 +23,7 @@ Daftar isi:
 Nasabah bisa daftar akun, cek saldo, transfer, bayar QRIS, beli pulsa, membuat kantong tabungan, dan sebagainya.
 
 - **Periode proyek:** 15 September – 23 November 2026
-- **Tenggat dokumentasi:** **24 November 2026, pukul 23.59 WIB**
+- **Tenggat dokumentasi:** **23 November 2026, pukul 23.59 WIB**
 - **Acuan utama:** SRS (Software Requirements Specification) v0.1 di `documents_area/00_Referensi/`.
   SRS menjadi "kitab" proyek ini karena semua fitur dan aturan berasal dari sana.
 
@@ -62,6 +62,10 @@ Aplikasi ini terdiri dari **tiga bagian** yang bekerja sama:
 | **Backend** | Mengecek PIN, menghitung saldo, memindahkan uang, mencatat riwayat | **Ruang belakang bank**, tempat semua keputusan diambil |
 | **Database** | Menyimpan akun, saldo, transaksi secara permanen | **Lemari arsip / brankas** |
 
+> 💡 Web punya server kecil sendiri (Node.js, port 3000) yang membuat halaman dan meneruskan permintaan ke backend.
+> Server ini **tidak punya database**. Saat dijalankan lokal, Android dan Web memanggil backend langsung (port 8080).
+> API Gateway sudah dikonfigurasi, tetapi belum diuji karena Docker belum terpasang.
+
 **Kenapa backend-nya cuma satu?** Supaya data Android dan Web **selalu sama**.
 Kalau kamu transfer dari HP, riwayatnya langsung muncul juga di Web karena keduanya bertanya ke "otak" yang sama.
 
@@ -73,12 +77,13 @@ Kalau kamu transfer dari HP, riwayatnya langsung muncul juga di Web karena kedua
 |---|---|---|
 | 📱 Android | **Kotlin**, **Jetpack Compose**, pola **MVVM** + Repository | Kotlin adalah bahasa resmi Android. Compose dipakai untuk membuat tampilan dengan kode. MVVM memisahkan *tampilan* (View), *logika layar* (ViewModel), dan *data* (Model/Repository) supaya rapi. |
 | 📱 Android → server | **Retrofit + OkHttp** | Pustaka untuk "menelepon" API backend dari HP |
-| 🌐 Web | **React** (JavaScript), **Vite**, **react-router**, **axios** | React untuk membuat halaman web interaktif. Vite menjalankan dan membangun proyek. axios dipakai untuk memanggil API. |
+| 🌐 Web | **Node.js**, **Express 5**, **EJS**, express-session | Express adalah server Web. EJS adalah templat halaman HTML yang diisi data di server. Token login disimpan di sesi server, tidak pernah dikirim ke peramban. |
+| 🌐 Web → server | **fetch** bawaan Node.js (`lib/backend.js`) | Cara server Web "menelepon" API backend |
 | ⚙️ Backend | **Java 21**, **Spring Boot 4** | Framework Java populer untuk membuat server |
-| 🗄️ Database | **PostgreSQL** (+ **Flyway**). Untuk uji cepat bisa pakai **H2**. | Flyway membuat tabel database otomatis. H2 adalah database "mainan" di memori, jadi tidak perlu instal apa pun. |
+| 🗄️ Database | **PostgreSQL** (+ **Flyway**). Untuk uji cepat bisa pakai **H2**. | Flyway membuat tabel database otomatis. H2 adalah database kecil bawaan backend, jadi tidak perlu instal apa pun. |
 | 🔐 Keamanan | **JWT**, **BCrypt**, **AES-GCM**, HTTPS | JWT = "tiket masuk" setelah login. BCrypt = cara menyimpan password/PIN supaya tidak bisa dibaca. AES-GCM = enkripsi data kartu. |
 | 🚪 Gateway | **Nginx** | Pintu masuk dan pembatas permintaan |
-| 📦 Deployment | **Docker** + docker-compose | "Kotak" berisi backend, database, dan gateway yang bisa dijalankan dengan satu perintah |
+| 📦 Deployment | **Docker** + docker-compose | "Kotak" berisi backend, database, dan gateway yang bisa dijalankan dengan satu perintah (sudah disiapkan, belum diuji) |
 | 🧪 Pengujian | JUnit (backend), test Android, skrip Node.js (uji end-to-end) | Uji otomatis supaya kita yakin fiturnya benar |
 
 ---
@@ -144,7 +149,7 @@ Kolom `message` langsung ditampilkan ke nasabah, sedangkan `code` dipakai oleh p
 
 1. **Login dulu.** Setelah login, server memberi dua token:
    **access token** (berlaku 15 menit, dipakai di setiap permintaan) dan **refresh token** (berlaku 7 hari, dipakai untuk minta access token baru).
-   Aplikasi memperbarui access token secara otomatis, jadi nasabah tidak perlu login ulang setiap 15 menit.
+   Aplikasi memperbarui access token secara otomatis, jadi nasabah tidak perlu login ulang setiap 15 menit. Kalau tidak ada aktivitas selama 5 menit, sesi berakhir.
 2. **Setiap transaksi uang wajib mengirim `Idempotency-Key`.** Kalau sinyal putus lalu aplikasi mengirim ulang, server tahu itu permintaan yang **sama**, jadi uang **tidak terpotong dua kali**.
 3. **Setiap transaksi dikonfirmasi PIN 6 digit.** Salah 3× berturut-turut membuat PIN diblokir 5 menit.
 4. Uang selalu **bilangan bulat rupiah** (tanpa koma). Waktu memakai format standar ISO dan ditampilkan dalam WIB.
@@ -181,65 +186,57 @@ Semua fitur lain mengikuti pola yang sama: **layar → panggil API → backend c
 
 ## 6. Daftar fitur
 
-Kode **FR** (Functional Requirement) berasal dari SRS. Kolom PIC menunjukkan pemilik modul di tim Android/backend.
+Kode **FR** (Functional Requirement) berasal dari SRS. Kolom PIC menunjukkan pemilik modul di tim Android.
+Tanda – berarti fitur tidak dimuat di Web (keputusan tim Web); fiturnya tetap ada di backend dan Android.
 
 | Modul | FR | Fitur | PIC | Android | Web |
 |---|---|---|---|:-:|:-:|
-| 🔑 **Authentication** | FR-01 – 05 | Daftar akun + OTP, e-KYC (verifikasi KTP, simulasi), login (password / biometrik di Android), buat & verifikasi PIN, logout semua perangkat, lupa password/PIN | Salomo | ✅ | ✅ |
-| 💰 **Account** | FR-06 – 09 | Lihat & sembunyikan saldo, grafik saldo, **kantong** tabungan + kunci kantong sampai tanggal/target | Grace | ✅ | ✅ |
-| 💸 **Transfer** | FR-10 – 14 | Transfer sesama DDB & antarbank, cek nama penerima, penerima favorit, bukti transfer | Cecil | ✅ | ✅ |
-| 📷 **QRIS** | FR-15 – 17 | Scan & bayar QRIS (Android), QRIS pribadi, QRIS dinamis | Cia | ✅ | ✅ (QRIS pribadi saja) |
-| 📶 **Top-up** | FR-18 – 20 | Pulsa, paket data, token PLN, tagihan, e-wallet | Grace | ✅ | ✅ |
-| 💳 **Virtual Card** | FR-21 – 22 | Buat kartu virtual, lihat detail (pakai PIN), bekukan/aktifkan, atur limit | Salomo | ✅ | ✅ |
-| 📜 **History & Dashboard** | FR-23 – 26 | Riwayat + filter + pencarian, detail transaksi, grafik pengeluaran bulanan, ekspor CSV/PDF | Cecil | ✅ | ✅ |
-| 👤 **Profile & Notifikasi** | FR-27 – 29 | Ubah profil (pakai OTP), foto profil, keamanan, pengaturan & kotak notifikasi | Cia | ✅ | ✅ |
+| 🔑 **Authentication** | FR-01 – 05 | Daftar akun + OTP, e-KYC (verifikasi KTP, simulasi), login (password / biometrik di Android), buat & verifikasi PIN, logout semua perangkat, lupa password/PIN | Salomo | ✅ | ✅ (tanpa biometrik dan logout semua perangkat) |
+| 💰 **Account** | FR-06 – 09 | Lihat & sembunyikan saldo, grafik saldo, **kantong** tabungan + kunci kantong sampai tanggal/target | Grace | ✅ | Lihat saldo |
+| 💸 **Transfer** | FR-10 – 14 | Transfer sesama DDB & antarbank, cek nama penerima, penerima favorit, bukti transfer | Cecil | ✅ | ✅ (tanpa favorit; bukti lewat Cetak pada detail riwayat) |
+| 📷 **QRIS** | FR-15 – 17 | Scan & bayar QRIS (Android), QRIS pribadi, QRIS dinamis | Cia | ✅ | Bayar dengan contoh QRIS (tanpa kamera) |
+| 📶 **Top-up** | FR-18 – 20 | Pulsa, paket data, token PLN, tagihan, e-wallet | Grace | ✅ | ✅ (tanpa paket data) |
+| 💳 **Virtual Card** | FR-21 – 22 | Buat kartu virtual, lihat detail (pakai PIN), bekukan/aktifkan, atur limit | Salomo | ✅ | – |
+| 📜 **History & Dashboard** | FR-23 – 26 | Riwayat + filter + pencarian, detail transaksi, grafik pengeluaran bulanan (Android), ekspor CSV/PDF (Web) | Cecil | ✅ (tanpa ekspor) | ✅ (tanpa grafik) |
+| 👤 **Profile & Notifikasi** | FR-27 – 29 | Ubah profil (pakai OTP), foto profil, keamanan, pengaturan & kotak notifikasi | Cia | ✅ | Ubah profil dan kata sandi |
 
 **Keputusan PM yang sudah ditetapkan:**
 - Login **tanpa OTP**. OTP hanya dipakai saat daftar, ubah profil, dan pemulihan akun.
 - Semua transaksi memakai **PIN + Idempotency-Key**.
 - **Virtual Account tidak dibuat.**
-- Di Web, QRIS hanya **menampilkan QRIS pribadi**. Scan QRIS hanya ada di Android karena butuh kamera.
+- Scan QRIS dengan kamera dan QRIS pribadi hanya ada di Android. Web membayar dengan contoh QRIS dari backend.
+- Web punya menu **Top Up saldo** (simulasi dana masuk, tanpa PIN), yang tidak termasuk SRS.
 
 ---
 
 ## 7. Progres proyek: apa yang sudah dan belum
 
-> **Ringkasnya: aplikasinya SUDAH JADI dan sudah diuji. Yang masih kurang adalah DOKUMEN bagian anggota lain dan beberapa pengujian akhir.**
+> **Ringkasnya: aplikasi SUDAH JADI dan sudah diuji, dan semua dokumen sudah v1.0.**
 
 ### ✅ Sudah selesai
 
 | Bagian | Status |
 |---|---|
-| ⚙️ Backend | Semua 8 modul (FR-01 – FR-29) selesai, 73 endpoint API, **47 test otomatis lulus**, cakupan test **92,3%** (target SRS ≥ 70%) |
-| 🗄️ Database | PostgreSQL berjalan: 17 tabel + data demo |
-| 📱 Android | 8 modul tim digabung jadi satu aplikasi dan terhubung ke backend. Ada 2 versi: `demo` (offline) dan `online` (pakai server). |
-| 🌐 Web | Semua halaman selesai dan terhubung ke backend yang sama |
-| 🧪 Uji sistem | Android **28/28** lulus (termasuk uji di HP fisik) · Web **15/15** · Lintas platform Android↔Web **4/4** · **11 bug ditemukan dan semuanya sudah diperbaiki** |
-| 📄 Dokumen | D00 (Work Plan), D01, D02, D03, D04B, D05W (UI Map Web dari Nabila), D06, D07A, D07B, Panduan Uji di Ponsel. Semua masih versi **0.9.x** (draf, menunggu review). Ditambah draf awal **D04W** dan **D07W** v0.5 untuk dilengkapi PIC Web. |
+| ⚙️ Backend | Semua 8 modul (FR-01 – FR-29) selesai, 73 endpoint API, **47 test otomatis lulus**, cakupan test **92,2%** (target SRS ≥ 70%) |
+| 🗄️ Database | PostgreSQL: 17 tabel + data demo (H2 untuk uji cepat) |
+| 📱 Android | 8 modul tim digabung jadi satu aplikasi dan terhubung ke backend. Ada 2 versi: `demo` (offline) dan `online` (pakai server). Test otomatis: demo 63 dan online 57 lulus, masing-masing 1 dilewati. |
+| 🌐 Web | Aplikasi tim Web (`digitalbanking-node` v2.0.0) terhubung ke backend yang sama |
+| 🧪 Uji sistem | Android **28/28** · Web **25/25** · Peramban (Chrome, Edge, Firefox) **24/24** · Lintas platform **3/3** · NFR **8/9** · **14 bug ditemukan dan semuanya sudah diperbaiki** |
+| 📄 Dokumen | Semua volume D01–D09 **v1.0** dan Work Plan (D00) **v1.5** |
 
-### ⏳ Belum selesai: perlu dikerjakan
+### ⏳ Keterbatasan yang masih ada
 
-| # | Pekerjaan | Siapa | Catatan |
-|---|---|---|---|
-| 1 | **D04W**: Detailed Design Web | **Rafi** | 🟡 **Draf v0.5 sudah ada** (disiapkan PM dari kode). Tugasmu: baca sambil mencocokkan dengan kode di `code_area/apps/web`, lengkapi, lalu naikkan versi. |
-| 2 | **D07W**: Developer Manual Web | **Steven** (bagian komponen UI: **Nabila**) | 🟡 **Draf v0.5 sudah ada.** Steven: ikuti langkah Bab II–III di laptop sendiri dan catat hasilnya. Nabila: periksa Bab 5.3. |
-| 3 | **D04A**: Detailed Design Android | **Gracia** | ⏳ Belum ada. Contoh format: D04B dan D04W. |
-| 4 | **D05A**: User Interface Map Android | **Cecilia** | ⏳ Belum ada. Contoh format: D05W milik Nabila. |
-| 5 | **D08**: System Program Demo | **Rafi** | ⏳ Belum ada |
-| 6 | **D09A**: User Manual Android | **Grace** | ⏳ Belum ada |
-| 7 | **D09W**: User Manual Web | **Permata** | ⏳ Belum ada |
-| 8 | Review ke-2 untuk D01, D02, D03, D04B, D07B | Steven | Menunggu |
-| 9 | ~~Uji di HP fisik: scan QRIS pakai kamera (SA-08) dan NF-07~~ | Salomo | ✅ Selesai 14 Nov 2026 (D06 v0.9.6) |
-| 10 | Uji gateway + rate limit (NF-04) | Salomo | Menunggu Docker terpasang |
-| 11 | Deploy Web + backend ke server publik (HTTPS) | Salomo | Opsional; saat ini aplikasi dijalankan lokal |
-| 12 | Semua dokumen dinaikkan ke **v1.0** (final + tanda tangan) | Salomo | Setelah semua review selesai |
+| # | Butir | Catatan |
+|---|---|---|
+| 1 | Uji gateway + rate limit (NF-04) | Terblokir, Docker belum terpasang |
+| 2 | Kamera, notifikasi push, dan berbagi bukti di HP fisik | Lulus 14 Nov 2026, belum diulang pada APK final. SA-08 pada APK final diuji dengan kamera virtual emulator. |
+| 3 | Gladi demo (D08) | Belum dilakukan per 22 Nov |
+| 4 | Login biometrik Android | Masih simulasi |
+| 5 | Deploy ke server publik (HTTPS) | Opsional; saat ini aplikasi dijalankan lokal |
 
 📌 **Pembagian tugas resmi dan format dokumen** ada di Work Plan:
 `documents_area/D00_DWP_Work_Plan/`. Semua dokumen pembagian kerja (modul coding, modul Android, 9 dokumen) dikumpulkan di folder
 [`pembagian_kerja/`](pembagian_kerja). Daftar bagian wajib tiap dokumen dari dosen ada di `documents_area/00_Referensi/Software Engineering Project.pdf`.
-
-**Tips untuk yang menulis dokumen:** lihat dulu dokumen yang sudah jadi sebagai contoh format (misalnya D04B untuk Detailed Design dan D07A untuk Developer Manual).
-Semua isi teknisnya sudah ada di kode, jadi kamu tidak perlu mengarang. Kalau bingung, tanya Salomo.
 
 ---
 
@@ -250,19 +247,25 @@ Semua dokumen ada di [`documents_area/`](documents_area). Satu folder per volume
 | Folder | Dokumen | Versi |
 |---|---|---|
 | `00_Referensi/` | SRS v0.1, Project Brief, daftar dokumen dari dosen, MDTA (`PANDUAN_MODULE.docx` = pembagian modul) | – |
-| `D00_DWP_Work_Plan/` | Rencana kerja dokumentasi (pembagian tugas) | v1.3 |
-| `D01_Project_Document/` | Dokumen proyek (jadwal, risiko, biaya COCOMO) | v0.9.4 |
-| `D02_Architectural_Design/` | Desain arsitektur | v0.9.5 |
-| `D03_Functional_Design/` | Desain fungsional | v0.9.3 |
-| `D04B_Detailed_Design_Backend_DB/` | Desain detail backend & database | v0.9.2 |
-| `D05W_UI_Map_Web/` | Peta tampilan Web (Nabila) | v0.3 |
-| `D06_System_Testing/` | Pengujian sistem | v0.9.6 |
-| `D07A_Developer_Manual_Android/` | Manual developer Android | v0.9.2 |
-| `D07B_Developer_Manual_Backend/` | Manual developer backend | v0.9.2 |
-| `D04W_Detailed_Design_Web/` | Desain detail Web (draf untuk Rafi) | v0.5 |
-| `D07W_Developer_Manual_Web/` | Manual developer Web (draf untuk Steven & Nabila) | v0.5 |
+| `D00_DWP_Work_Plan/` | Rencana kerja dokumentasi (pembagian tugas) | v1.5 |
+| `D01_Project_Document/` | Dokumen proyek (jadwal, risiko, biaya COCOMO) | v1.0 |
+| `D02_Architectural_Design/` | Desain arsitektur | v1.0 |
+| `D03_Functional_Design/` | Desain fungsional | v1.0 |
+| `D04A_Detailed_Design_Android/` | Desain detail Android | v1.0 |
+| `D04B_Detailed_Design_Backend_DB/` | Desain detail backend & database | v1.0 |
+| `D04W_Detailed_Design_Web/` | Desain detail Web | v1.0 |
+| `D05A_UI_Map_Android/` | Peta tampilan Android | v1.0 |
+| `D05W_UI_Map_Web/` | Peta tampilan Web | v1.0 |
+| `D06_System_Testing/` | Pengujian sistem | v1.0 |
+| `D07A_Developer_Manual_Android/` | Manual developer Android | v1.0 |
+| `D07B_Developer_Manual_Backend/` | Manual developer backend | v1.0 |
+| `D07W_Developer_Manual_Web/` | Manual developer Web | v1.0 |
+| `D08A_System_Program_Demo_Android/` | Demo program Android | v1.0 |
+| `D08W_System_Program_Demo_Web/` | Demo program Web dan lintas platform | v1.0 |
+| `D09A_User_Manual_Android/` | Panduan pengguna Android | v1.0 |
+| `D09W_User_Manual_Web/` | Panduan pengguna Web | v1.0 |
 | `TUT_Panduan_Uji_Ponsel/` | Cara instal & uji aplikasi di HP | v1.1 |
-| `TUT_Panduan_Menjalankan_Web/` | Cara menjalankan & menguji aplikasi Web (versi Word dari `TUTORIAL_MENJALANKAN_WEB.md`) | v1.0 |
+| `TUT_Panduan_Menjalankan_Web/` | Cara menjalankan & menguji aplikasi Web | v2.0 |
 
 **Aturan simpan dokumen:** simpan versi baru di folder volumenya. Kalau ada versi lama, beri tahu Salomo supaya dipindahkan dari folder.
 Setelah membuka .docx di Word, klik kanan Daftar Isi lalu pilih **Update Field**.
@@ -271,19 +274,20 @@ Setelah membuka .docx di Word, klik kanan Daftar Isi lalu pilih **Update Field**
 
 ## 9. Cara mencoba aplikasinya sendiri
 
-**Yang perlu diinstal:** JDK 21+ (sudah termasuk di Android Studio), Node.js 20+, Android Studio (untuk Android).
+**Yang perlu diinstal:** JDK 21+ (sudah termasuk di Android Studio), Node.js 18+, Android Studio (untuk Android).
 
 ```powershell
 # 1. Jalankan backend (pakai database H2, tidak perlu instal PostgreSQL)
 cd code_area\backend
-.\run-local.ps1 -H2
-#   → tunggu sampai muncul "Started", lalu buka http://localhost:8080/swagger-ui.html
+powershell -ExecutionPolicy Bypass -File .\run-local.ps1 -H2
+#   → tunggu sampai muncul "Backend jalan di http://localhost:8080", lalu buka http://localhost:8080/swagger-ui.html
 
-# 2. Di terminal lain, jalankan Web
-cd code_area\apps\web
-npm install
-npm run dev
-#   → buka http://localhost:5173
+# 2. Di terminal lain (dari folder utama repo), jalankan Web
+cd code_area\apps\web\digitalbanking-node
+copy .env.example .env
+npm.cmd install
+npm.cmd start
+#   → buka http://localhost:3000
 
 # 3. Android: buka folder code_area\apps\android di Android Studio,
 #    pilih varian "onlineDebug" lalu Run ke emulator.
@@ -300,7 +304,7 @@ npm run dev
 Coba transfer dari `demo` ke `1400000002`, lalu login sebagai `andi` di Web. Uangnya pasti sudah masuk.
 
 Penjelasan lebih teknis:
-[backend](code_area/backend/README.md) · [Web](code_area/apps/web/README.md) · [Android](code_area/apps/android/README.md) · [pengujian](code_area/pengujian/README.md)
+[backend](code_area/backend/README.md) · [Web](code_area/apps/web/digitalbanking-node/README.md) · [Android](code_area/apps/android/README.md) · [pengujian](code_area/pengujian/README.md)
 
 ---
 
