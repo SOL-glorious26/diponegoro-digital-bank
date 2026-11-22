@@ -32,7 +32,7 @@ docker compose up -d --build
 **Test otomatis** (memakai H2 di memori, tidak butuh PostgreSQL):
 ```bash
 export JAVA_HOME="/c/Program Files/Android/Android Studio/jbr"
-./mvnw test        # 44 test integrasi API, ±40 detik
+./mvnw test        # 47 test, ±40 detik
 ```
 
 ### Siapkan PostgreSQL (sekali saja)

@@ -13,7 +13,7 @@ Diperbarui: 22 November 2026. Setiap folder hanya berisi **versi terbaru**. Vers
 | `D04B_Detailed_Design_Backend_DB/` | **v1.0 final** | Salomo |
 | `D05A_UI_Map_Android/` | **v1.0 final** (dari draf Cecilia) | Cecilia (diselesaikan PM) |
 | `D05W_UI_Map_Web/` | **v1.0 final** (dari draf v0.7 Nabila, diselesaikan PM) | Nabila |
-| `D06_System_Testing/` | **v1.0 final** (Android 28/28, Web Node WN 14/14, LPN 3/3, 14 defect ditutup) | Steven (disusun PM) |
+| `D06_System_Testing/` | **v1.0 final** (Android 28/28, Web Node WN 25/25, peramban 24/24, LPN 3/3, 14 defect ditutup) | Steven (disusun PM) |
 | `D07A_Developer_Manual_Android/` | **v1.0 final** | Salomo |
 | `D07B_Developer_Manual_Backend/` | **v1.0 final** | Salomo |
 | `D04W_Detailed_Design_Web/` | **v1.0 final** (Rafi + koreksi PM; Web Node) | Rafi |
