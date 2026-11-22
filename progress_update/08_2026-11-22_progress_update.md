@@ -28,3 +28,4 @@ Bukti: `code_area/pengujian/bukti/2026-11-22/` (`web-node*`, `performa-web-node`
 
 Fitur yang tidak dimuat di Web (kantong, kartu virtual, notifikasi, grafik saldo, favorit, QRIS pribadi, paket data) mengikuti cakupan tim Web dan tidak ditindaklanjuti (keputusan PM).
 `PENJELASAN_TEKNOLOGI_WEB.docx` dan `TUTORIAL_MENJALANKAN_APLIKASI_WEB.docx` ditulis ulang untuk Web tim (`gen/patch_penjelasan_tutorial_web.py`).
+`PENJELASAN_TEKNOLOGI_ANDROID.docx` dan `TUTORIAL_MENJALANKAN_ANDROID_EMULATOR.docx` disamakan dengan kode 22 Nov (`gen/patch_penjelasan_tutorial_android.py`); operasi API yang dipakai Android = 69 dari 73.
