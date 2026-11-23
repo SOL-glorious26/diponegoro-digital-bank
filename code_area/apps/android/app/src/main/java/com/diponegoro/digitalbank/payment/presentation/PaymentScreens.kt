@@ -15,10 +15,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.QrCode
-import com.diponegoro.digitalbank.core.ui.DdbButton as Button
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import com.diponegoro.digitalbank.core.ui.DdbOutlinedButton as OutlinedButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -30,6 +30,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -42,9 +43,14 @@ import com.diponegoro.digitalbank.core.ui.PinDialog
 import com.diponegoro.digitalbank.core.ui.ReceiptCard
 import com.diponegoro.digitalbank.core.ui.ScreenScaffold
 import com.diponegoro.digitalbank.core.ui.SectionCard
+import com.diponegoro.digitalbank.core.util.parseRupiah
 import com.diponegoro.digitalbank.core.util.formatRupiah
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
+import androidx.compose.foundation.layout.height
+import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material3.ButtonDefaults
+import com.diponegoro.digitalbank.ui.theme.GoldLight
 
 @Composable
 fun QrisPayScreen(
@@ -75,7 +81,7 @@ fun QrisPayScreen(
             scanned != null -> {
                 val p = scanned.payload
                 SectionCard(title = "Detail pembayaran") {
-                    InfoRow("Merchant", p.merchantName)
+                    InfoRow("Merchant", p.merchantName, emphasize = true)
                     InfoRow("Kota", p.city)
                     InfoRow("Jenis", if (p.isDynamic) "QRIS dinamis (nominal ditetapkan)" else "QRIS statis")
                     InfoRow("Penerbit", if (scanned.internalAccountId != null) "Diponegoro Digital Bank" else "Bank / PJSP lain")
@@ -89,8 +95,14 @@ fun QrisPayScreen(
                     supportingText = if (p.isDynamic) "Nominal ditetapkan penerima dan tidak dapat diubah" else null
                 )
                 ErrorText(state.error.takeIf { !state.showPin })
-                Button(onClick = vm::requestPin, modifier = Modifier.fillMaxWidth()) { Text("Bayar") }
-                OutlinedButton(onClick = vm::reset, modifier = Modifier.fillMaxWidth()) { Text("Batal") }
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedButton(onClick = vm::reset, modifier = Modifier.weight(1f).height(52.dp)) { Text("Batal") }
+                    Button(
+                        onClick = vm::requestPin,
+                        modifier = Modifier.weight(1.5f).height(52.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = GoldLight, contentColor = Color.Black)
+                    ) { Text("Bayar") }
+                }
             }
 
             else -> {
@@ -131,7 +143,7 @@ fun QrisPayScreen(
     if (state.showPin) {
         PinDialog(
             subtitle = state.scanned?.let {
-                "Bayar ${formatRupiah(it.payload.amount ?: state.amount.toLongOrNull() ?: 0)} ke ${it.payload.merchantName}"
+                "Bayar ${formatRupiah(it.payload.amount ?: parseRupiah(state.amount) ?: 0)} ke ${it.payload.merchantName}"
             },
             errorMessage = state.error,
             isLoading = state.busy,
@@ -148,7 +160,7 @@ private fun QrImage(payload: String, description: String) {
         Image(
             bitmap = image,
             contentDescription = description,
-            modifier = Modifier.size(240.dp).background(Color.White).padding(8.dp)
+            modifier = Modifier.size(260.dp).background(Color.White).padding(8.dp)
         )
     }
 }
@@ -174,7 +186,7 @@ fun QrisReceiveScreen(state: QrisReceiveUiState, vm: QrisReceiveViewModel, onBac
             MoneyField(amount, { amount = it }, "Nominal yang diminta")
             OutlinedButton(onClick = { vm.generateDynamic(amount) }, modifier = Modifier.fillMaxWidth()) { Text("Buat QRIS dinamis") }
         }
-        SectionCard(title = "Simulasi dana masuk") {
+        SectionCard(modifier = Modifier.alpha(0.75f), title = "Simulasi dana masuk") {
             Text(
                 "Simulator: pengguna bank lain membayar ke QRIS Anda.",
                 style = MaterialTheme.typography.bodySmall
