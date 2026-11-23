@@ -120,7 +120,7 @@ public abstract class ApiTestBase {
         return new Customer(userId, ver.text("accessToken"), ver.text("refreshToken"), null, username);
     }
 
-    /** Nasabah lengkap: OTP, e-KYC disetujui (rekening dibuka Rp5 juta), PIN 123456. */
+    /** Nasabah lengkap: OTP, e-KYC disetujui (rekening dibuka dengan Rp5 juta khusus profil test), PIN 123456. */
     protected Customer newCustomer() throws Exception {
         String username = "u" + uniq();
         Customer c = registerAndVerify(username);

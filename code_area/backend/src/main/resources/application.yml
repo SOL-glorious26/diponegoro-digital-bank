@@ -70,6 +70,8 @@ spring:
     password: ""
 ddb:
   seed-demo-data: false
+  # Hanya untuk test: skenario transfer/riwayat memakai saldo awal Rp5.000.000. Bawaan aplikasi Rp50.000.
+  opening-balance: 5000000
 
 ---
 # Profil cadangan tanpa PostgreSQL: database file H2 di folder ./data (hanya untuk mencoba cepat).

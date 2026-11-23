@@ -16,7 +16,10 @@ class AccountFlowTest extends ApiTestBase {
         Customer c = newCustomer();
         Res acc = get("/api/v1/accounts/me", c.token());
         assertThat(acc.status()).isEqualTo(200);
+        // Profil test memakai Rp5 juta (ddb.opening-balance) agar skenario transfer cukup saldo.
         assertThat(acc.num("balance")).isEqualTo(5_000_000L);
+        // Bawaan aplikasi: Rp50.000, ketentuan PT Diponegoro Digital Bank.
+        assertThat(com.diponegoro.ddb.auth.AuthService.NEW_USER_OPENING_BALANCE).isEqualTo(50_000L);
         assertThat(acc.text("accountNumber")).matches("1400\\d{6}");
         assertThat(acc.text("ownerName")).isEqualTo(("Nasabah " + c.username()).toUpperCase());
     }

@@ -55,7 +55,7 @@ izin ini wajib selama backend berjalan di laptop/LAN. HTTP polos hanya diizinkan
 | QRIS per transaksi | Rp1.000 – Rp10.000.000 | `QrisRules` |
 | Biaya admin pulsa / PLN / tagihan | Rp1.500 / Rp2.500 / Rp2.500 | `TopUpModels` |
 | Limit Virtual Card | Rp10.000 – Rp50.000.000 (default Rp5.000.000) | `VirtualCardLimits` |
-| Saldo awal pengguna baru | Rp5.000.000 | `CoreModule` |
+| Saldo awal pengguna baru | Rp50.000 | `CoreModule` |
 | Timeout sesi tidak aktif | 5 menit | `InactivityMonitor` |
 | Salah PIN | 3× → PIN diblokir 5 menit | modul Authentication |
 

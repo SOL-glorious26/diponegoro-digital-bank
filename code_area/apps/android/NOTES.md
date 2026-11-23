@@ -168,5 +168,5 @@ Semua nilai ini perlu dikonfirmasi tim/dosen:
 | Biaya transfer antarbank | Rp2.500 | `TransferRules` |
 | Batas QRIS per transaksi | Rp1.000 – Rp10.000.000 | `QrisRules` |
 | Limit Virtual Card | Rp10.000 – Rp50.000.000 (default Rp5.000.000) | `VirtualCardLimits` |
-| Saldo awal pengguna baru (simulasi) | Rp5.000.000 | `CoreModule` |
+| Saldo awal pengguna baru (simulasi) | Rp50.000 | `CoreModule` |
 | Timeout sesi karena tidak aktif | 5 menit | `InactivityMonitor` |

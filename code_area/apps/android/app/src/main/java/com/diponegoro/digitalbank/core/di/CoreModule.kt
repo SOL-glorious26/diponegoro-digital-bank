@@ -98,7 +98,7 @@ object CoreModule {
     }
 
     /** Saldo awal simulasi untuk pengguna baru hasil registrasi. */
-    const val NEW_USER_OPENING_BALANCE = 5_000_000L
+    const val NEW_USER_OPENING_BALANCE = 50_000L
 
     /** Memastikan pengguna memiliki rekening utama. Aman dipanggil berulang. */
     suspend fun ensureCustomer(userId: String, displayName: String) =

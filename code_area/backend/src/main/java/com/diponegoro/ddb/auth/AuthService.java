@@ -25,6 +25,7 @@ import com.diponegoro.ddb.common.Hashing;
 import com.diponegoro.ddb.common.Ids;
 import com.diponegoro.ddb.ledger.LedgerService;
 import com.diponegoro.ddb.security.JwtService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,8 +39,8 @@ import java.util.regex.Pattern;
 /** Modul Authentication: FR-01 – FR-05. */
 @Service
 public class AuthService {
-    /** Saldo awal simulasi untuk nasabah baru (nilai usulan). */
-    public static final long NEW_USER_OPENING_BALANCE = 5_000_000L;
+    /** Saldo awal rekening nasabah baru: Rp50.000, ketentuan PT Diponegoro Digital Bank. */
+    public static final long NEW_USER_OPENING_BALANCE = 50_000L;
     /** Lama simulasi proses e-KYC sebelum diputuskan. */
     public static final Duration EKYC_PROCESSING = Duration.ofSeconds(3);
     static final String GENERIC_LOGIN_ERROR = "Username/email atau password salah";
@@ -63,11 +64,15 @@ public class AuthService {
     private final DdbProperties props;
     private final Clock clock;
     private final String dummyHash;
+    private final long openingBalance;
 
     public AuthService(UserRepository users, SessionRepository sessions, EkycRepository ekycs,
                        BiometricDevice.Repo biometrics, OtpService otps, PinService pins, LedgerService ledger,
                        JwtService jwt, PasswordEncoder encoder, AuditService audit, LoginThrottle throttle,
-                       DdbProperties props, Clock clock) {
+                       DdbProperties props, Clock clock,
+                       @Value("${ddb.opening-balance:#{T(com.diponegoro.ddb.auth.AuthService).NEW_USER_OPENING_BALANCE}}")
+                       long openingBalance) {
+        this.openingBalance = openingBalance;
         this.users = users;
         this.sessions = sessions;
         this.ekycs = ekycs;
@@ -196,7 +201,7 @@ public class AuthService {
             u.status = rejected ? AccountStatus.KYC_REJECTED : AccountStatus.FINANCIAL_ENABLED;
             u.updatedAt = now;
             if (!rejected) {
-                ledger.openMainAccount(userId, displayName(u, e), NEW_USER_OPENING_BALANCE, null, now);
+                ledger.openMainAccount(userId, displayName(u, e), openingBalance, null, now);
             }
             audit.record(userId, rejected ? "EKYC_REJECTED" : "EKYC_APPROVED", null);
         }
