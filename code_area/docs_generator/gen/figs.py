@@ -167,10 +167,10 @@ def highlevel():
     for t, y in layers:
         ax.text(0.05, y + 0.5, t, fontsize=8.5, fontweight="bold", rotation=90, va="center", color=GREY)
     box(ax, 0.6, 5.4, 3.9, 0.95, "Aplikasi Android\nKotlin · Jetpack Compose · MVVM", fs=9.5)
-    box(ax, 5.5, 5.4, 3.9, 0.95, "Aplikasi Web\n(SPA; framework menunggu konfirmasi)", fs=9.5, ls="--")
+    box(ax, 5.5, 5.4, 3.9, 0.95, "Aplikasi Web (tim)\nNode.js · Express · EJS (BFF)", fs=9.5)
     box(ax, 2.5, 4.2, 5, 0.8, "API Gateway (Nginx) — /api/**, rate limit, CORS, TLS", fc=LGREY, ec=GREY, fs=9.5)
     arrow(ax, 2.5, 5.4, 4.0, 5.0, "HTTPS/JSON + JWT", fs=8)
-    arrow(ax, 7.4, 5.4, 6.0, 5.0, "HTTPS/JSON + JWT", fs=8)
+    arrow(ax, 7.4, 5.4, 6.0, 5.0, "HTTP/JSON + JWT", fs=8)
     ax.add_patch(FancyBboxPatch((0.6, 1.95), 8.8, 1.95, boxstyle="round,pad=0.02", fc="white", ec=NAVY, lw=1.4))
     ax.text(5, 3.68, "Backend — Spring Boot modular monolith (Java 21)", ha="center", fontsize=9.5, fontweight="bold")
     mods = ["auth", "account", "transfer", "payment", "topup", "card", "history", "profile +\nnotification"]
