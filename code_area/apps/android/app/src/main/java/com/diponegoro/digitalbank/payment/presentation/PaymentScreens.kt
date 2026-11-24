@@ -43,6 +43,7 @@ import com.diponegoro.digitalbank.core.ui.ReceiptCard
 import com.diponegoro.digitalbank.core.ui.ScreenScaffold
 import com.diponegoro.digitalbank.core.ui.SectionCard
 import com.diponegoro.digitalbank.core.util.formatRupiah
+import com.diponegoro.digitalbank.core.util.parseRupiah
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
 
@@ -131,7 +132,7 @@ fun QrisPayScreen(
     if (state.showPin) {
         PinDialog(
             subtitle = state.scanned?.let {
-                "Bayar ${formatRupiah(it.payload.amount ?: state.amount.toLongOrNull() ?: 0)} ke ${it.payload.merchantName}"
+               "Bayar ${formatRupiah(it.payload.amount ?: parseRupiah(state.amount) ?: 0)} ke ${it.payload.merchantName}"
             },
             errorMessage = state.error,
             isLoading = state.busy,
